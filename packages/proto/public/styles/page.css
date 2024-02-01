@@ -134,7 +134,7 @@ body {
   background: #36454f;
   color: #faf9f6;
   font-weight: 300;
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 
 h1 {
@@ -177,7 +177,7 @@ a {
 
 .user-description {
   font-weight: 300;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 body {
@@ -188,7 +188,7 @@ body {
 }
 
 main {
-  width: 60%;
+  width: 55%;
   border: 2px solid black;
 }
 
@@ -200,6 +200,7 @@ main {
   flex-direction: column;
   width: 100%;
   padding: 15px 15px 15px 100px;
+  margin-bottom: 10px;
 }
 
 h2 {
@@ -219,9 +220,9 @@ h2 {
 .user-friend,
 .single-playlist,
 .game {
-  border: 1px solid white;
-  width: 150px;
-  height: 150px;
+  border: 0.9px solid white;
+  width: 120px;
+  height: 120px;
   border-radius: 5px;
 }
 
@@ -241,9 +242,14 @@ but I couldnt get flex working for aligning the text within the cards */
 
 .friends-list-friends,
 .playlist-list,
-.past-games-list {
-  margin-top: 20px;
-  margin-bottom: 35px;
+.past-games-list,
+.favorites-all-lists {
+  margin-top: 15px;
+}
+
+/* this is the top section, and it needs more spacing from the header */
+.friends-list {
+  margin-top: 15px;
 }
 
 .match-the-vibe-header h3 {
@@ -259,7 +265,7 @@ but I couldnt get flex working for aligning the text within the cards */
 .favorite-artists-list,
 .favorite-songs-list,
 .favorite-albums-list {
-  border: 1px solid white;
+  border: 0.9px solid white;
   border-radius: 5px;
   width: 265px;
 }
@@ -270,6 +276,31 @@ but I couldnt get flex working for aligning the text within the cards */
   gap: 25px;
 }
 
-.song-title, .artist-title, .album-title {
+.song-title,
+.artist-title,
+.album-title {
   font-weight: 600;
+}
+
+.current-favorites-h3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding: 10px 0px 0px 10px;
+}
+
+.favorite-album,
+.favorite-song,
+.favorite-artist {
+  padding: 10px 0px 5px 10px;
+}
+
+.favorite-artist p,
+.favorite-album p,
+.favorite-song p {
+  margin-top: 3px;
+}
+
+.profile-section-description {
+  font-size: 0.75em;
+  margin-top: 7px;
 }
