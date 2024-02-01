@@ -3,105 +3,145 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/page.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <title>user1</title>
   </head>
   <body>
-    <a href="./index.html">home</a>
-    <h1>user 1 page</h1>
+    <main>
+      <section class="match-the-vibe-header">
+        <h3>match the vibe</h3>
+      </section>
+      <section class="user-profile-header">
+        <a href="./index.html">home</a>
+        <section class="user-profile-user-content">
+          <section class="user-profile-picture">
+            <img src="/aidan_pfp.png" alt="Aidan wearing a hat." width="150" />
+          </section>
+          <section class="user-profile-header-text">
+            <h1>Aidan's Page</h1>
+            <p class="user-description">swag.</p>
+          </section>
+        </section>
+      </section>
 
-    <h2>friend's list</h2>
-    <ul>
-      <li>
-        <a href="./user2.html">bob</a>
-      </li>
-      <li>
-        <p>joe</p>
-      </li>
-      <li>
-        <p>ally</p>
-      </li>
-      <li>
-        <p>kyle</p>
-      </li>
-      <li>
-        <p>aidan</p>
-      </li>
-      <li>
+      <section class="friends-list">
+        <h2>friend's list</h2>
         <a href="./friends.html">... see all friends</a>
-      </li>
-    </ul>
+        <section class="friends-list-friends">
+          <div class="user-friend">
+            <a href="./user2.html">thea</a>
+          </div>
+          <div class="user-friend">
+            <p>robby</p>
+          </div>
+          <div class="user-friend">
+            <p>lauryn</p>
+          </div>
+          <div class="user-friend">
+            <p>ethan</p>
+          </div>
+          <div class="user-friend">
+            <p>jonathan</p>
+          </div>
+        </section>
+      </section>
 
-    <h2>Displayed Playlists</h2>
-    <ul>
-      <li>
-        <a href="./playlist1.html">chill vibes</a>
-      </li>
-      <li>
-        <p>non chill vibes</p>
-      </li>
-      <li>
-        <p>summer</p>
-      </li>
-      <li>
-        <p>beach</p>
-      </li>
-    </ul>
-    <h2>Past Games</h2>
-    <ul>
-      <li>
-        <a href="./game1.html">game1</a>
-      </li>
-      <li>
-        <p>game2</p>
-      </li>
-      <li>
-        <p>game3</p>
-      </li>
-    </ul>
-    <h2>Current Favorites</h2>
-    <ul>
-      <li>
-        <h3>favorite artists</h3>
-        <ul>
-          <li>
-            <a href="./artist1.html">the backseat lovers</a>
-          </li>
-          <li>
-            <p>tyler the creator</p>
-          </li>
-          <li>
-            <p>arctic monkeys</p>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>favorite albums</h3>
-        <ul>
-          <li>
-            <a href="./album1.html">silhouettes</a>
-          </li>
-          <li>
-            <p>when we were friends</p>
-          </li>
-          <li>
-            <p>am</p>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <h3>favorite songs</h3>
-        <ul>
-          <li>
-            <a href="./song1.html">words I used</a>
-          </li>
-          <li>
-            <p>hospital beach</p>
-          </li>
-          <li>
-            <p>what love is</p>
-          </li>
-        </ul>
-      </li>
-    </ul>
+      <section class="playlist">
+        <h2>playlists</h2>
+
+        <section class="playlist-list">
+          <div class="single-playlist">
+            <a href="./playlist1.html">chill vibes</a>
+          </div>
+          <div class="single-playlist">
+            <p>chill vibes</p>
+          </div>
+          <div class="single-playlist">
+            <p>non chill vibes</p>
+          </div>
+          <div class="single-playlist">
+            <p>beach</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="past-games">
+        <h2>past games</h2>
+
+        <section class="past-games-list">
+          <div class="game">
+            <a href="./game1.html">game1</a>
+          </div>
+          <div class="game">
+            <p>game2</p>
+          </div>
+          <div class="game">
+            <p>game3</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="current-favorites">
+        <h2>Current Favorites</h2>
+
+        <section class="favorites-all-lists">
+          <section class="favorite-artists-list">
+            <h3>artists</h3>
+            <div class="favorite-artist">
+              <a href="./artist1.html" class="artist-title"
+                >the backseat lovers</a
+              >
+              <p>4.6M monthly listeners</p>
+            </div>
+            <div class="favorite-artist">
+              <p class="artist-title">palace</p>
+              <p>1.8M monthly listeners</p>
+            </div>
+            <div class="favorite-artist">
+              <p class="artist-title">matt maltese</p>
+              <p>7.6M monthly listeners</p>
+            </div>
+          </section>
+
+          <section class="favorite-songs-list">
+            <h3>songs</h3>
+            <div class="favorite-song">
+              <a href="./song1.html" class="song-title">words I used</a>
+              <p>the backseat lovers</p>
+            </div>
+            <div class="favorite-song">
+              <p class="song-title">disciples</p>
+              <p>tame impala</p>
+            </div>
+            <div class="favorite-song">
+              <p class="song-title">jigsaw falling into place</p>
+              <p>radiohead</p>
+            </div>
+          </section>
+
+          <section class="favorite-albums-list">
+            <h3>albums</h3>
+            <div class="favorite-album">
+              <a href="./album1.html" class="album-title">silhouettes</a>
+              <p>the backseat lovers</p>
+            </div>
+            <div class="favorite-album">
+              <p class="album-title">lost in the night ep</p>
+              <p>palace</p>
+            </div>
+            <div class="favorite-album">
+              <p class="album-title">orange blood</p>
+              <p>mt joy</p>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
   </body>
 </html>

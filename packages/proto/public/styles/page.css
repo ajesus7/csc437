@@ -1,0 +1,275 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* End Style Reset */
+
+body {
+  background: #36454f;
+  color: #faf9f6;
+  font-weight: 300;
+  font-size: 1.4em;
+}
+
+h1 {
+  color: #faf9f6;
+  font-size: 4rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.accent {
+  background: #feba4f;
+}
+
+a {
+  color: #feba4f;
+}
+
+.friends-list,
+.playlist-list,
+.past-games-list {
+  width: 20%;
+}
+
+.user-profile-user-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 25px;
+}
+
+.user-profile-header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 50px;
+}
+
+.user-profile-header {
+  padding: 25px 15px 15px 100px;
+}
+
+.user-description {
+  font-weight: 300;
+  font-size: 2rem;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", Helvetica, sans-serif;
+}
+
+main {
+  width: 60%;
+  border: 2px solid black;
+}
+
+.friends-list,
+.past-games,
+.playlist,
+.current-favorites {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px 15px 15px 100px;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.friends-list-friends,
+.playlist-list,
+.past-games-list {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  gap: 25px;
+}
+
+.user-friend,
+.single-playlist,
+.game {
+  border: 1px solid white;
+  width: 150px;
+  height: 150px;
+  border-radius: 5px;
+}
+
+/* using margin here is definitely not the most elegant solution
+but I couldnt get flex working for aligning the text within the cards */
+.user-friend p,
+.single-playlist p,
+.game p,
+.user-friend a,
+.single-playlist a,
+.game a {
+  display: flex;
+  margin-top: 80px;
+  font-weight: 600;
+  padding-left: 15px;
+}
+
+.friends-list-friends,
+.playlist-list,
+.past-games-list {
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+.match-the-vibe-header h3 {
+  font-weight: 600;
+  color: black;
+  padding: 15px 15px 15px 100px;
+}
+
+.match-the-vibe-header {
+  background: #faf9f6;
+}
+
+.favorite-artists-list,
+.favorite-songs-list,
+.favorite-albums-list {
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 265px;
+}
+
+.favorites-all-lists {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.song-title, .artist-title, .album-title {
+  font-weight: 600;
+}
