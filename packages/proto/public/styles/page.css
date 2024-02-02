@@ -179,6 +179,10 @@ but I couldnt get flex working for aligning the text within the cards */
   margin-top: 15px;
 }
 
+.subsection-header-line {
+  display: flex;
+}
+
 /******** END FRIENDS, PLAYLISTS, GAMES SECTION ********/
 
 /******** FAVORITES SECTION ********/
@@ -187,6 +191,10 @@ but I couldnt get flex working for aligning the text within the cards */
   font-weight: 600;
   margin-bottom: 15px;
   padding: 10px 0px 0px 10px;
+}
+
+.current-favorites {
+  padding-bottom: 50px;
 }
 
 .favorite-album,
@@ -219,4 +227,15 @@ but I couldnt get flex working for aligning the text within the cards */
 .artist-title,
 .album-title {
   font-weight: 600;
+}
+
+/*********** SVG SECTION **********/
+
+svg.icon {
+  display: inline;
+  height: 1.4em;
+  width: 1.4em;
+  vertical-align: top;
+  fill: currentColor;
+  margin: 4px 0px 0px 13px;
 }
