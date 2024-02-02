@@ -1,15 +1,15 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
 
-html,
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 body,
-div,
-span,
-applet,
-object,
-iframe,
 h1,
 h2,
 h3,
@@ -17,145 +17,80 @@ h4,
 h5,
 h6,
 p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
 ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
+ul {
   margin: 0;
   padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+  font-weight: normal;
 }
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
+
 ol,
 ul {
   list-style: none;
 }
-blockquote,
-q {
-  quotes: none;
-}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: "";
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* End Style Reset */
 
+/* Default HTML Elements */
+
 body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", Helvetica, sans-serif;
   background: #36454f;
   color: #faf9f6;
   font-weight: 300;
   font-size: 1.2em;
 }
 
+main {
+  width: 55%;
+  border: 2px solid black;
+}
+
 h1 {
   color: #faf9f6;
   font-size: 4rem;
-  margin-bottom: 8px;
   font-weight: 600;
+  margin-bottom: 8px;
 }
 
-.accent {
-  background: #feba4f;
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
 }
 
 a {
   color: #feba4f;
 }
 
-.friends-list,
-.playlist-list,
-.past-games-list {
-  width: 20%;
+/* End Default HTML ELements */
+
+.accent {
+  background: #feba4f;
+}
+
+/******** HEADER SECTION ********/
+
+.match-the-vibe-header h3 {
+  font-weight: 600;
+  color: black;
+  padding: 15px 15px 15px 100px;
+}
+
+.match-the-vibe-header {
+  background: #faf9f6;
+}
+
+.profile-section-description {
+  font-size: 0.75em;
+  margin-top: 7px;
 }
 
 .user-profile-user-content {
@@ -180,16 +115,10 @@ a {
   font-size: 1.5rem;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Inter", Helvetica, sans-serif;
-}
-
-main {
-  width: 55%;
-  border: 2px solid black;
+.friends-list,
+.playlist-list,
+.past-games-list {
+  width: 20%;
 }
 
 .friends-list,
@@ -203,10 +132,9 @@ main {
   margin-bottom: 10px;
 }
 
-h2 {
-  font-size: 1.5em;
-  font-weight: 600;
-}
+/******** END HEADER SECTION ********/
+
+/******** FRIENDS, PLAYLISTS, GAMES SECTION ********/
 
 .friends-list-friends,
 .playlist-list,
@@ -215,6 +143,12 @@ h2 {
   flex-direction: row;
   width: 80%;
   gap: 25px;
+  margin-top: 15px;
+}
+
+.favorites-all-lists {
+  /* does it make more sense to remove the above margin-top and add the above 3 classes to this rule? */
+  margin-top: 15px;
 }
 
 .user-friend,
@@ -226,8 +160,6 @@ h2 {
   border-radius: 5px;
 }
 
-/* using margin here is definitely not the most elegant solution
-but I couldnt get flex working for aligning the text within the cards */
 .user-friend p,
 .single-playlist p,
 .game p,
@@ -235,31 +167,38 @@ but I couldnt get flex working for aligning the text within the cards */
 .single-playlist a,
 .game a {
   display: flex;
-  margin-top: 80px;
+  margin-top: 60px;
   font-weight: 600;
   padding-left: 15px;
+  /* using margin here is definitely not the most elegant solution
+but I couldnt get flex working for aligning the text within the cards */
 }
 
-.friends-list-friends,
-.playlist-list,
-.past-games-list,
-.favorites-all-lists {
-  margin-top: 15px;
-}
-
-/* this is the top section, and it needs more spacing from the header */
 .friends-list {
+  /* this is the top section, and it needs more spacing from the header */
   margin-top: 15px;
 }
 
-.match-the-vibe-header h3 {
+/******** END FRIENDS, PLAYLISTS, GAMES SECTION ********/
+
+/******** FAVORITES SECTION ********/
+
+.current-favorites-h3 {
   font-weight: 600;
-  color: black;
-  padding: 15px 15px 15px 100px;
+  margin-bottom: 15px;
+  padding: 10px 0px 0px 10px;
 }
 
-.match-the-vibe-header {
-  background: #faf9f6;
+.favorite-album,
+.favorite-song,
+.favorite-artist {
+  padding: 10px 0px 5px 10px;
+}
+
+.favorite-artist p,
+.favorite-album p,
+.favorite-song p {
+  margin-top: 3px;
 }
 
 .favorite-artists-list,
@@ -280,27 +219,4 @@ but I couldnt get flex working for aligning the text within the cards */
 .artist-title,
 .album-title {
   font-weight: 600;
-}
-
-.current-favorites-h3 {
-  font-weight: 600;
-  margin-bottom: 15px;
-  padding: 10px 0px 0px 10px;
-}
-
-.favorite-album,
-.favorite-song,
-.favorite-artist {
-  padding: 10px 0px 5px 10px;
-}
-
-.favorite-artist p,
-.favorite-album p,
-.favorite-song p {
-  margin-top: 3px;
-}
-
-.profile-section-description {
-  font-size: 0.75em;
-  margin-top: 7px;
 }
