@@ -117,14 +117,16 @@ a {
 
 .friends-list,
 .playlist-list,
-.past-games-list {
+.past-games-list,
+.find-friends {
   width: 20%;
 }
 
 .friends-list,
 .past-games,
 .playlist,
-.current-favorites {
+.current-favorites,
+.find-friends {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -174,7 +176,8 @@ a {
 but I couldnt get flex working for aligning the text within the cards */
 }
 
-.friends-list {
+.friends-list,
+.find-friends {
   /* this is the top section, and it needs more spacing from the header */
   margin-top: 15px;
 }
@@ -238,4 +241,10 @@ svg.icon {
   vertical-align: top;
   fill: currentColor;
   margin: 4px 0px 0px 13px;
+}
+
+/********** HOME PAGE **********/
+
+.home-page-hero-information {
+  padding: 15px 15px 15px 100px;
 }
