@@ -302,3 +302,13 @@ svg.icon {
 .playlist-vibe {
   margin-bottom: 17px;
 }
+
+/********** RANDOM **********/
+
+.dev-note {
+  padding-left: 25px;
+  border: 2px solid white;
+  width: 50%;
+  margin: 25px 0px;
+  margin-left: 100px;
+}
