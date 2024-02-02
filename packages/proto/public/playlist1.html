@@ -13,42 +13,62 @@
     <title>chill vibes</title>
   </head>
   <body>
-    <a href="./index.html">home</a>
-    <a href="./user1.html">user1</a>
-    <h1>chill vibes playlist</h1>
-    <h3>song list</h3>
-    <ul>
-      <li>
-        <a href="./song1.html">words I used</a>
-      </li>
-      <li>
-        <p>i've been in love</p>
-      </li>
-      <li>
-        <p>storms</p>
-      </li>
-      <li>
-        <p>paul</p>
-      </li>
-    </ul>
-    <h3>playlist description</h3>
-    <ul>
-      <li>
-        <h4>name</h4>
-        <p>chill vibes</p>
-      </li>
-      <li>
-        <h4>vibe</h4>
-        <p>chill</p>
-      </li>
-      <li>
-        <h4>description</h4>
-        <p>the most chillest vibe ever.</p>
-      </li>
-      <li>
-        <h4>name</h4>
-        <p>chill vibes</p>
-      </li>
-    </ul>
+    <main>
+      <!--Bar on Top of Page with 'Match the Vibe Logo', will be changed to nav -->
+      <section class="match-the-vibe-header">
+        <a href="./index.html">match the vibe home</a>
+      </section>
+
+      <section class="page-hero-information">
+        <a href="./user1.html">back to aidan's profile.</a>
+        <h1>aidan's chill vibes playlist</h1>
+      </section>
+
+      <!--Rename this playlist container to something semantically better?-->
+      <section class="playlist-container">
+        <section class="playlist-songs">
+          <section class="subsection-header-line">
+            <h3>song list</h3>
+            <svg class="icon">
+              <use href="/icons/user-icons.svg#icon-music-note" />
+            </svg>
+          </section>
+          <ol>
+            <li>
+              <a href="./song1.html">words I used</a>
+            </li>
+            <li>
+              <p>i've been in love</p>
+            </li>
+            <li>
+              <p>storms</p>
+            </li>
+            <li>
+              <p>paul</p>
+            </li>
+          </ol>
+        </section>
+        <section class="playlist-description">
+          <section class="subsection-header-line">
+            <h3>playlist description</h3>
+            <svg class="icon">
+              <use href="/icons/user-icons.svg#icon-pencil" />
+            </svg>
+          </section>
+          <ul>
+            <!--does this vibe text look like a link because of the accent color? even if theres no underline-->
+            <li>
+              <h4 class="accent-text playlist-vibe">vibe: chill</h4>
+            </li>
+            <li>
+              <p>
+                this playlist is the most chillest vibe ever. it literally saved
+                my life. i can't thank match the vibe enough for this.
+              </p>
+            </li>
+          </ul>
+        </section>
+      </section>
+    </main>
   </body>
 </html>
