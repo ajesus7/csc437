@@ -78,7 +78,7 @@ a {
 
 /******** HEADER SECTION ********/
 
-.match-the-vibe-header h3 {
+.match-the-vibe-header a {
   font-weight: 600;
   color: black;
   padding: 15px 15px 15px 100px;
@@ -86,6 +86,7 @@ a {
 
 .match-the-vibe-header {
   background: #faf9f6;
+  padding: 15px 15px 15px 0px;
 }
 
 .profile-section-description {
@@ -110,7 +111,8 @@ a {
   padding: 25px 15px 15px 100px;
 }
 
-.user-description {
+.user-description,
+.description {
   font-weight: 300;
   font-size: 1.5rem;
 }
@@ -245,6 +247,11 @@ svg.icon {
 
 /********** HOME PAGE **********/
 
-.home-page-hero-information {
+.page-hero-information {
   padding: 15px 15px 15px 100px;
+  margin-top: 10px;
+}
+
+.page-hero-information h1 {
+  margin-top: 13px;
 }
