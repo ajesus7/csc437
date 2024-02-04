@@ -389,3 +389,42 @@ svg.icon {
   width: 50%;
   margin: 35px 0px 100px 100px;
 }
+
+/********** ALBUM PAGE **********/
+
+.individual-album img {
+  width: 425px;
+  height: auto;
+  border: 3px solid white;
+  border-radius: 5px;
+  margin-left: 100px;
+}
+
+.you-may-also-like {
+  border: 0.9px solid white;
+  padding-left: 50px;
+  padding: 15px 100px 15px 50px;
+  margin-left: 50px;
+  width: 35%;
+  border-radius: 5px;
+}
+
+.you-may-also-like h3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.album-page-information {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 100px;
+}
+
+.artist-name {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.song-name {
+  margin-bottom: 1px;
+}
