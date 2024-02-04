@@ -57,17 +57,22 @@ main {
 h1 {
   color: #faf9f6;
   font-size: 4rem;
-  font-weight: 600;
   margin-bottom: 8px;
 }
 
 h2 {
   font-size: 1.5em;
-  font-weight: 600;
 }
 
 a {
   color: #feba4f;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
 }
 
 /* End Default HTML ELements */
@@ -198,7 +203,6 @@ but I couldnt get flex working for aligning the text within the cards */
 /******** FAVORITES SECTION ********/
 
 .current-favorites-h3 {
-  font-weight: 600;
   margin-bottom: 15px;
   padding: 10px 0px 0px 10px;
 }
@@ -234,8 +238,8 @@ but I couldnt get flex working for aligning the text within the cards */
 }
 
 .song-title,
-.artist-title,
-.album-title {
+.album-title,
+.artist-title {
   font-weight: 600;
 }
 
