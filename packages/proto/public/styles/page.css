@@ -344,3 +344,48 @@ svg.icon {
 .song-information li {
   margin-bottom: 15px;
 }
+
+/********** ARTIST PAGE **********/
+
+.artist-description {
+  padding: 0px 0px 0px 100px;
+}
+
+.popular-albums {
+  border: 0.9px solid white;
+  border-radius: 5px;
+  padding: 25px;
+  width: 50%;
+  margin-left: 100px;
+  margin-top: 40px;
+}
+
+.popular-albums h3,
+.popular-albums h4,
+.related-bands h3,
+.popular-albums li a {
+  font-weight: 600;
+}
+
+.artist-album {
+  margin-top: 10px;
+}
+
+.artists-album-list {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  padding-top: 25px;
+}
+
+.artists-album-list li {
+  width: 100%;
+}
+
+.related-bands {
+  border: 0.9px solid white;
+  border-radius: 5px;
+  padding: 25px;
+  width: 50%;
+  margin: 35px 0px 100px 100px;
+}
