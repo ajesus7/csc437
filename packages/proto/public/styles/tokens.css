@@ -1,0 +1,19 @@
+/* Design Tokens */
+:root {
+  /* Colors */
+  --background-color: #36454f;
+  --white-color: #faf9f6;
+  --accent-color: #feba4f;
+
+  /* Font Weights */
+  --light-weight: 300;
+  --medium-weight: 400;
+  --bold-weight: 600;
+  --heavy-weight: 700;
+
+  /* Padding and Margin */
+  --component-inside-padding: 15px 15px 15px 100px;
+  --component-bottom-margin: 100px;
+
+  --box-border-radius: 5px;
+}
