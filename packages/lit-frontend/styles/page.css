@@ -1,68 +1,6 @@
 /*
 I have a lot of duplicate styling here, and I will work to consolidate the styling so 
-that components/sections that reuse the same styling can be declared together; however,
-I segregated this style sheet by website page for the time being so that I could easily
-navigate to a section and view all the relevant styling. I want to be able to refactor
-this CSS to preserve this readability.
-*/
-
-html {
-  box-sizing: border-box;
-  font-size: 16px;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-ol,
-ul {
-  margin: 0;
-  padding: 0;
-  font-weight: normal;
-}
-
-ol,
-ul {
-  list-style: none;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* End Style Reset */
-
-/* Design Tokens */
-:root {
-  /* Colors */
-  --background-color: #36454f;
-  --white-color: #faf9f6;
-  --accent-color: #feba4f;
-
-  /* Font Weights */
-  --light-weight: 300;
-  --medium-weight: 400;
-  --bold-weight: 600;
-  --heavy-weight: 700;
-
-  /* Padding and Margin */
-  --component-inside-padding: 15px 15px 15px 100px;
-  --component-bottom-margin: 100px;
-
-  --box-border-radius: 5px;
-}
+that components/sections that reuse the same styling can be declared together */
 
 /* Default HTML Elements */
 
@@ -126,32 +64,57 @@ h4 {
   padding: 15px 15px 15px 0px;
 }
 
-.profile-section-description {
-  font-size: 0.75em;
-  margin-top: 7px;
+.page-hero-information {
+  padding: var(--component-inside-padding);
+  margin-top: 10px;
 }
 
-.user-profile-user-content {
+.page-hero-information h1 {
+  margin-top: 13px;
+}
+
+/******** END HEADER SECTION ********/
+
+/*********** SVG SECTION **********/
+
+svg.icon {
+  display: inline;
+  height: 1.4em;
+  width: 1.4em;
+  vertical-align: top;
+  fill: currentColor;
+  margin: 4px 0px 0px 13px;
+}
+
+/********** STYLINGS THAT ARE REUSED AND TO BE REFACTORED **********/
+
+.friends-list-friends {
   display: flex;
   flex-direction: row;
-  margin-top: 25px;
+  width: 80%;
+  gap: 25px;
+  margin-top: 15px;
 }
 
-.user-profile-header-text {
+.user-friend {
+  border: 0.9px solid var(--white-color);
+  width: 120px;
+  height: 120px;
+  border-radius: var(--box-border-radius);
+}
+
+.user-friend p,
+.user-friend a {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 50px;
+  margin-top: 60px;
+  font-weight: var(--bold-weight);
+  padding-left: 15px;
+  /* using margin here is definitely not the most elegant solution
+but I couldnt get flex working for aligning the text within the cards */
 }
 
-.user-profile-header {
-  padding: 25px 15px 15px 100px;
-}
-
-.user-description,
-.description {
-  font-weight: var(--light-weight);
-  font-size: 1.5rem;
+.subsection-header-line {
+  display: flex;
 }
 
 .friends-list,
@@ -172,349 +135,4 @@ h4 {
   width: 100%;
   padding: var(--component-inside-padding);
   margin-bottom: 10px;
-}
-
-/******** END HEADER SECTION ********/
-
-/******** FRIENDS, PLAYLISTS, GAMES SECTION ********/
-
-.friends-list-friends,
-.playlist-list,
-.past-games-list {
-  display: flex;
-  flex-direction: row;
-  width: 80%;
-  gap: 25px;
-  margin-top: 15px;
-}
-
-.favorites-all-lists {
-  /* does it make more sense to remove the above margin-top and add the above 3 classes to this rule? */
-  margin-top: 15px;
-}
-
-.user-friend,
-.single-playlist,
-.game {
-  border: 0.9px solid var(--white-color);
-  width: 120px;
-  height: 120px;
-  border-radius: var(--box-border-radius);
-}
-
-.user-friend p,
-.single-playlist p,
-.game p,
-.user-friend a,
-.single-playlist a,
-.game a {
-  display: flex;
-  margin-top: 60px;
-  font-weight: var(--bold-weight);
-  padding-left: 15px;
-  /* using margin here is definitely not the most elegant solution
-but I couldnt get flex working for aligning the text within the cards */
-}
-
-.friends-list,
-.find-friends,
-.playlist-display {
-  /* this is the top section, and it needs more spacing from the header */
-  margin-top: 15px;
-}
-
-.subsection-header-line {
-  display: flex;
-}
-
-/******** END FRIENDS, PLAYLISTS, GAMES SECTION ********/
-
-/******** FAVORITES SECTION ********/
-
-.current-favorites-h3 {
-  margin-bottom: 15px;
-  padding: 10px 0px 0px 10px;
-}
-
-.current-favorites {
-  padding-bottom: 50px;
-}
-
-.favorite-album,
-.favorite-song,
-.favorite-artist {
-  padding: 10px 0px 5px 10px;
-}
-
-.favorite-artist p,
-.favorite-album p,
-.favorite-song p {
-  margin-top: 3px;
-}
-
-.favorite-artists-list,
-.favorite-songs-list,
-.favorite-albums-list {
-  border: 0.9px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  width: 265px;
-}
-
-.favorites-all-lists {
-  display: flex;
-  flex-direction: row;
-  gap: 25px;
-}
-
-.song-title,
-.album-title,
-.artist-title {
-  font-weight: var(--bold-weight);
-}
-
-/*********** SVG SECTION **********/
-
-svg.icon {
-  display: inline;
-  height: 1.4em;
-  width: 1.4em;
-  vertical-align: top;
-  fill: currentColor;
-  margin: 4px 0px 0px 13px;
-}
-
-/********** HOME PAGE **********/
-
-.page-hero-information {
-  padding: var(--component-inside-padding);
-  margin-top: 10px;
-}
-
-.page-hero-information h1 {
-  margin-top: 13px;
-}
-
-/********** PLAYLIST PAGE **********/
-
-.playlist-songs,
-.playlist-description {
-  border: 0.9px solid var(--white-color);
-  width: 38%;
-  border-radius: var(--box-border-radius);
-  padding: 15px;
-}
-
-.playlist-songs {
-  margin-right: 50px;
-}
-.playlist-songs ol {
-  list-style: decimal;
-  padding-left: 22px;
-  margin-bottom: 25px;
-}
-
-.playlist-songs h3,
-.playlist-description h3 {
-  font-weight: var(--bold-weight);
-  margin-bottom: 7px;
-}
-
-.playlist-container {
-  display: flex;
-  flex-direction: row;
-  margin-left: 100px;
-  margin: 0px 0px 100px 100px;
-}
-
-.playlist-container svg {
-  position: relative;
-  bottom: 6px;
-  margin-left: 10px;
-}
-
-.playlist-vibe {
-  margin-bottom: 17px;
-}
-
-/********** RANDOM **********/
-
-.dev-note {
-  padding-left: 25px;
-  border: 2px solid var(--white-color);
-  width: 50%;
-  margin: 25px 0px;
-  margin-left: 100px;
-}
-
-/********** SONG PAGE **********/
-
-.individual-song-container {
-  padding-left: 100px;
-  display: flex;
-  flex-direction: row;
-  margin-bottom: var(--component-bottom-margin);
-}
-
-.individual-song-container img {
-  width: 425px;
-  height: auto;
-  border: 3px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-}
-
-.song-information {
-  border: 0.9px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  padding: 25px 0px 0px 25px;
-  width: 30%;
-  margin-left: 50px;
-}
-
-.song-information h3 {
-  font-weight: var(--bold-weight);
-}
-
-.song-information li {
-  margin-bottom: 15px;
-}
-
-/********** ARTIST PAGE **********/
-
-.artist-description {
-  padding-left: 100px;
-}
-
-.popular-albums {
-  border: 0.9px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  padding: 25px;
-  width: 50%;
-  margin-left: 100px;
-  margin-top: 40px;
-}
-
-.popular-albums h3,
-.popular-albums h4,
-.related-bands h3,
-.popular-albums li a {
-  font-weight: var(--bold-weight);
-}
-
-.artist-album {
-  margin-top: 10px;
-}
-
-.artists-album-list {
-  display: flex;
-  flex-direction: row;
-  gap: 25px;
-  padding-top: 25px;
-}
-
-.artists-album-list li {
-  width: 100%;
-}
-
-.related-bands {
-  border: 0.9px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  padding: 25px;
-  width: 50%;
-  margin: 35px 0px 100px 100px;
-}
-
-/********** ALBUM PAGE **********/
-
-.individual-album img {
-  width: 425px;
-  height: auto;
-  border: 3px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  margin-left: 100px;
-}
-
-.you-may-also-like {
-  border: 0.9px solid var(--white-color);
-  padding-left: 50px;
-  padding: 25px 100px 15px 25px;
-  margin-left: 50px;
-  width: 35%;
-  border-radius: var(--box-border-radius);
-}
-
-.you-may-also-like h3 {
-  font-weight: var(--bold-weight);
-  margin-bottom: 15px;
-}
-
-.album-page-information {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: var(--component-bottom-margin);
-}
-
-.artist-name {
-  font-weight: var(--bold-weight);
-  margin-bottom: 15px;
-}
-
-.song-name {
-  margin-bottom: 1px;
-}
-
-/********** GAME PAGE **********/
-
-.involved-users {
-  width: 60%;
-  margin: 50px 0px 50px 100px;
-}
-
-.involved-users h3 {
-  font-weight: var(--bold-weight);
-}
-
-.game-stats h3 {
-  font-weight: var(--bold-weight);
-  margin-bottom: 15px;
-}
-.involved-users ul {
-  display: flex;
-  flex-direction: row;
-  gap: 25px;
-  margin-top: 15px;
-}
-
-.game-stats {
-  width: 60%;
-  margin-bottom: var(--component-bottom-margin);
-  margin-left: 100px;
-}
-
-.game-stats ul {
-  border: 0.9px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  padding: 25px;
-}
-
-.game-stats h4 {
-  font-weight: var(--bold-weight);
-  margin-bottom: 5px;
-}
-
-.game-stats li {
-  margin-bottom: 40px;
-}
-
-.game-stats img {
-  width: 90px;
-  height: 90px;
-  border: 3px solid var(--white-color);
-  border-radius: var(--box-border-radius);
-  margin-left: 30px;
-}
-
-.popular-song {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }

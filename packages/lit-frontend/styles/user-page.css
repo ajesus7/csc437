@@ -1,0 +1,123 @@
+/******** FRIENDS, PLAYLISTS, GAMES SECTION ********/
+
+.friends-list-friends,
+.playlist-list,
+.past-games-list {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  gap: 25px;
+  margin-top: 15px;
+}
+
+.favorites-all-lists {
+  /* does it make more sense to remove the above margin-top and add the above 3 classes to this rule? */
+  margin-top: 15px;
+}
+
+.user-friend,
+.single-playlist,
+.game {
+  border: 0.9px solid var(--white-color);
+  width: 120px;
+  height: 120px;
+  border-radius: var(--box-border-radius);
+}
+
+.user-friend p,
+.single-playlist p,
+.game p,
+.user-friend a,
+.single-playlist a,
+.game a {
+  display: flex;
+  margin-top: 60px;
+  font-weight: var(--bold-weight);
+  padding-left: 15px;
+  /* using margin here is definitely not the most elegant solution
+but I couldnt get flex working for aligning the text within the cards */
+}
+
+.friends-list,
+.find-friends,
+.playlist-display {
+  /* this is the top section, and it needs more spacing from the header */
+  margin-top: 15px;
+}
+
+.subsection-header-line {
+  display: flex;
+}
+
+.profile-section-description {
+  font-size: 0.75em;
+  margin-top: 7px;
+}
+
+.user-profile-user-content {
+  display: flex;
+  flex-direction: row;
+  margin-top: 25px;
+}
+
+.user-profile-header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 50px;
+}
+
+.user-profile-header {
+  padding: 25px 15px 15px 100px;
+}
+
+.user-description,
+.description {
+  font-weight: var(--light-weight);
+  font-size: 1.5rem;
+}
+
+/******** END FRIENDS, PLAYLISTS, GAMES SECTION ********/
+
+/******** FAVORITES SECTION ********/
+
+.current-favorites-h3 {
+  margin-bottom: 15px;
+  padding: 10px 0px 0px 10px;
+}
+
+.current-favorites {
+  padding-bottom: 50px;
+}
+
+.favorite-album,
+.favorite-song,
+.favorite-artist {
+  padding: 10px 0px 5px 10px;
+}
+
+.favorite-artist p,
+.favorite-album p,
+.favorite-song p {
+  margin-top: 3px;
+}
+
+.favorite-artists-list,
+.favorite-songs-list,
+.favorite-albums-list {
+  border: 0.9px solid var(--white-color);
+  border-radius: var(--box-border-radius);
+  width: 265px;
+}
+
+.favorites-all-lists {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.song-title,
+.album-title,
+.artist-title {
+  font-weight: var(--bold-weight);
+}
