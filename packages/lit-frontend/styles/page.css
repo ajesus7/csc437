@@ -144,10 +144,12 @@ but I couldnt get flex working for aligning the text within the cards */
   --background-color: #36454f;
   --white-color: #faf9f6;
   --darker-color: #20282e;
+  --hover-color: #0d1013;
 }
 
 .light-mode {
   --background-color: #faf9f6;
   --white-color: #36454f;
   --darker-color: #e1e1df;
+  --hover-color: #cdcdca;
 }

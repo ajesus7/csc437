@@ -36,15 +36,11 @@ export class DropDownElement extends LitElement {
           <li class="link">
             <a href="./user1.html" class="link">your profile</a>
           </li>
-          <li>
-            <p>settings (not functional)</p>
-          </li>
+          <li>settings (not functional)</li>
           <li>
             <toggle-switch></toggle-switch>
           </li>
-          <li>
-            <p>sign out (not functional)</p>
-          </li>
+          <li>sign out (not functional)</li>
         </ul>
       </slot>
     `;
@@ -53,7 +49,7 @@ export class DropDownElement extends LitElement {
   static styles = css`
     :host {
       font-family: var(--font);
-      font-weight: var(--bold-weight);
+      font-weight: var(--medium-weight);
       --position-left: 0;
       --position-right: auto;
 
@@ -99,8 +95,12 @@ export class DropDownElement extends LitElement {
     }
 
     li {
-      padding: 0em 0.5em 0.5em 0.5em;
+      padding: 1em 0.5em 1em 0.5em;
       border-bottom: 0.1em solid var(--white-color);
+    }
+
+    li:hover {
+      background: var(--hover-color);
     }
 
     .link {
