@@ -4,6 +4,7 @@
   --background-color: #36454f;
   --white-color: #faf9f6;
   --accent-color: #feba4f;
+  --darker-color: #20282e;
 
   /* Font Weights */
   --light-weight: 300;
@@ -16,4 +17,6 @@
   --component-bottom-margin: 100px;
 
   --box-border-radius: 5px;
+
+  --font: "Inter", Helvetica, sans-serif;
 }

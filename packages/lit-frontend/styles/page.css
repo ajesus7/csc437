@@ -8,7 +8,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Inter", Helvetica, sans-serif;
+  font-family: var(--font);
   background: var(--background-color);
   color: var(--white-color);
   font-weight: var(--light-weight);
@@ -60,8 +60,11 @@ h4 {
 }
 
 .match-the-vibe-header {
+  display: flex;
+  justify-content: space-between;
   background: var(--white-color);
   padding: 15px 15px 15px 0px;
+  height: 4.3em;
 }
 
 .page-hero-information {
@@ -135,4 +138,16 @@ but I couldnt get flex working for aligning the text within the cards */
   width: 100%;
   padding: var(--component-inside-padding);
   margin-bottom: 10px;
+}
+
+.dark-mode {
+  --background-color: #36454f;
+  --white-color: #faf9f6;
+  --darker-color: #20282e;
+}
+
+.light-mode {
+  --background-color: #faf9f6;
+  --white-color: #36454f;
+  --darker-color: #e1e1df;
 }
