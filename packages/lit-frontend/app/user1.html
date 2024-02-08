@@ -27,6 +27,19 @@
         <drop-down></drop-down>
       </section>
 
+      <section class="banner">
+        <h3>dev note!</h3>
+        <p>
+          <span class="bold">other than the thea profile</span> user links are
+          not functional yet, they will eventually use a 'user' object's id to
+          populate the correct data on a page. I also am working on the
+          favorites list component, and I may redefine the general-list
+          component to be composed of card components. the
+          <span class="bold">game1, chill vibes, and the favorites links</span>
+          also work, other links not functional (yet).
+        </p>
+      </section>
+
       <!--User Info Header with Profile Picture, Name, Bio, and Nav link back to home.-->
       <section class="user-profile-header">
         <section class="user-profile-user-content">
@@ -49,17 +62,17 @@
       profile page). This method of passing the data will be updated once we start interacting with the database.-->
       <general-list
         listAttributes='["friend&apos;s list", "friends"]'
-        names='[["Josh", "indie", "1234529"], ["Joey", "indie", "2599568"], ["Adam", "rock", "295853939"], ["Bob", "rap", "29588582"], ["Ethan", "white noise", "9995933"]]'
+        names='[["thea", "indie", "user2.html"], ["Joey", "indie", "2599568"], ["Adam", "rock", "295853939"], ["Bob", "rap", "29588582"], ["Ethan", "white noise", "9995933"]]'
       ></general-list>
 
       <general-list
         listAttributes='["playlists list", "playlists"]'
-        names='[["running for the...", "", "252"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
+        names='[["chill vibes", "", "playlist1.html"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
       ></general-list>
 
       <general-list
         listAttributes='["games list", "playlists"]'
-        names='[["game1.", "12/2/23", "252"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
+        names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
       ></general-list>
 
       <!--Favorites section has 3 sub section 'lists' that will become components. -->

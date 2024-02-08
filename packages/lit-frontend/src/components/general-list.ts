@@ -16,9 +16,6 @@ export class GeneralListElements extends LitElement {
   }
 
   render() {
-    console.log("listAttributes", this.listAttributes);
-    console.log("names", this.names);
-
     return html`
       <section class="friends-list">
         <section class="subsection-header-line">

@@ -140,6 +140,8 @@ but I couldnt get flex working for aligning the text within the cards */
   margin-bottom: 10px;
 }
 
+/* classes used in tandem with the toggle switch component */
+
 .dark-mode {
   --background-color: #36454f;
   --white-color: #faf9f6;
@@ -152,4 +154,26 @@ but I couldnt get flex working for aligning the text within the cards */
   --white-color: #36454f;
   --darker-color: #e1e1df;
   --hover-color: #cdcdca;
+}
+
+/* banner classes used for dev notes (currently) */
+
+.banner {
+  background: var(--accent-color);
+  font-size: 0.8em;
+  text-align: center;
+  padding: 1em;
+  color: var(--background-color);
+}
+
+.banner h3 {
+  font-weight: var(--heavy-weight);
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.5em;
+}
+
+.bold {
+  font-weight: var(--heavy-weight);
 }
