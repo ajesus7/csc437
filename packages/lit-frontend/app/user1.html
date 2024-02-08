@@ -16,7 +16,7 @@
     />
     <script type="module" src="../src/components/drop-down.ts"></script>
     <script type="module" src="../src/components/color-mode-switch.ts"></script>
-
+    <script type="module" src="../src/components/general-list.ts"></script>
     <title>aidan's page</title>
   </head>
   <body class="dark-mode">
@@ -44,79 +44,23 @@
         </section>
       </section>
 
-      <section class="friends-list">
-        <section class="subsection-header-line">
-          <h2>friend's list</h2>
-          <svg class="icon">
-            <use href="/icons/user-icons.svg#icon-friends-list" />
-          </svg>
-        </section>
-        <a href="./friends.html" class="profile-section-description"
-          >... see all friends</a
-        >
-        <section class="friends-list-friends">
-          <div class="user-friend">
-            <a href="./user2.html">thea</a>
-          </div>
-          <div class="user-friend">
-            <p>robby</p>
-          </div>
-          <div class="user-friend">
-            <p>lauryn</p>
-          </div>
-          <div class="user-friend">
-            <p>ethan</p>
-          </div>
-          <div class="user-friend">
-            <p>jonathan</p>
-          </div>
-        </section>
-      </section>
+      <!-- This list is the friends list; for now, I am defining the data within the last as the below list of "people objects"
+      Where each people object has a name, a music genre of interest, and in id (which may be used to link to their individual
+      profile page). This method of passing the data will be updated once we start interacting with the database.-->
+      <general-list
+        listAttributes='["friend&apos;s list", "friends"]'
+        names='[["Josh", "indie", "1234529"], ["Joey", "indie", "2599568"], ["Adam", "rock", "295853939"], ["Bob", "rap", "29588582"], ["Ethan", "white noise", "9995933"]]'
+      ></general-list>
 
-      <section class="playlist">
-        <section class="subsection-header-line">
-          <h2>playlists</h2>
-          <svg class="icon">
-            <use href="/icons/user-icons.svg#icon-playlist" />
-          </svg>
-        </section>
-        <p class="profile-section-description">see all playlists...</p>
-        <section class="playlist-list">
-          <div class="single-playlist">
-            <a href="./playlist1.html">chill vibes</a>
-          </div>
-          <div class="single-playlist">
-            <p>morongo mondays</p>
-          </div>
-          <div class="single-playlist">
-            <p>non chill vibes</p>
-          </div>
-          <div class="single-playlist">
-            <p>beach</p>
-          </div>
-        </section>
-      </section>
+      <general-list
+        listAttributes='["playlists list", "playlists"]'
+        names='[["running for the...", "", "252"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
+      ></general-list>
 
-      <section class="past-games">
-        <section class="subsection-header-line">
-          <h2>past games</h2>
-          <svg class="icon">
-            <use href="/icons/user-icons.svg#icon-general-list" />
-          </svg>
-        </section>
-        <p class="profile-section-description">see all past games...</p>
-        <section class="past-games-list">
-          <div class="game">
-            <a href="./game1.html">game1</a>
-          </div>
-          <div class="game">
-            <p>game2</p>
-          </div>
-          <div class="game">
-            <p>game3</p>
-          </div>
-        </section>
-      </section>
+      <general-list
+        listAttributes='["games list", "playlists"]'
+        names='[["game1.", "12/2/23", "252"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
+      ></general-list>
 
       <!--Favorites section has 3 sub section 'lists' that will become components. -->
       <section class="current-favorites">

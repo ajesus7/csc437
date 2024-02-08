@@ -31,11 +31,23 @@
 .single-playlist a,
 .game a {
   display: flex;
-  margin-top: 60px;
+  margin: 0;
+  padding: 0em;
   font-weight: var(--bold-weight);
   padding-left: 15px;
   /* using margin here is definitely not the most elegant solution
 but I couldnt get flex working for aligning the text within the cards */
+}
+
+.user-friend p:first-child,
+.user-friend a:first-child {
+  padding-top: 2.7em;
+}
+
+p.music-taste {
+  padding-top: 0.1em;
+  font-weight: var(--light-weight);
+  font-size: var(--small-size);
 }
 
 .friends-list,
