@@ -3,16 +3,14 @@
 https://miro.com/app/board/uXjVN7Ov_ZU=/
 
 ## assignment 3 | typescript and lit components
-as of right now I have completed the first three tasks of this assignment. 
-* Part1: I didn't add a user-panel component for part 1; i don't know if that is required or a suggestion, but I can add it if needed.
-* Part2: I added a dark/light mode toggle switch - I need to adjust the styling of the dropdown and this switch a little bit.
-* Part3: I created a 'general-list' component and I pass in data for the text within each card and for the name of the component (from the HTML). So, I was able to repurpose this component to work for the friends list, games list, and playlist list. Below is a sketch of this component design. I also included a sketch with a possible future plan for implementing more components. I may create a card/cards components so that I can repurpose the general-list component, and compose it with different card types depending on the need; for example, I will need a different card type for the 'favorites list', and I don't want to create a specific list component just for this section of the website.
+all four parts complete now; I allow the user to sort the first three lists (I haven't created a component for the favorites list yet) by their names in alphabetical order.
+* so, if you are sorting the friends list, a name with the letter A will come first. The user can then revert the list to its original order by clicking the toggle switch again.
+* I did not provide the user the option to sort in reverse alphabetical, because I felt that I usually don't use that feature, but may implement in the future.
 
-  ![currentDesign](https://github.com/ajesus7/csc437/assets/75648657/6c294110-ebe0-46d7-94a9-12097de5d81c)
+On another note, I created the toggle switch component to be used within the sortable list component; the toggle switch component is tightly coupled with the sortable list component, but I
+think it would be cool to adjust the toggle switch component in the future so that I can pass in information to it, and it can be reused for other components. This would mean passing in the text that goes in the label, as well as passing in the property that the toggle switch is tracking/updating.
 
-  ![futureDesign](https://github.com/ajesus7/csc437/assets/75648657/ff267d12-222b-434f-9f35-5e676718b8cf)
-
-I will complete the fourth part of this assignment ASAP!
+The links to each friend's profile/game/playlist should be functional when connected to the database, but for now they are just placeholders.
 
 ## assignment 2 | css/styling update
 
