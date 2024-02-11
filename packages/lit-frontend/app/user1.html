@@ -40,7 +40,9 @@
           are able to sort each list in alphabetical order by name. I may
           redefine the sortable list component so that I can change the method
           by which it sorts (name, date, description, etc.), so that it is
-          reusable.
+          reusable. games list is not sortable due to its nature (once I add
+          functionality to sort by date, I will change it back to a sortable
+          list component).
         </p>
       </section>
 
@@ -74,10 +76,10 @@
         names='[["chill vibes", "", "playlist1.html"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
       ></sortable-list>
 
-      <sortable-list
+      <general-list
         listAttributes='["games list", "playlists"]'
         names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
-      ></sortable-list>
+      ></general-list>
 
       <!--Favorites section has 3 sub section 'lists' that will become components. -->
       <section class="current-favorites">

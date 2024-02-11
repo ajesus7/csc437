@@ -78,11 +78,13 @@ export class SortableListElement extends LitElement {
         <section class="friends-list-friends">
           ${this.names.map(
             (i) =>
-              html`<default-card
-                title=${i[0]}
-                description=${i[1]}
-                user_id=${i[2]}
-              ></default-card>`
+              html`<slot
+                ><default-card
+                  title=${i[0]}
+                  description=${i[1]}
+                  user_id=${i[2]}
+                ></default-card>
+              </slot>`
           )}
         </section>
       </section>
