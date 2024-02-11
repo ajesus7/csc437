@@ -38,7 +38,7 @@ export class DropDownElement extends LitElement {
           </li>
           <li>settings (not functional)</li>
           <li>
-            <toggle-switch></toggle-switch>
+            <color-mode-switch></color-mode-switch>
           </li>
           <li>sign out (not functional)</li>
         </ul>

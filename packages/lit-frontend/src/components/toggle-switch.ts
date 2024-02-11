@@ -1,18 +1,31 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-@customElement("color-mode-switch")
-export class ColorModeSwitchElement extends LitElement {
+@customElement("toggle-switch")
+export class ToggleSwitchElement extends LitElement {
   @property({ reflect: true, type: Boolean })
   on: boolean = false;
 
+  @property()
+  filteredState: string = "";
+
   render() {
     return html`<label>
-      <slot>light mode</slot>
+      <slot class="label-title">sort alphabetically by name</slot>
       <span class="slider">
-        <input type="checkbox" @change=${this._handleChange} />
+        <input type="checkbox" @change=${this._onInput} />
       </span>
     </label>`;
+  }
+
+  private _onInput() {
+    if (this.filteredState == "unsorted") {
+      this.filteredState = "sorted";
+    } else {
+      this.filteredState = "unsorted";
+    }
+
+    this.dispatchEvent(new Event("state-changed"));
   }
 
   static styles = css`
@@ -20,14 +33,20 @@ export class ColorModeSwitchElement extends LitElement {
       display: block;
       padding: 0.5em 0.5em 0.5em 0em;
     }
+
     label {
       display: flex;
-      width: 80%;
+      width: 85%;
       justify-content: space-between;
       align-items: center;
       gap: 0.5rem;
       line-height: 2em;
       cursor: pointer;
+      margin-left: 3em;
+    }
+
+    .label-title {
+      font-size: 0.8em;
     }
 
     .slider {
@@ -62,30 +81,4 @@ export class ColorModeSwitchElement extends LitElement {
       left: 1.1em;
     }
   `;
-
-  //change light mode borders and light mode header
-  _handleChange(ev: Event) {
-    const target = ev.target as HTMLInputElement;
-    const composedEvent = new Event(ev.type, {
-      bubbles: true,
-      composed: true,
-    });
-
-    if (document.body.classList.contains("dark-mode")) {
-      document.body.classList.remove("dark-mode");
-      document.body.classList.add("light-mode");
-
-      //   document.querySelector(drop - down).classList.remove("dark-mode");
-      //   document.querySelector(drop - down).classList.add("light-mode");
-    } else {
-      document.body.classList.remove("light-mode");
-      document.body.classList.add("dark-mode");
-
-      //   document.querySelector(drop - down).classList.remove("light-mode");
-      //   document.querySelector(drop - down).classList.add("dark-mode");
-    }
-
-    this.on = target?.checked;
-    this.dispatchEvent(composedEvent);
-  }
 }

@@ -16,8 +16,10 @@
     />
     <script type="module" src="../src/components/drop-down.ts"></script>
     <script type="module" src="../src/components/color-mode-switch.ts"></script>
+    <script type="module" src="../src/components/toggle-switch.ts"></script>
     <script type="module" src="../src/components/general-list.ts"></script>
     <script type="module" src="../src/components/default-card.ts"></script>
+    <script type="module" src="../src/components/sortable-list.ts"></script>
 
     <title>aidan's page</title>
   </head>
@@ -32,13 +34,13 @@
       <section class="banner">
         <h3>dev note!</h3>
         <p>
-          <span class="bold">other than the thea profile</span> user links are
-          not functional yet, they will eventually use a 'user' object's id to
-          populate the correct data on a page. I also am working on the
-          favorites list component, and I may redefine the general-list
-          component to be composed of card components. the
-          <span class="bold">game1, chill vibes, and the favorites links</span>
-          also work, other links not functional (yet).
+          all user and game links will be functional once database is connected.
+          I'm still working on the favorites list component. But for the sake of
+          the Assignment 3, I created components for the first three lists; You
+          are able to sort each list in alphabetical order by name. I may
+          redefine the sortable list component so that I can change the method
+          by which it sorts (name, date, description, etc.), so that it is
+          reusable.
         </p>
       </section>
 
@@ -62,20 +64,20 @@
       <!-- This list is the friends list; for now, I am defining the data within the last as the below list of "people objects"
       Where each people object has a name, a music genre of interest, and in id (which may be used to link to their individual
       profile page). This method of passing the data will be updated once we start interacting with the database.-->
-      <general-list
+      <sortable-list
         listAttributes='["friend&apos;s list", "friends"]'
         names='[["thea", "indie", "user2.html"], ["Joey", "indie", "2599568"], ["Adam", "rock", "295853939"], ["Bob", "rap", "29588582"], ["Ethan", "white noise", "9995933"]]'
-      ></general-list>
+      ></sortable-list>
 
-      <general-list
+      <sortable-list
         listAttributes='["playlists list", "playlists"]'
         names='[["chill vibes", "", "playlist1.html"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
-      ></general-list>
+      ></sortable-list>
 
-      <general-list
+      <sortable-list
         listAttributes='["games list", "playlists"]'
         names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
-      ></general-list>
+      ></sortable-list>
 
       <!--Favorites section has 3 sub section 'lists' that will become components. -->
       <section class="current-favorites">
