@@ -30,10 +30,11 @@ export class GeneralListElements extends LitElement {
         <section class="friends-list-friends">
           ${this.names.map(
             (i) =>
-              html`<div class="user-friend">
-                <a href="./${i[2]}">${i[0]}</a>
-                <p class="music-taste">${i[1]}</p>
-              </div>`
+              html`<default-card
+                title=${i[0]}
+                description=${i[1]}
+                user_id=${i[2]}
+              ></default-card>`
           )}
         </section>
       </section>
