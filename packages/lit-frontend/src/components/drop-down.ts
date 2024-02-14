@@ -9,6 +9,12 @@ export class DropDownElement extends LitElement {
   @property()
   align: "left" | "right" = "left";
 
+  @property()
+  profileImage?: "";
+
+  @property()
+  profileDescription?: "";
+
   render() {
     const menuStyle =
       this.align === "left"
@@ -25,8 +31,8 @@ export class DropDownElement extends LitElement {
       <label for="is-shown">
         <slot>
           <img
-            src="/images/aidan_pfp.png"
-            alt="Aidan in a hat."
+            src="/images/${this.profileImage}.png"
+            alt="${this.profileDescription}"
             class="dropdown-pfp"
           />
         </slot>
