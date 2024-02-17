@@ -35,7 +35,7 @@ app.post("/api/profiles", (req: Request, res: Response) => {
     .catch((err) => res.status(500).send(err));
 });
 
-app.put("/api/profiles/:userid", (req: Request, res: Response) => {
+app.put("/api/profile/:userid", (req: Request, res: Response) => {
   const { userid } = req.params;
   const newProfile = req.body;
 

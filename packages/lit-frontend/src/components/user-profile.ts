@@ -143,26 +143,43 @@ export class UserProfileEditElement extends UserProfileElement {
       <form @submit=${this._handleSubmit}>
         <div class="form-group">
           <label for="name">First Name</label>
-          <input type="text" id="name" placeholder="e.g John" />
+          <input type="text" id="name" name="name" placeholder="e.g John" />
         </div>
         <div class="form-group">
           <label for="timezone">Timezone</label>
-          <input type="text" id="timezone" placeholder="e.g PST" />
+          <input
+            type="text"
+            id="timezone"
+            name="timezone"
+            placeholder="e.g PST"
+          />
         </div>
         <div class="form-group">
           <label for="music-taste">Music Taste</label>
-          <input type="text" id="music-taste" placeholder="e.g Indie Rock" />
+          <input
+            type="text"
+            id="music-taste"
+            name="musicTaste"
+            placeholder="e.g Indie Rock"
+          />
         </div>
         <div class="form-group">
           <label for="profile-image">Profile Image</label>
-          <input type="text" id="profile-image" placeholder="(slug)" />
+          <input
+            type="text"
+            id="profile-image"
+            name="profileImage"
+            placeholder="(slug)"
+          />
         </div>
         <div class="form-group">
           <label for="bio">Bio</label>
-          <textarea id="bio" placeholder="A short bio..."></textarea>
+          <textarea id="bio" name="bio" placeholder="A short bio..."></textarea>
         </div>
         <div class="form-group">
-          <label for="image-description">Profile Image Description</label>
+          <label for="image-description" name="profileDescription"
+            >Profile Image Description</label
+          >
           <input
             type="text"
             id="image-description"
@@ -187,9 +204,9 @@ export class UserProfileEditElement extends UserProfileElement {
 
   _handleSubmit(ev: Event) {
     ev.preventDefault(); // prevent browser from submitting form data itself
-
     const target = ev.target as HTMLFormElement;
     const formdata = new FormData(target);
+
     const entries = Array.from(formdata.entries())
       .map(([k, v]) => (v === "" ? [k] : [k, v]))
       .map(([k, v]) =>
@@ -198,7 +215,6 @@ export class UserProfileEditElement extends UserProfileElement {
           : [k, v]
       );
     const json = Object.fromEntries(entries);
-
     this._putData(json);
   }
 

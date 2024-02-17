@@ -42,7 +42,7 @@ app.post("/api/profiles", (req, res) => {
   const newProfile = req.body;
   import_profiles.default.create(newProfile).then((profile) => res.status(201).send(profile)).catch((err) => res.status(500).send(err));
 });
-app.put("/api/profiles/:userid", (req, res) => {
+app.put("/api/profile/:userid", (req, res) => {
   const { userid } = req.params;
   const newProfile = req.body;
   import_profiles.default.update(userid, newProfile).then((profile) => res.json(profile)).catch((err) => res.status(404).end());
