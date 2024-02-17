@@ -44,7 +44,8 @@ export class UserProfileElement extends LitElement {
   }
 
   render() {
-    return html` <section class="match-the-vibe-header">
+    return html`
+      <section class="match-the-vibe-header">
         <a href="./index.html">match the vibe home</a>
         <drop-down
           profileImage="${this.profile.profileImage}"
@@ -81,9 +82,7 @@ export class UserProfileElement extends LitElement {
         listAttributes='["games list", "playlists"]'
         names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
       ></general-list>
-      ${Object.entries(this.profile || {}).map(
-        ([key, value]) => html` <p><b>${key}:</b> ${value}</p> `
-      )}`;
+    `;
   }
 
   static styles = css`
@@ -130,6 +129,181 @@ export class UserProfileElement extends LitElement {
       background: var(--white-color);
       padding: 15px 15px 15px 0px;
       height: 4.3em;
+    }
+  `;
+}
+
+// in src/user-profile.ts, after the previous component
+@customElement("user-profile-edit")
+export class UserProfileEditElement extends UserProfileElement {
+  render() {
+    return html` <section class="form-container">
+      <h2>edit profile form</h2>
+
+      <form @submit=${this._handleSubmit}>
+        <div class="form-group">
+          <label for="name">First Name</label>
+          <input type="text" id="name" placeholder="e.g John" />
+        </div>
+        <div class="form-group">
+          <label for="timezone">Timezone</label>
+          <input type="text" id="timezone" placeholder="e.g PST" />
+        </div>
+        <div class="form-group">
+          <label for="music-taste">Music Taste</label>
+          <input type="text" id="music-taste" placeholder="e.g Indie Rock" />
+        </div>
+        <div class="form-group">
+          <label for="profile-image">Profile Image</label>
+          <input type="text" id="profile-image" placeholder="(slug)" />
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" placeholder="A short bio..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="image-description">Profile Image Description</label>
+          <input
+            type="text"
+            id="image-description"
+            placeholder="Describe your profile image"
+          />
+        </div>
+        <div class="form-group">
+          <label>Spotify</label>
+          <div class="radio-group">
+            <input type="radio" id="spotify-yes" name="spotify" value="yes" />
+            <label for="spotify-yes">Yes</label>
+            <input type="radio" id="spotify-no" name="spotify" value="no" />
+            <label for="spotify-no">No</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn">Submit</button>
+        </div>
+      </form>
+    </section>`;
+  }
+
+  _handleSubmit(ev: Event) {
+    ev.preventDefault(); // prevent browser from submitting form data itself
+
+    const target = ev.target as HTMLFormElement;
+    const formdata = new FormData(target);
+    const entries = Array.from(formdata.entries())
+      .map(([k, v]) => (v === "" ? [k] : [k, v]))
+      .map(([k, v]) =>
+        k === "airports"
+          ? [k, (v as string).split(",").map((s) => s.trim())]
+          : [k, v]
+      );
+    const json = Object.fromEntries(entries);
+
+    this._putData(json);
+  }
+
+  _putData(json: Profile) {
+    fetch(serverPath(this.path), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(json),
+    })
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        else return null;
+      })
+      .then((json: unknown) => {
+        if (json) this.profile = json as Profile;
+      })
+      .catch((err) => console.log("Failed to PUT form data", err));
+  }
+
+  static styles = css`
+    ${UserProfileElement.styles}
+
+    .form-container {
+      border: 0.05em solid white;
+      border-radius: var(--box-border-radius);
+      width: 70%;
+      margin: 25px 0 100px 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container h2 {
+      font-weight: var(--medium-weight);
+    }
+
+    .form-group,
+    .form-container {
+      background-color: var(--background-color);
+      padding: .6em;
+      border-radius: 8px;
+      width: 95%;
+      max-width: 625px;
+    }
+
+    form {
+      width: 90%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items; center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--white-color);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--darker-color);
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .radio-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .radio-group label {
+      margin-left: 0.5rem;
+      margin-right: 1rem;
+    }
+
+    .radio-group input[type="radio"] {
+      margin-right: 0.25rem;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+
+      background-color: var(--accent-color);
+      color: var(--white-color);
+      border: none;
+      border-radius: 4px;
+      margin-top: .85rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-color-hover);
     }
   `;
 }
