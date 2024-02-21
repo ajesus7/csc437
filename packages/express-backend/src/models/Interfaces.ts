@@ -15,7 +15,6 @@ export interface Profile {
   //   games: Game[];
 }
 
-//have artist and album strings or artist/album objects?
 export interface Song {
   artist: string;
   title: string;
@@ -24,6 +23,7 @@ export interface Song {
   songCoverArt: string;
   songRuntime: string;
 }
+
 export interface Artist {
   albumArt: string;
   name: string;

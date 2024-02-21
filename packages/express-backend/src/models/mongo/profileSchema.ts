@@ -1,8 +1,6 @@
-import { Profile, Artist, Album, Song, Playlist, Game } from "../profile";
+import { Profile } from "../Interfaces";
 import { Schema, Model, Document, model } from "mongoose";
 
-//what to do about participant list inside of playlists and games
-//and playlist inside of game
 const profileSchema = new Schema<Profile>(
   {
     userid: { type: String, required: true, trim: true },

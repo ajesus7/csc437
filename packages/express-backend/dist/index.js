@@ -25,9 +25,9 @@ var import_express = __toESM(require("express"));
 var import_cors = __toESM(require("cors"));
 var import_mongoConnect = require("./mongoConnect");
 var import_profiles = __toESM(require("./profiles"));
+var import_songs = __toESM(require("./songs"));
 const app = (0, import_express.default)();
 const port = process.env.PORT || 3e3;
-console.log("hi");
 app.use((0, import_cors.default)());
 app.use(import_express.default.json());
 (0, import_mongoConnect.connect)("vibing");
@@ -46,6 +46,10 @@ app.put("/api/profile/:userid", (req, res) => {
   const { userid } = req.params;
   const newProfile = req.body;
   import_profiles.default.update(userid, newProfile).then((profile) => res.json(profile)).catch((err) => res.status(404).end());
+});
+app.post("/api/songs", (req, res) => {
+  const newSong = req.body;
+  import_songs.default.create(newSong).then((song) => res.status(201).send(song)).catch((err) => res.status(500).send(err));
 });
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

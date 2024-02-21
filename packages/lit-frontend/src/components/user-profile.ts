@@ -21,6 +21,7 @@ export class UserProfileElement extends LitElement {
 
   // in class UserProfileElement
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    console.log("ATTRIBUTE CHANGED");
     if (name === "path" && oldValue !== newValue && oldValue) {
       this._fetchData(newValue);
     }
@@ -82,6 +83,8 @@ export class UserProfileElement extends LitElement {
         listAttributes='["games list", "playlists"]'
         names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
       ></general-list>
+
+      <user-profile-edit path="/profile/aidan"></user-profile-edit>
     `;
   }
 
@@ -136,6 +139,12 @@ export class UserProfileElement extends LitElement {
 // in src/user-profile.ts, after the previous component
 @customElement("user-profile-edit")
 export class UserProfileEditElement extends UserProfileElement {
+  @property()
+  path: string = "";
+
+  @state()
+  profile?: Profile;
+
   render() {
     return html` <section class="form-container">
       <h2>edit profile form</h2>

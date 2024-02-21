@@ -26,34 +26,34 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var profiles_exports = {};
-__export(profiles_exports, {
-  default: () => profiles_default
+var songs_exports = {};
+__export(songs_exports, {
+  default: () => songs_default
 });
-module.exports = __toCommonJS(profiles_exports);
-var import_profileSchema = __toESM(require("./models/mongo/profileSchema"));
+module.exports = __toCommonJS(songs_exports);
+var import_songSchema = __toESM(require("./models/mongo/songSchema"));
 function index() {
-  return import_profileSchema.default.find();
+  return import_songSchema.default.find();
 }
 function get(userid) {
-  return import_profileSchema.default.find({ userid }).then((list) => list[0]).catch((err) => {
+  return import_songSchema.default.find({ userid }).then((list) => list[0]).catch((err) => {
     throw `${userid} Not Found`;
   });
 }
-function create(profile) {
-  const p = new import_profileSchema.default(profile);
-  return p.save();
+function create(song) {
+  const s = new import_songSchema.default(song);
+  return s.save();
 }
-function update(userid, profile) {
+function update(userid, song) {
   return new Promise((resolve, reject) => {
-    import_profileSchema.default.findOneAndUpdate({ userid }, profile, {
+    import_songSchema.default.findOneAndUpdate({ userid }, song, {
       new: true
-    }).then((profile2) => {
-      if (profile2)
-        resolve(profile2);
+    }).then((song2) => {
+      if (song2)
+        resolve(song2);
       else
-        reject("Failed to update profile");
+        reject("Failed to update song");
     });
   });
 }
-var profiles_default = { index, get, create, update };
+var songs_default = { index, get, create, update };
