@@ -60,3 +60,5 @@ app.post("/api/songs", (req: Request, res: Response) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+// login/auth route
