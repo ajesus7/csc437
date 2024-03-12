@@ -21,7 +21,7 @@ export class ProfilePageElement extends App.View {
 
   @property({ reflect: true })
   get userid() {
-    console.log()
+    console.log();
     return this.location?.params.userid;
   }
 
@@ -48,9 +48,7 @@ export class ProfilePageElement extends App.View {
   }
 
   render() {
-    return html`
-        <user-profile .using=${this.profile}> </user-profile>
-    `;
+    return html` <user-profile .using=${this.profile}> </user-profile> `;
   }
 
   static styles = [

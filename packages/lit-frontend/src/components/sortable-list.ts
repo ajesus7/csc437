@@ -98,6 +98,15 @@ export class SortableListElement extends LitElement {
       width: 1.4em;
     }
 
+    .subsection-header-line {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: 2em;
+      width: 36.5em;
+    }
+    
     .subsection-header-line h2 {
       margin-right: 0.35em;
       font-weight: var(--medium-weight);
@@ -111,14 +120,6 @@ export class SortableListElement extends LitElement {
       margin-bottom: 10px;
     }
 
-    .subsection-header-line {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      height: 2em;
-      width: 36.5em;
-    }
 
     .name-and-icon {
       display: flex;
