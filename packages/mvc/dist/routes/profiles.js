@@ -26,15 +26,30 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var api_exports = {};
-__export(api_exports, {
-  default: () => api_default
+var profiles_exports = {};
+__export(profiles_exports, {
+  default: () => profiles_default
 });
-module.exports = __toCommonJS(api_exports);
+module.exports = __toCommonJS(profiles_exports);
 var import_express = __toESM(require("express"));
-var import_auth = require("../auth");
-var import_profiles = __toESM(require("./profiles"));
+var import_profiles = __toESM(require("../services/profiles"));
 const router = import_express.default.Router();
-router.use(import_auth.authenticateUser);
-router.use("/profiles", import_profiles.default);
-var api_default = router;
+router.post("/", (req, res) => {
+  const newProfile = req.body;
+  import_profiles.default.create(newProfile).then((profile) => res.status(201).send(profile)).catch((err) => res.status(500).send(err));
+});
+router.get("/:userid", (req, res) => {
+  const { userid } = req.params;
+  import_profiles.default.get(userid).then((profile) => {
+    if (!profile)
+      throw "Not found";
+    else
+      res.json(profile);
+  }).catch((err) => res.status(404).end());
+});
+router.put("/:userid", (req, res) => {
+  const { userid } = req.params;
+  const newProfile = req.body;
+  import_profiles.default.update(userid, newProfile).then((profile) => res.json(profile)).catch((err) => res.status(404).end());
+});
+var profiles_default = router;
