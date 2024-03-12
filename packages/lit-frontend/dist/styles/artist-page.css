@@ -1,0 +1,44 @@
+/********** ARTIST PAGE **********/
+
+.artist-description {
+  padding-left: 100px;
+}
+
+.popular-albums {
+  border: 0.9px solid var(--white-color);
+  border-radius: var(--box-border-radius);
+  padding: 25px;
+  width: 50%;
+  margin-left: 100px;
+  margin-top: 40px;
+}
+
+.popular-albums h3,
+.popular-albums h4,
+.related-bands h3,
+.popular-albums li a {
+  font-weight: var(--bold-weight);
+}
+
+.artist-album {
+  margin-top: 10px;
+}
+
+.artists-album-list {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  padding-top: 25px;
+}
+
+.artists-album-list li {
+  width: 100%;
+}
+
+.related-bands {
+  border: 0.9px solid var(--white-color);
+  border-radius: var(--box-border-radius);
+  padding: 25px;
+  width: 50%;
+  margin: 35px 0px 100px 100px;
+}
