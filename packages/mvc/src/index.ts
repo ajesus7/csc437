@@ -30,6 +30,7 @@ app.options("*", cors());
 
 app.post("/login", loginUser);
 app.post("/signup", registerUser);
+app.use("/api", apiRouter);
 
 // // app.use("/api", apiRouter);
 

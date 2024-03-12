@@ -3,8 +3,8 @@ import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 //fix these imports?
-// import resetCSS from "src/styles/reset.css";
-// import pageCSS from "../src/styles/page.css?inline";
+// import resetCSS from "/styles/reset.css?inline";
+// import pageCSS from "/styles/page.css?inline";
 
 import "../components/user-profile";
 
@@ -21,6 +21,7 @@ export class ProfilePageElement extends App.View {
 
   @property({ reflect: true })
   get userid() {
+    console.log()
     return this.location?.params.userid;
   }
 
@@ -48,13 +49,7 @@ export class ProfilePageElement extends App.View {
 
   render() {
     return html`
-      <main class="page">
-        ${this.edit
-          ? html`
-              <user-profile-edit .using=${this.profile}> </user-profile-edit>
-            `
-          : html` <user-profile .using=${this.profile}> </user-profile> `}
-      </main>
+        <user-profile .using=${this.profile}> </user-profile>
     `;
   }
 

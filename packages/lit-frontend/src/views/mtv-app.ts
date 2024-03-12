@@ -1,6 +1,5 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { Commands, Context, Route } from "@vaadin/router";
 
 // MVU app
 import * as App from "../app";
@@ -9,6 +8,7 @@ import update from "../update";
 //components
 import "../components/user-profile";
 import "../components/vaadin-router";
+import "../components/auth-required";
 
 //views
 import "./profile-page";
@@ -17,12 +17,6 @@ import "./song-page";
 import "./TestPage"; // Adjust the import path as needed
 
 let routes = [
-  // {
-  //   path: "/",
-  //   action: (context, commands) => {
-  //     return commands.redirect("/app/");
-  //   },
-  // },
   {
     path: "/app/profile/:userid/:edit(edit)",
     component: "profile-page",
@@ -34,10 +28,6 @@ let routes = [
   {
     path: "/app/",
     component: "home-page", // Assuming 'app-component' is your main app component
-  },
-  {
-    path: "app/test",
-    component: "test-page",
   },
   {
     path: "(.*)",
@@ -52,7 +42,11 @@ export class MTVAppElement extends App.Main {
   }
 
   render() {
-    return html` <vaadin-router .routes=${routes}> </vaadin-router> `;
+    return html`
+      <auth-required>
+        <vaadin-router .routes=${routes}> </vaadin-router>
+      </auth-required>
+    `;
   }
 
   updated(changes: Map<string, unknown>) {
