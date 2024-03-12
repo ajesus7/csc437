@@ -61,14 +61,6 @@ export class UserProfileElement extends LitElement {
     const { name, profileImage, profileDescription, bio } = this.profile;
 
     return html`
-      <section class="match-the-vibe-header">
-        <a href="./index.html">match the vibe home</a>
-        <drop-down
-          profileImage="${profileImage}"
-          profileDescription="${profileDescription}"
-        ></drop-down>
-      </section>
-
       <section class="user-profile-header">
         <section class="user-profile-user-content">
           <section class="user-profile-picture">
@@ -158,20 +150,6 @@ export class UserProfileElement extends LitElement {
       color: var(--white-color);
       font-size: 4rem;
       margin: 0;
-    }
-
-    .match-the-vibe-header a {
-      font-weight: var(--bold-weight);
-      color: var(--background-color);
-      padding: var(--component-inside-padding);
-    }
-
-    .match-the-vibe-header {
-      display: flex;
-      justify-content: space-between;
-      background: var(--white-color);
-      padding: 15px 15px 15px 0px;
-      height: 4.3em;
     }
 
     .current-favorites-h3 {

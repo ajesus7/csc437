@@ -9,6 +9,7 @@ import update from "../update";
 import "../components/user-profile";
 import "../components/vaadin-router";
 import "../components/auth-required";
+import "../components/match-the-vibe-header";
 
 //views
 import "./profile-page";
@@ -44,6 +45,7 @@ export class MTVAppElement extends App.Main {
   render() {
     return html`
       <auth-required>
+        <match-the-vibe-header></match-the-vibe-header>
         <vaadin-router .routes=${routes}> </vaadin-router>
       </auth-required>
     `;
