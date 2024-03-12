@@ -22,17 +22,37 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var import_express = __toESM(require("express"));
-var import_path = __toESM(require("path"));
+var path = __toESM(require("path"));
+var import_cors = __toESM(require("cors"));
+var import_mongoConnect = require("./mongoConnect");
+var import_auth = require("./auth");
 const app = (0, import_express.default)();
-const port = 3e3;
-const distPath = import_path.default.resolve(__dirname, "..", "..", "lit-frontend", "dist");
+const port = process.env.PORT || 3e3;
+let dist;
+let frontend;
+try {
+  frontend = require.resolve("lit-frontend");
+  dist = path.resolve(frontend, "..", "..");
+  console.log("Serving lit-frontend from", dist);
+} catch (error) {
+  console.log("Cannot find static assets in lit-frontend", error.code);
+}
+(0, import_mongoConnect.connect)("vibing");
+if (dist)
+  app.use(import_express.default.static(dist));
+app.use(import_express.default.json({ limit: "500kb" }));
+app.use((0, import_cors.default)());
+app.options("*", (0, import_cors.default)());
+app.post("/login", import_auth.loginUser);
+app.post("/signup", import_auth.registerUser);
+const distPath = path.resolve(__dirname, "..", "..", "lit-frontend", "dist");
 console.log(distPath);
 app.use(import_express.default.static(distPath));
 app.get("*", (req, res) => {
   if (/\.[^\/]+$/.test(req.path)) {
     res.status(404).send("Not found");
   } else {
-    res.sendFile(import_path.default.join(distPath, "app", "index.html"), (err) => {
+    res.sendFile(path.join(distPath, "app", "index.html"), (err) => {
       if (err) {
         console.error("Error serving index.html:", err);
         res.status(500).send("Server error");
