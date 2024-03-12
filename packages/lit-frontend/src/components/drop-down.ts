@@ -16,11 +16,6 @@ export class DropDownElement extends LitElement {
   profileDescription?: "";
 
   render() {
-    const menuStyle =
-      this.align === "left"
-        ? ""
-        : "--position-left: auto; --position-right: 0;";
-
     return html`
       <input
         type="checkbox"

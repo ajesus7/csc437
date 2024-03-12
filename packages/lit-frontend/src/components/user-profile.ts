@@ -49,8 +49,8 @@ export class UserProfileElement extends LitElement {
       <section class="match-the-vibe-header">
         <a href="./index.html">match the vibe home</a>
         <drop-down
-          profileImage="${this.profile.profileImage}"
-          profileDescription="${this.profile.profileDescription}"
+          profileImage="${this.profile?.profileImage}"
+          profileDescription="${this.profile?.profileDescription}"
         ></drop-down>
       </section>
 
@@ -58,13 +58,13 @@ export class UserProfileElement extends LitElement {
         <section class="user-profile-user-content">
           <section class="user-profile-picture">
             <img
-              src="/images/${this.profile.profileImage}.png"
-              alt="${this.profile.profileDescription}"
+              src="/images/${this.profile?.profileImage}.png"
+              alt="${this.profile?.profileDescription}"
               width="150"
             />
           </section>
           <section class="user-profile-header-text">
-            <h1>${this.profile.name}&apos;s Page</h1>
+            <h1>${this.profile?.name}&apos;s Page</h1>
             <p class="user-description">${this.profile?.bio}</p>
           </section>
         </section>

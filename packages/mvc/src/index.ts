@@ -1,64 +1,86 @@
-// src/index.ts
-import express, { Request, Response } from "express";
-import cors from "cors";
-import { connect } from "./mongoConnect";
-import profiles from "./profiles";
-import songs from "./songs";
-import { Profile } from "./models/Interfaces";
-import { Song } from "./models/Interfaces";
+// import express, { Request, Response } from "express";
+// import * as path from "path";
+// import fs from "node:fs/promises";
+// import cors from "cors";
+// import { connect } from "./mongoConnect";
+// // import { loginUser, registerUser } from "./auth";
+// import apiRouter from "./routes/api";
+
+// const app = express();
+// const port = process.env.PORT || 3000;
+
+// let dist: string | undefined;
+// let frontend: string | undefined;
+
+// try {
+//   frontend = require.resolve("lit-frontend");
+//   dist = path.resolve(frontend, "..", "..");
+//   console.log("Serving lit-frontend from", dist);
+// } catch (error: any) {
+//   console.log("Cannot find static assets in lit-frontend", error.code);
+// }
+
+// connect("vibing");
+
+// if (dist) app.use(express.static(dist));
+// app.use(express.json({ limit: "500kb" }));
+// app.use(cors());
+
+// app.options("*", cors());
+
+// // TODO ONCE AUTHENTICATION IS CREATED DO THIS
+// // app.post("/login", loginUser);
+// // app.post("/signup", registerUser);
+
+// // app.use("/api", apiRouter);
+
+// // SPA routes ignore parameters when locating index.html
+// app.use("/:spa(app)", (req, res) => {
+//   const { spa } = req.params;
+
+//   if (!dist) {
+//     res.status(404).send("Not found; frontend module not loaded");
+//   } else {
+//     const indexHtml = path.resolve(dist, spa, "index.html");
+//     fs.readFile(indexHtml, { encoding: "utf8" }).then((html) => res.send(html));
+//     console.log("Sent SPA from", indexHtml);
+//   }
+// });
+
+// app.listen(port, () => {
+//   console.log(`Server running at http://localhost:${port}`);
+// });
+
+import express from "express";
+import path from "path";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-app.use(cors());
-app.use(express.json());
-connect("vibing"); // use your own db name here
+// Base directory for the built frontend files
+const distPath = path.resolve(__dirname, "..", "..", "lit-frontend", "dist");
 
-app.get("/hello", (req: Request, res: Response) => {
-  res.send("Hello, World");
-});
+console.log(distPath);
+// Serve static files from 'dist'
+app.use(express.static(distPath));
 
-//profiles
-app.get("/api/profile/:userid", (req: Request, res: Response) => {
-  const { userid } = req.params;
-
-  profiles
-    .get(userid)
-    .then((profile: Profile) => res.json(profile))
-    .catch((err) => res.status(404).end());
-});
-
-app.post("/api/profiles", (req: Request, res: Response) => {
-  const newProfile = req.body;
-
-  profiles
-    .create(newProfile)
-    .then((profile: Profile) => res.status(201).send(profile))
-    .catch((err) => res.status(500).send(err));
-});
-
-app.put("/api/profile/:userid", (req: Request, res: Response) => {
-  const { userid } = req.params;
-  const newProfile = req.body;
-
-  profiles
-    .update(userid, newProfile)
-    .then((profile: Profile) => res.json(profile))
-    .catch((err) => res.status(404).end());
-});
-
-//songs
-app.post("/api/songs", (req: Request, res: Response) => {
-  const newSong = req.body;
-
-  songs
-    .create(newSong)
-    .then((song: Song) => res.status(201).send(song))
-    .catch((err) => res.status(500).send(err));
+// SPA fallback: Serve 'index.html' for non-file requests (e.g., navigation routes)
+app.get("*", (req, res) => {
+  // Check if the request is for a file (by looking for a '.' in the last URI segment)
+  if (/\.[^\/]+$/.test(req.path)) {
+    // If the request is for a file that wasn't found (e.g., .css, .js), return a 404
+    res.status(404).send("Not found");
+  } else {
+    // For navigation requests, serve 'index.html' from 'dist/app'
+    res.sendFile(path.join(distPath, "app", "index.html"), (err) => {
+      if (err) {
+        console.error("Error serving index.html:", err);
+        res.status(500).send("Server error");
+      }
+    });
+  }
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server listening on http://localhost:${port}`);
 });
-
-// login/auth route

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <base href="/" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/page.css" />
@@ -14,61 +15,13 @@
       rel="stylesheet"
     />
 
-    <script type="module" src="../src/components/drop-down.ts"></script>
+    <script type="module" src="/src/views/mtv-app.ts"></script>
 
     <title>match the vibe</title>
   </head>
   <body class="dark-mode">
     <main>
-      <!--Bar on Top of Page with 'Match the Vibe Logo', will be changed to nav -->
-      <section class="match-the-vibe-header">
-        <a href="./index.html">match the vibe home</a>
-        <drop-down></drop-down>
-      </section>
-
-      <section class="banner">
-        <p>
-          this page needs some love. I think that I am going to create a new
-          component for this search for friends feature, and it will have a
-          different appearance than the list components that I have created;
-          there also needs to be a way to find/create a game here as well as
-          maybe discover songs (as according to my Miro plan)
-        </p>
-      </section>
-
-      <section class="page-hero-information">
-        <h1>match the vibe home</h1>
-        <p class="description">
-          a new social music app where you have to pick a song <br />
-          that matches the vibe... or you&apos;re out
-        </p>
-      </section>
-      <section class="find-friends">
-        <section class="subsection-header-line">
-          <h2>find friends!</h2>
-          <svg class="icon">
-            <use href="/icons/user-icons.svg#icon-friends-list" />
-          </svg>
-        </section>
-
-        <section class="friends-list-friends">
-          <div class="user-friend">
-            <a href="./user1.html">aidan</a>
-          </div>
-          <div class="user-friend">
-            <a href="./user2.html">thea</a>
-          </div>
-          <div class="user-friend">
-            <p>lauryn</p>
-          </div>
-          <div class="user-friend">
-            <p>ethan</p>
-          </div>
-          <div class="user-friend">
-            <p>jonathan</p>
-          </div>
-        </section>
-      </section>
+      <mtv-app></mtv-app>
     </main>
   </body>
 </html>

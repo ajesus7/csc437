@@ -22,35 +22,24 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var import_express = __toESM(require("express"));
-var import_cors = __toESM(require("cors"));
-var import_mongoConnect = require("./mongoConnect");
-var import_profiles = __toESM(require("./profiles"));
-var import_songs = __toESM(require("./songs"));
+var import_path = __toESM(require("path"));
 const app = (0, import_express.default)();
-const port = process.env.PORT || 3e3;
-app.use((0, import_cors.default)());
-app.use(import_express.default.json());
-(0, import_mongoConnect.connect)("vibing");
-app.get("/hello", (req, res) => {
-  res.send("Hello, World");
-});
-app.get("/api/profile/:userid", (req, res) => {
-  const { userid } = req.params;
-  import_profiles.default.get(userid).then((profile) => res.json(profile)).catch((err) => res.status(404).end());
-});
-app.post("/api/profiles", (req, res) => {
-  const newProfile = req.body;
-  import_profiles.default.create(newProfile).then((profile) => res.status(201).send(profile)).catch((err) => res.status(500).send(err));
-});
-app.put("/api/profile/:userid", (req, res) => {
-  const { userid } = req.params;
-  const newProfile = req.body;
-  import_profiles.default.update(userid, newProfile).then((profile) => res.json(profile)).catch((err) => res.status(404).end());
-});
-app.post("/api/songs", (req, res) => {
-  const newSong = req.body;
-  import_songs.default.create(newSong).then((song) => res.status(201).send(song)).catch((err) => res.status(500).send(err));
+const port = 3e3;
+const distPath = import_path.default.resolve(__dirname, "..", "..", "lit-frontend", "dist");
+console.log(distPath);
+app.use(import_express.default.static(distPath));
+app.get("*", (req, res) => {
+  if (/\.[^\/]+$/.test(req.path)) {
+    res.status(404).send("Not found");
+  } else {
+    res.sendFile(import_path.default.join(distPath, "app", "index.html"), (err) => {
+      if (err) {
+        console.error("Error serving index.html:", err);
+        res.status(500).send("Server error");
+      }
+    });
+  }
 });
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server listening on http://localhost:${port}`);
 });
