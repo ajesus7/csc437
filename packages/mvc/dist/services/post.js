@@ -26,17 +26,35 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var api_exports = {};
-__export(api_exports, {
-  default: () => api_default
+var post_exports = {};
+__export(post_exports, {
+  default: () => post_default
 });
-module.exports = __toCommonJS(api_exports);
-var import_express = __toESM(require("express"));
-var import_auth = require("../auth");
-var import_profiles = __toESM(require("./profiles"));
-var import_posts = __toESM(require("./posts"));
-const router = import_express.default.Router();
-router.use(import_auth.authenticateUser);
-router.use("/profiles", import_profiles.default);
-router.use("/posts", import_posts.default);
-var api_default = router;
+module.exports = __toCommonJS(post_exports);
+var import_post = __toESM(require("../mongo/post"));
+var import_mongodb = require("mongodb");
+function index() {
+  return import_post.default.find();
+}
+function get(userid) {
+  return import_post.default.find({ ObjectId: import_mongodb.ObjectId }).then((list) => list[0]).catch((err) => {
+    throw `Post with ID ${import_mongodb.ObjectId} Not Found`;
+  });
+}
+function create(post) {
+  const p = new import_post.default(post);
+  return p.save();
+}
+function update(ObjectId2, post) {
+  return new Promise((resolve, reject) => {
+    import_post.default.findOneAndUpdate({ ObjectId: ObjectId2 }, post, {
+      new: true
+    }).then((post2) => {
+      if (post2)
+        resolve(post2);
+      else
+        reject("Failed to update post");
+    });
+  });
+}
+var post_default = { index, get, create, update };

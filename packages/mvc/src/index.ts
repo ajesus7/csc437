@@ -6,6 +6,8 @@ import { connect } from "./mongoConnect";
 import { loginUser, registerUser } from "./auth";
 import apiRouter from "./routes/api";
 
+import posts from "./services/posts";
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -32,16 +34,36 @@ app.post("/login", loginUser);
 app.post("/signup", registerUser);
 app.use("/api", apiRouter);
 
-// // app.use("/api", apiRouter);
-
-// // SPA routes ignore parameters when locating index.html
-
 // Base directory for the built frontend files
 const distPath = path.resolve(__dirname, "..", "..", "lit-frontend", "dist");
 
-console.log(distPath);
 // Serve static files from 'dist'
 app.use(express.static(distPath));
+
+// TODO The post endpoints should be in api/posts but I couldn't get that to work... authentication issue (401)
+app.get("/posts", (req, res) => {
+  posts
+    .getAll() // Assuming .getAll() is the method to fetch all posts; adjust according to your actual method
+    .then((allPosts: IPost[] | undefined) => {
+      // Use an array type to represent multiple posts
+      if (!allPosts || allPosts.length === 0) throw "No posts found";
+      else res.json(allPosts); // Send the array of posts
+    })
+    .catch((err) => {
+      console.error(err); // Log the error for debugging purposes
+      res.status(404).send("Posts not found");
+    });
+});
+
+// * Creates New Post
+app.post("/posts", (req: Request, res: Response) => {
+  const newPost = req.body;
+
+  posts
+    .create(newPost)
+    .then((post: IPost) => res.status(201).send(post))
+    .catch((err) => res.status(500).send(err));
+});
 
 // SPA fallback: Serve 'index.html' for non-file requests (e.g., navigation routes)
 app.get("*", (req, res) => {

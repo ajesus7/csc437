@@ -26,17 +26,43 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var api_exports = {};
-__export(api_exports, {
-  default: () => api_default
+var posts_exports = {};
+__export(posts_exports, {
+  default: () => posts_default
 });
-module.exports = __toCommonJS(api_exports);
-var import_express = __toESM(require("express"));
-var import_auth = require("../auth");
-var import_profiles = __toESM(require("./profiles"));
-var import_posts = __toESM(require("./posts"));
-const router = import_express.default.Router();
-router.use(import_auth.authenticateUser);
-router.use("/profiles", import_profiles.default);
-router.use("/posts", import_posts.default);
-var api_default = router;
+module.exports = __toCommonJS(posts_exports);
+var import_post = __toESM(require("../mongo/post"));
+function index() {
+  return import_post.default.find();
+}
+function get() {
+  return import_post.default.find().then((list) => list[0]).catch((err) => {
+    throw `No Posts found`;
+  });
+}
+function getAll() {
+  return import_post.default.find().then((list) => {
+    if (!list.length)
+      throw `No Posts found`;
+    return list;
+  }).catch((err) => {
+    throw new Error(`No Posts found: ${err}`);
+  });
+}
+function create(post) {
+  const p = new import_post.default(post);
+  return p.save();
+}
+function update(ObjectId, post) {
+  return new Promise((resolve, reject) => {
+    import_post.default.findOneAndUpdate({ ObjectId }, post, {
+      new: true
+    }).then((post2) => {
+      if (post2)
+        resolve(post2);
+      else
+        reject("Failed to update post");
+    });
+  });
+}
+var posts_default = { index, get, create, update, getAll };

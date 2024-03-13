@@ -26,17 +26,34 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var api_exports = {};
-__export(api_exports, {
-  default: () => api_default
+var postSchema_exports = {};
+__export(postSchema_exports, {
+  default: () => postSchema_default
 });
-module.exports = __toCommonJS(api_exports);
-var import_express = __toESM(require("express"));
-var import_auth = require("../auth");
-var import_profiles = __toESM(require("./profiles"));
-var import_posts = __toESM(require("./posts"));
-const router = import_express.default.Router();
-router.use(import_auth.authenticateUser);
-router.use("/profiles", import_profiles.default);
-router.use("/posts", import_posts.default);
-var api_default = router;
+module.exports = __toCommonJS(postSchema_exports);
+var import_mongoose = __toESM(require("mongoose"));
+var import_commentSchema = __toESM(require("./commentSchema"));
+const PostSchema = new import_mongoose.default.Schema({
+  userid: {
+    type: import_mongoose.default.Schema.Types.ObjectId,
+    // Using ObjectId for userid
+    required: true
+  },
+  userName: {
+    type: String,
+    required: true
+  },
+  postTime: {
+    type: Date,
+    // Explicitly setting to Date type
+    default: Date.now
+  },
+  postMessage: {
+    type: String,
+    required: true
+  },
+  comments: [import_commentSchema.default]
+  // List of adjusted Comment objects
+});
+const Post = import_mongoose.default.model("Post", PostSchema);
+var postSchema_default = { PostSchema, Post };

@@ -26,17 +26,43 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var api_exports = {};
-__export(api_exports, {
-  default: () => api_default
+var commentSchema_exports = {};
+__export(commentSchema_exports, {
+  default: () => commentSchema_default
 });
-module.exports = __toCommonJS(api_exports);
-var import_express = __toESM(require("express"));
-var import_auth = require("../auth");
-var import_profiles = __toESM(require("./profiles"));
-var import_posts = __toESM(require("./posts"));
-const router = import_express.default.Router();
-router.use(import_auth.authenticateUser);
-router.use("/profiles", import_profiles.default);
-router.use("/posts", import_posts.default);
-var api_default = router;
+module.exports = __toCommonJS(commentSchema_exports);
+var import_mongoose = __toESM(require("mongoose"));
+const CommentSchema = new import_mongoose.default.Schema({
+  userid: {
+    type: import_mongoose.default.Schema.Types.ObjectId,
+    // Using ObjectId for userid
+    required: true
+  },
+  userName: {
+    type: String,
+    required: true
+  },
+  commentTime: {
+    type: Date,
+    // Explicitly setting to Date type
+    default: Date.now
+  },
+  commentMessage: {
+    type: String,
+    required: true
+  },
+  SongIDs: [
+    {
+      type: String
+      // String identifiers for songs
+    }
+  ],
+  SongRecs: [
+    {
+      type: String
+      // String recommendations or identifiers
+    }
+  ]
+});
+const Comment = import_mongoose.default.model("Comment", CommentSchema);
+var commentSchema_default = { CommentSchema, Comment };

@@ -27,6 +27,7 @@ var import_cors = __toESM(require("cors"));
 var import_mongoConnect = require("./mongoConnect");
 var import_auth = require("./auth");
 var import_api = __toESM(require("./routes/api"));
+var import_posts = __toESM(require("./services/posts"));
 const app = (0, import_express.default)();
 const port = process.env.PORT || 3e3;
 let dist;
@@ -48,8 +49,22 @@ app.post("/login", import_auth.loginUser);
 app.post("/signup", import_auth.registerUser);
 app.use("/api", import_api.default);
 const distPath = path.resolve(__dirname, "..", "..", "lit-frontend", "dist");
-console.log(distPath);
 app.use(import_express.default.static(distPath));
+app.get("/posts", (req, res) => {
+  import_posts.default.getAll().then((allPosts) => {
+    if (!allPosts || allPosts.length === 0)
+      throw "No posts found";
+    else
+      res.json(allPosts);
+  }).catch((err) => {
+    console.error(err);
+    res.status(404).send("Posts not found");
+  });
+});
+app.post("/posts", (req, res) => {
+  const newPost = req.body;
+  import_posts.default.create(newPost).then((post) => res.status(201).send(post)).catch((err) => res.status(500).send(err));
+});
 app.get("*", (req, res) => {
   if (/\.[^\/]+$/.test(req.path)) {
     res.status(404).send("Not found");
