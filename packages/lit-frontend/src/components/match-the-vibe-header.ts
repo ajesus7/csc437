@@ -15,13 +15,14 @@ export class MatchTheVibeHeaderElement extends LitElement {
   user = new APIUser();
 
   render() {
-    const { profileImage, profileDescription } = this.profile || {};
+    const { profileImage, profileDescription, userid } = this.profile || {};
     return html`
       <section class="match-the-vibe-header">
         <a href="/app/home">match the vibe home</a>
         <drop-down
           profileImage="${profileImage}"
           profileDescription="${profileDescription}"
+          profileUserID="${userid}"
         ></drop-down>
       </section>
     `;

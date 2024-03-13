@@ -13,6 +13,9 @@ export class DropDownElement extends LitElement {
   profileImage?: "";
 
   @property()
+  profileUserID?: "";
+
+  @property()
   profileDescription?: "";
 
   render() {
@@ -35,7 +38,9 @@ export class DropDownElement extends LitElement {
       <slot name="menu">
         <ul>
           <li class="link">
-            <a href="./user1.html" class="link">your profile</a>
+            <a href="app/profile/${this.profileUserID}" class="link"
+              >your profile</a
+            >
           </li>
           <li>settings (not functional)</li>
           <li>
