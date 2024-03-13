@@ -25,12 +25,7 @@ export class UserProfileElement extends LitElement {
   }
 
   // //runs once when instantiated
-  // connectedCallback() {
-  //   if (this.path) {
-  //     this._fetchData(this.path);
-  //   }
-  //   super.connectedCallback();
-  // }
+
 
   // // in class UserProfileElement
   // attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -42,20 +37,6 @@ export class UserProfileElement extends LitElement {
   //   super.attributeChangedCallback(name, oldValue, newValue);
   // }
 
-  // _fetchData(path: string) {
-  //   fetch(serverPath(path))
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         return response.json();
-  //       }
-  //       return null;
-  //     })
-  //     .then((json: unknown) => {
-  //       if (json) this.profile = json as Profile;
-  //       //print the profile for testing
-  //       console.log("profile", this.profile);
-  //     });
-  // }
 
   render() {
     const { name, profileImage, profileDescription, bio } = this.profile;
