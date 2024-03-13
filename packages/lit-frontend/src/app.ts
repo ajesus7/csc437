@@ -11,7 +11,7 @@ export interface Model {
   profile?: Profile;
 }
 
-export const context = createContext<Model>("BlazingModel");
+export const context = createContext<Model>("MTVModel");
 
 export const init: Model = {
   user: new APIUser(),
@@ -64,10 +64,7 @@ export class View extends MVU.View<Message> {
   _model: Model | undefined;
 
   getFromModel(path: keyof Model) {
-    console.log("GET FROM MODEL CALLED");
-    console.log("dlakjflda", init);
     if (this._model) {
-      console.log("MODEL PROFILE IN APP.TS: ", this._model.profile);
       return this._model[path];
     }
   }

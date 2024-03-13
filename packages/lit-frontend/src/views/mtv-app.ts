@@ -15,7 +15,7 @@ import "../components/match-the-vibe-header";
 import "./profile-page";
 import "./home-page";
 import "./song-page";
-import "./TestPage"; // Adjust the import path as needed
+import "./not-found-page";
 
 let routes = [
   {
@@ -27,12 +27,12 @@ let routes = [
     component: "profile-page",
   },
   {
-    path: "/app/",
-    component: "home-page", // Assuming 'app-component' is your main app component
+    path: "/app/home",
+    component: "home-page",
   },
   {
     path: "(.*)",
-    component: "not-found-component", // Serve a "not found" component instead of redirecting to avoid loops
+    component: "not-found-page", // Serve a "not found" component instead of redirecting to avoid loops
   },
 ];
 
@@ -52,7 +52,7 @@ export class MTVAppElement extends App.Main {
   }
 
   updated(changes: Map<string, unknown>) {
-    console.log("BlazingAppElement updated:", changes.keys());
+    console.log("MTVAPPElement updated:", changes.keys());
     if (changes.has("model")) {
       console.log("New model", this.model);
       this.requestUpdate();

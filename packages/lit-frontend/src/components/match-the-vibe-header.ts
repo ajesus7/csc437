@@ -18,7 +18,7 @@ export class MatchTheVibeHeaderElement extends LitElement {
     const { profileImage, profileDescription } = this.profile || {};
     return html`
       <section class="match-the-vibe-header">
-        <a href="/app">match the vibe home</a>
+        <a href="/app/home">match the vibe home</a>
         <drop-down
           profileImage="${profileImage}"
           profileDescription="${profileDescription}"
