@@ -41,8 +41,12 @@ export class MainFeedElement extends LitElement {
 
   static styles = css`
     .feed-container {
-      border: 2px solid white;
-      width: 40em;
+      width: 50em;
+      margin-top: 3em;
+    }
+
+    h2 {
+      font-size: 2em;
     }
   `;
 }

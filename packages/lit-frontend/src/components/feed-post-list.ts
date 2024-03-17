@@ -10,6 +10,7 @@ import { customElement, property } from "lit/decorators.js";
 
 import Post from "../models/post";
 import "./feed-post";
+import "./feed-post-expanded";
 
 @customElement("feed-post-list")
 export class FeedPostListElement extends LitElement {
@@ -19,6 +20,7 @@ export class FeedPostListElement extends LitElement {
   render() {
     return html`
       <div class="posts-container">
+        <feed-post-expanded .post=${this.posts[1]}></feed-post-expanded>
         ${this.posts.map(
           (post) => html` <feed-post .post=${post}></feed-post>`
         )}

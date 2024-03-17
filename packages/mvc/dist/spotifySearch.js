@@ -48,7 +48,6 @@ class SpotifyService {
   }
   authenticate() {
     return __async(this, null, function* () {
-      console.log("AUTHENTICATING");
       const response = yield fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: {
@@ -62,7 +61,6 @@ class SpotifyService {
       if (response.ok) {
         const data = yield response.json();
         this.accessToken = data.access_token;
-        console.log("Access Token:", this.accessToken);
       } else {
         console.error("Spotify authentication failed");
       }
@@ -70,7 +68,6 @@ class SpotifyService {
   }
   searchSongs(query) {
     return __async(this, null, function* () {
-      console.log("searching for songs!");
       const response = yield fetch(
         `https://api.spotify.com/v1/search?q=${encodeURIComponent(
           query
@@ -89,7 +86,7 @@ class SpotifyService {
           album: track.album.name,
           url: track.external_urls.spotify
         }));
-        console.log("songs!", songs);
+        console.log("songs found", songs);
         return songs;
       } else {
         console.error("Failed to fetch songs from Spotify");
@@ -98,4 +95,6 @@ class SpotifyService {
     });
   }
 }
+const spotifyService = new SpotifyService();
+setTimeout(() => spotifyService.searchSongs("The backseat"), 1e3);
 var spotifySearch_default = SpotifyService;

@@ -1,0 +1,68 @@
+import { css, html, LitElement } from "lit";
+import { customElement, property } from "lit/decorators.js";
+// import { Profile } from "../models/profile";
+// import { authContext } from "./auth-required";
+// import { consume } from "@lit/context";
+// import { APIUser, APIRequest } from "../rest";
+
+// * Takes in an object that represents a Spotify track
+// * Renders a single card with that songs title, artist, image.
+
+// interfaces
+import { TrackObject } from "../../../ts-models";
+
+@customElement("track-card")
+export class TrackCardElement extends LitElement {
+  @property({ type: Object })
+  track?: TrackObject;
+
+  render() {
+    if (!this.track) {
+      // Render a message or empty state if track is undefined
+      return html`
+        <section class="single-track">
+          <p>Track information is not available.</p>
+        </section>
+      `;
+    }
+
+    // Now that we've checked that track is defined, we can safely destructure it
+    const { name } = this.track;
+    const artist = this.track.artists[0].name;
+    const { url } = this.track.album.images[0];
+    // Render the track information
+    return html`
+      <section class="single-track">
+        <img src="${url}" alt="Album cover for ${name}" class="track-image" />
+        <section class="details">
+          <p class="track-name">${name}</p>
+          <p class="artist-name">${artist}</p>
+        </section>
+      </section>
+    `;
+  }
+
+  static styles = css`
+    .single-track {
+      display: flex;
+      flex-direction: row;
+      border: 2px solid white;
+      font-weight: 500;
+    }
+    .track-name {
+      font-size: 1.25em;
+      padding: 0;
+      margin: 0;
+    }
+    .artist-name {
+      color: darkgray;
+      font-size: 0.8em;
+      margin: 0;
+      padding: 0;
+    }
+    .track-image {
+      width: 4em;
+      height: 4em;
+    }
+  `;
+}

@@ -16,15 +16,18 @@ router.post("/", (req: Request, res: Response) => {
 
 // * Get a Specific Post
 // TODO do I need to redefine the "/:userid here?"
-router.get("/:userid", (req: Request, res: Response) => {
-  const { ObjectId } = req.params;
+router.get("/posts", (req, res) => {
   posts
-    .get()
-    .then((post: IPost | undefined) => {
-      if (!post) throw "Not found";
-      else res.json(post);
+    .getAll() // Assuming .getAll() is the method to fetch all posts; adjust according to your actual method
+    .then((allPosts: IPost[] | undefined) => {
+      // Use an array type to represent multiple posts
+      if (!allPosts || allPosts.length === 0) throw "No posts found";
+      else res.json(allPosts); // Send the array of posts
     })
-    .catch((err) => res.status(404).end());
+    .catch((err) => {
+      console.error(err); // Log the error for debugging purposes
+      res.status(404).send("Posts not found");
+    });
 });
 
 // * Update a Specific Post

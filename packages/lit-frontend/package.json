@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@lit/context": "^1.1.0",
+    "@spotify/web-api-ts-sdk": "^1.2.0",
+    "buffer": "^6.0.3",
     "lit": "^3.1.2",
     "ts-models": "^0.0.13"
   }

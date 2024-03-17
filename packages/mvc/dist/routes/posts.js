@@ -38,14 +38,16 @@ router.post("/", (req, res) => {
   const newPost = req.body;
   import_posts.default.create(newPost).then((post) => res.status(201).send(post)).catch((err) => res.status(500).send(err));
 });
-router.get("/:userid", (req, res) => {
-  const { ObjectId } = req.params;
-  import_posts.default.get().then((post) => {
-    if (!post)
-      throw "Not found";
+router.get("/posts", (req, res) => {
+  import_posts.default.getAll().then((allPosts) => {
+    if (!allPosts || allPosts.length === 0)
+      throw "No posts found";
     else
-      res.json(post);
-  }).catch((err) => res.status(404).end());
+      res.json(allPosts);
+  }).catch((err) => {
+    console.error(err);
+    res.status(404).send("Posts not found");
+  });
 });
 router.put("/:userid", (req, res) => {
   const { ObjectId } = req.params;
