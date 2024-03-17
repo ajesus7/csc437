@@ -24,7 +24,7 @@ export class FeedPostElement extends LitElement {
   expanded: boolean = false;
 
   @property({ type: String })
-  artistName = "";
+  requestedSearchQuery = "";
 
   @property({ type: String })
   accessToken = "";
@@ -42,10 +42,10 @@ export class FeedPostElement extends LitElement {
     const formData = new FormData(target);
 
     // Retrieve the value of the input field by its name
-    this.artistName = formData.get("inputted-artist-name") as string;
+    this.requestedSearchQuery = formData.get("inputted-artist-name") as string;
 
-    console.log("Artist Name: ", this.artistName);
-    this.searchArtist();
+    console.log("Artist Name: ", this.requestedSearchQuery);
+    this.searchSpotify();
   }
 
   async fetchTopTracks(artistId: string) {
@@ -107,19 +107,19 @@ export class FeedPostElement extends LitElement {
     }
   }
 
-  async searchArtist(): Promise<void> {
-    // ? if artistName not given, return nothing
-    if (!this.artistName.trim()) return;
+  async searchSpotify(): Promise<void> {
+    // Ensure there's a query to search for
+    if (!this.requestedSearchQuery.trim()) return;
 
-    console.log("calling searchArtist function!");
-
-    // ? create the query url
+    // Construct the search URL for tracks only
     const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-      this.artistName
-    )}&type=artist&limit=5`;
+      this.requestedSearchQuery
+    )}&type=track&limit=10`;
 
     try {
+      // Authenticate and get the access token
       await this.authenticate();
+
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -132,20 +132,19 @@ export class FeedPostElement extends LitElement {
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      // ? if list of artists larger than 0, grab the artist id and find their top tracks
-      // ? otherwise, artist couldn't be found, return error
       const data = await response.json();
-      console.log("SEARCHARTIST RESPONSE: ", data);
+      console.log("Tracks Search Response: ", data);
 
-      if (data.artists.items.length > 0) {
-        const artistId = data.artists.items[0].id;
-        this.fetchTopTracks(artistId);
+      // Update the component state with the found tracks
+      if (data.tracks.items.length > 0) {
+        this.topTracks = data.tracks.items;
+        console.log("Tracks found:", this.topTracks);
       } else {
         this.topTracks = [];
-        alert("Artist not found. Please try another search.");
+        alert("No tracks found. Please try another search.");
       }
     } catch (error) {
-      console.error("Error searching for artist:", error);
+      console.error("Error searching for tracks:", error);
     }
   }
 
@@ -173,7 +172,7 @@ export class FeedPostElement extends LitElement {
               type="text"
               id="inputted-artist-name"
               name="inputted-artist-name"
-              placeholder="Enter an artist name!"
+              placeholder="Enter an artist, song, or album!"
             />
             <button class="recommend-songs" type="submit">Submit Songs</button>
           </form>

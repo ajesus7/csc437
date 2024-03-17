@@ -10,7 +10,6 @@ import { customElement, property } from "lit/decorators.js";
 
 import Post from "../models/post";
 import "./feed-post";
-import "./feed-post-expanded";
 
 @customElement("feed-post-list")
 export class FeedPostListElement extends LitElement {
