@@ -32,10 +32,21 @@ export class FeedPostElement extends LitElement {
   @property()
   topTracks: TrackObject[] = [];
 
+  @state()
+  expandedClass: String = "feed-single-post";
+
   _expand() {
-    this.expanded = !this.expanded;
     console.log("EXPAND CALLED");
+    this.expanded = !this.expanded;
+    console.log("class was: ", this.expandedClass);
+    if (this.expandedClass === "feed-single-post") {
+      this.expandedClass = "feed-single-post-expanded";
+    } else {
+      this.expandedClass = "feed-single-post";
+    }
+    console.log("class now is: ", this.expandedClass);
   }
+
   _handleSubmit(ev: Event) {
     ev.preventDefault(); // Prevent the browser from submitting the form itself
     const target = ev.target as HTMLFormElement;
@@ -153,43 +164,57 @@ export class FeedPostElement extends LitElement {
       ? new Date(this.post.postTime).toLocaleString()
       : "";
 
-    if (this.expanded) {
-      return html`
-        <section class="feed-single-post-expanded">
-          <section class="name-and-time">
-            <h3 class="feed-name">${this.post?.userName}</h3>
-            <p class="time-posted">${readablePostTime}</p>
-          </section>
-          <p class="message">${this.post?.postMessage}</p>
-
-          ${this.topTracks.slice(0, 5).map(
-            // Only process the first 5 elements of the array
-            (track) => html` <track-card .track=${track}></track-card>`
-          )}
-
-          <form @submit=${this._handleSubmit}>
-            <input
-              type="text"
-              id="inputted-artist-name"
-              name="inputted-artist-name"
-              placeholder="Enter an artist, song, or album!"
-            />
-            <button class="recommend-songs" type="submit">Submit Songs</button>
-          </form>
+    return html`
+      <section class="${this.expandedClass}">
+        <section class="name-and-time">
+          <h3 class="feed-name">${this.post?.userName}</h3>
+          <p class="time-posted">${readablePostTime}</p>
         </section>
-      `;
-    } else {
-      return html`
-        <section class="feed-single-post">
-          <section class="name-and-time">
-            <h3 class="feed-name">${this.post?.userName}</h3>
-            <p class="time-posted">${readablePostTime}</p>
-          </section>
-          <p class="message">${this.post?.postMessage}</p>
-          <button class="recommend-songs" @click=${this._expand}>Expand</button>
-        </section>
-      `;
-    }
+        <p class="message">${this.post?.postMessage}</p>
+
+        ${this.expanded
+          ? html`
+              <section class="search-and-selected">
+                <section class="query-results">
+                  ${this.topTracks.length > 0
+                    ? this.topTracks
+                        .slice(0, 5)
+                        .map(
+                          (track) =>
+                            html`<track-card .track=${track}></track-card>`
+                        )
+                    : html`<h3>
+                        The tracks you search for will show up here
+                      </h3>`}
+                </section>
+                <section class="selected-tracks">
+                  <h3>Selected Tracks</h3>
+                  <!-- Render selected tracks or any other relevant information here -->
+                </section>
+              </section>
+
+              <form @submit=${this._handleSubmit}>
+                <input
+                  type="text"
+                  id="inputted-artist-name"
+                  name="inputted-artist-name"
+                  placeholder="Enter an artist, song, or album!"
+                />
+                <button class="recommend-songs" type="submit">
+                  Search for Songs
+                </button>
+              </form>
+              <button class="recommend-songs" @click=${this._expand}>
+                Expand
+              </button>
+            `
+          : html`
+              <button class="recommend-songs" @click=${this._expand}>
+                Expand
+              </button>
+            `}
+      </section>
+    `;
   }
 
   static styles = css`
@@ -200,11 +225,28 @@ export class FeedPostElement extends LitElement {
       padding: 1.25em;
     }
 
+    .search-and-selected {
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: row;
+    }
+
     .feed-single-post-expanded {
       border: 1px solid white;
       width: 47.5em;
       height: auto;
       padding: 1.25em;
+    }
+
+    .selected-tracks {
+      border: 2px solid white;
+      background: green;
+      width: 48%;
+    }
+    .query-results {
+      width: 48%;
+      background: blue;
     }
 
     h3 {
