@@ -16,6 +16,18 @@ export class TrackCardElement extends LitElement {
   @property({ type: Object })
   track?: TrackObject;
 
+  _handleClick() {
+    console.log("track clicked!");
+    // Emit a custom event with the track data
+    this.dispatchEvent(
+      new CustomEvent("track-selected", {
+        detail: { track: this.track },
+        bubbles: true, // This makes sure the event bubbles up through the DOM
+        composed: true, // This allows the event to cross the shadow DOM boundary
+      })
+    );
+  }
+
   render() {
     if (!this.track) {
       // Render a message or empty state if track is undefined
@@ -32,7 +44,7 @@ export class TrackCardElement extends LitElement {
     const { url } = this.track.album.images[0];
     // Render the track information
     return html`
-      <section class="single-track">
+      <section class="single-track" @click=${() => this._handleClick()}>
         <img src="${url}" alt="Album cover for ${name}" class="track-image" />
         <section class="details">
           <p class="track-name">${name}</p>
@@ -49,6 +61,11 @@ export class TrackCardElement extends LitElement {
       border: 2px solid white;
       font-weight: 500;
     }
+
+    .single-track:hover {
+      background: var(--accent-color);
+    }
+
     .track-name {
       font-size: 1.25em;
       padding: 0;

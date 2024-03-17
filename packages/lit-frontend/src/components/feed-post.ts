@@ -32,8 +32,31 @@ export class FeedPostElement extends LitElement {
   @property()
   topTracks: TrackObject[] = [];
 
+  @property()
+  selectedTracks: TrackObject[] = [];
+
   @state()
   expandedClass: String = "feed-single-post";
+
+  _selectTrack(track: TrackObject) {
+    // Check if the track is already in the selectedTracks array
+    const existingIndex = this.selectedTracks.findIndex(
+      (selectedTrack) => selectedTrack.id === track.id
+    );
+
+    if (existingIndex > -1) {
+      // If the track is already selected, remove it from the array
+      this.selectedTracks = [
+        ...this.selectedTracks.slice(0, existingIndex),
+        ...this.selectedTracks.slice(existingIndex + 1),
+      ];
+    } else {
+      // If the track is not already selected, add it to the array
+      this.selectedTracks = [...this.selectedTracks, track];
+    }
+
+    console.log("Selected tracks:", this.selectedTracks);
+  }
 
   _expand() {
     console.log("EXPAND CALLED");
@@ -57,6 +80,11 @@ export class FeedPostElement extends LitElement {
 
     console.log("Artist Name: ", this.requestedSearchQuery);
     this.searchSpotify();
+  }
+
+  _clearTopTracks() {
+    this.topTracks = []; // This empties the array, removing all tracks
+    console.log("Top tracks cleared");
   }
 
   async fetchTopTracks(artistId: string) {
@@ -89,6 +117,12 @@ export class FeedPostElement extends LitElement {
 
   constructor() {
     super();
+
+    // ! deals with adding tracks to the selected tracks section when a click event bubbles up
+    this.addEventListener("track-selected", (event: Event) => {
+      const customEvent = event as CustomEvent;
+      this._selectTrack(customEvent.detail.track);
+    });
   }
 
   async authenticate() {
@@ -203,8 +237,15 @@ export class FeedPostElement extends LitElement {
                 </section>
                 <section class="selected-tracks">
                   <h3>Selected Tracks</h3>
-                  <!-- Render selected tracks or any other relevant information here -->
+                  ${this.selectedTracks.map(
+                    (track) => html` <track-card .track=${track}></track-card> `
+                  )}
                 </section>
+              </section>
+              <section class="clear-button">
+                <button class="clear-results" @click=${this._clearTopTracks}>
+                  Clear Results
+                </button>
               </section>
 
               <button class="recommend-songs" @click=${this._expand}>
@@ -243,21 +284,22 @@ export class FeedPostElement extends LitElement {
       flex-direction: row;
       width: 100%;
       min-height: 8em; /* Set minimum height and allow expansion */
-      margin-bottom: 1.5em;
     }
 
     .query-results,
     .selected-tracks {
       flex: 1; /* Each takes up half of the container */
       min-height: 8em; /* Set minimum height and allow expansion */
-      padding: 0.5em;
       box-sizing: border-box; /* Ensures padding is included in dimensions */
       border: 2px solid white;
+      margin-bottom: 0.5em;
     }
 
-    .query-results {
-      width: 48%;
-      background: blue;
+    .clear-button {
+      width: 50%;
+      display: flex;
+      justify-content: right;
+      margin-bottom: 1.5em;
     }
 
     h3 {
@@ -270,6 +312,18 @@ export class FeedPostElement extends LitElement {
       flex-direction: row;
       align-items: center;
       height: 1em;
+    }
+
+    .clear-results {
+      background: red; /* Example style */
+      padding: 1em;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .clear-results:hover {
+      background: darkred; /* Example hover effect */
     }
 
     .recommend-songs {
