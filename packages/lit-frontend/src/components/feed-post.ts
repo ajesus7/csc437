@@ -58,6 +58,9 @@ export class FeedPostElement extends LitElement {
     console.log("Selected tracks:", this.selectedTracks);
   }
 
+  _recommendTracks() {
+    console.log("Recommend Tracks Called!");
+  }
   _expand() {
     console.log("EXPAND CALLED");
     this.expanded = !this.expanded;
@@ -85,6 +88,10 @@ export class FeedPostElement extends LitElement {
   _clearTopTracks() {
     this.topTracks = []; // This empties the array, removing all tracks
     console.log("Top tracks cleared");
+  }
+  _clearSelectedTracks() {
+    this.selectedTracks = []; // This empties the array, removing all tracks
+    console.log("Selected tracks cleared");
   }
 
   async fetchTopTracks(artistId: string) {
@@ -242,9 +249,25 @@ export class FeedPostElement extends LitElement {
                   )}
                 </section>
               </section>
-              <section class="clear-button">
-                <button class="clear-results" @click=${this._clearTopTracks}>
-                  Clear Results
+              <section class="clear-buttons">
+                <section class="clear-results-button-section">
+                  <button class="clear-results" @click=${this._clearTopTracks}>
+                    Clear Results
+                  </button>
+                </section>
+                <section class="clear-selected-tracks-button-section">
+                  <button
+                    class="clear-selected-tracks"
+                    @click=${this._clearSelectedTracks}
+                  >
+                    Clear Selected Tracks
+                  </button>
+                </section>
+              </section>
+
+              <section class="recommend-songs-button-section">
+                <button class="recommend-songs" @click=${this._recommendTracks}>
+                  Recommend Tracks!
                 </button>
               </section>
 
@@ -279,6 +302,12 @@ export class FeedPostElement extends LitElement {
       margin-bottom: 1.5em;
     }
 
+    .button-recommend-tracks {
+      width: 10em;
+      background: var(--accent-color);
+      padding: 1em;
+    }
+
     .search-and-selected {
       display: flex;
       flex-direction: row;
@@ -295,7 +324,12 @@ export class FeedPostElement extends LitElement {
       margin-bottom: 0.5em;
     }
 
-    .clear-button {
+    .clear-buttons {
+      display: flex;
+    }
+
+    .clear-results-button-section,
+    .clear-selected-tracks-button-section {
       width: 50%;
       display: flex;
       justify-content: right;
@@ -314,7 +348,8 @@ export class FeedPostElement extends LitElement {
       height: 1em;
     }
 
-    .clear-results {
+    .clear-results,
+    .clear-selected-tracks {
       background: red; /* Example style */
       padding: 1em;
       border: none;
@@ -322,7 +357,8 @@ export class FeedPostElement extends LitElement {
       cursor: pointer;
     }
 
-    .clear-results:hover {
+    .clear-results:hover,
+    .clear-selected-tracks:hover {
       background: darkred; /* Example hover effect */
     }
 
