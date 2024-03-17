@@ -20,7 +20,6 @@ export class FeedPostListElement extends LitElement {
   render() {
     return html`
       <div class="posts-container">
-        <feed-post-expanded .post=${this.posts[1]}></feed-post-expanded>
         ${this.posts.map(
           (post) => html` <feed-post .post=${post}></feed-post>`
         )}

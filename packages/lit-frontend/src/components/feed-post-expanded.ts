@@ -152,7 +152,8 @@ export class FeedPostExpandedElement extends LitElement {
         </section>
         <p class="message">${this.post?.postMessage}</p>
 
-        ${this.topTracks.map(
+        ${this.topTracks.slice(0, 5).map(
+          // Only process the first 5 elements of the array
           (track) => html` <track-card .track=${track}></track-card>`
         )}
 
