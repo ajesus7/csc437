@@ -205,7 +205,7 @@ export class FeedPostElement extends LitElement {
                 </button>
               </form>
               <button class="recommend-songs" @click=${this._expand}>
-                Expand
+                Unexpand Post
               </button>
             `
           : html`
