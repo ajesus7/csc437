@@ -174,6 +174,20 @@ export class FeedPostElement extends LitElement {
 
         ${this.expanded
           ? html`
+              <section class="search-form">
+                <form @submit=${this._handleSubmit}>
+                  <input
+                    type="text"
+                    id="inputted-artist-name"
+                    name="inputted-artist-name"
+                    placeholder="Enter an artist, song, or album!"
+                  />
+                  <button class="recommend-songs" type="submit">
+                    Search for Songs
+                  </button>
+                </form>
+              </section>
+
               <section class="search-and-selected">
                 <section class="query-results">
                   ${this.topTracks.length > 0
@@ -193,17 +207,6 @@ export class FeedPostElement extends LitElement {
                 </section>
               </section>
 
-              <form @submit=${this._handleSubmit}>
-                <input
-                  type="text"
-                  id="inputted-artist-name"
-                  name="inputted-artist-name"
-                  placeholder="Enter an artist, song, or album!"
-                />
-                <button class="recommend-songs" type="submit">
-                  Search for Songs
-                </button>
-              </form>
               <button class="recommend-songs" @click=${this._expand}>
                 Unexpand Post
               </button>
@@ -218,32 +221,40 @@ export class FeedPostElement extends LitElement {
   }
 
   static styles = css`
-    .feed-single-post {
-      border: 1px solid white;
-      width: 47.5em;
-      height: 8em;
-      padding: 1.25em;
-    }
-
-    .search-and-selected {
-      width: 100%;
-      height: auto;
-      display: flex;
-      flex-direction: row;
-    }
-
+    .feed-single-post,
     .feed-single-post-expanded {
       border: 1px solid white;
       width: 47.5em;
-      height: auto;
       padding: 1.25em;
+      box-sizing: border-box; /* Ensures padding is included in width */
     }
 
-    .selected-tracks {
-      border: 2px solid white;
-      background: green;
-      width: 48%;
+    #inputted-artist-name {
+      width: 15em;
+      height: 2em;
     }
+
+    .search-form {
+      margin-bottom: 1.5em;
+    }
+
+    .search-and-selected {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      min-height: 8em; /* Set minimum height and allow expansion */
+      margin-bottom: 1.5em;
+    }
+
+    .query-results,
+    .selected-tracks {
+      flex: 1; /* Each takes up half of the container */
+      min-height: 8em; /* Set minimum height and allow expansion */
+      padding: 0.5em;
+      box-sizing: border-box; /* Ensures padding is included in dimensions */
+      border: 2px solid white;
+    }
+
     .query-results {
       width: 48%;
       background: blue;
