@@ -24,6 +24,9 @@ export class FeedPostElement extends LitElement {
   @state()
   expanded: boolean = false;
 
+  @state()
+  submissionSuccess: boolean | null = null;
+
   @property()
   expandedText: String = "unexpanded";
 
@@ -65,6 +68,7 @@ export class FeedPostElement extends LitElement {
   // * add the comment to the list of comments of that post in the database
   async _recommendTracks(ev: Event) {
     ev.preventDefault();
+    this.submissionSuccess = null; // Reset the submission state on each attempt
     const target = ev.target as HTMLFormElement;
     const formData = new FormData(target);
 
@@ -95,12 +99,14 @@ export class FeedPostElement extends LitElement {
         console.log("Comment successfully added");
         this._clearTopTracks();
         this._clearSelectedTracks();
+        this.submissionSuccess = true;
         target.reset(); // Reset the form if the response is successful
       } else {
         throw new Error("Failed to post comment");
       }
     } catch (error) {
       console.error("Error:", error);
+      this.submissionSuccess = false;
     }
   }
 
@@ -311,6 +317,12 @@ export class FeedPostElement extends LitElement {
                 </section>
 
                 <section class="recommend-form">
+                  ${this.submissionSuccess === true
+                    ? html`<p>Submission successful!</p>`
+                    : ``}
+                  ${this.submissionSuccess === false
+                    ? html`<p>Submission failed. Please try again.</p>`
+                    : ``}
                   <form @submit=${this._recommendTracks}>
                     <input
                       type="text"
