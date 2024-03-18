@@ -23,6 +23,9 @@ export class FeedPostElement extends LitElement {
   @state()
   expanded: boolean = false;
 
+  @property()
+  expandedText: String = "unexpanded";
+
   @property({ type: String })
   requestedSearchQuery = "";
 
@@ -207,79 +210,79 @@ export class FeedPostElement extends LitElement {
 
     return html`
       <section class="${this.expandedClass}">
-        <section class="name-and-time">
-          <h3 class="feed-name">${this.post?.userName}</h3>
-          <p class="time-posted">${readablePostTime}</p>
+        <section class="name-and-time-and-expand">
+          <section class="name-and-time">
+            <h3 class="feed-name">${this.post?.userName}</h3>
+            <p class="time-posted">${readablePostTime}</p>
+          </section>
+          <button class="expand-unexpand" @click=${this._expand}>
+            ${this.expanded ? "Unexpand" : "Expand"}
+          </button>
         </section>
         <p class="message">${this.post?.postMessage}</p>
-
         ${this.expanded
           ? html`
-              <section class="search-form">
-                <form @submit=${this._handleSubmit}>
-                  <input
-                    type="text"
-                    id="inputted-artist-name"
-                    name="inputted-artist-name"
-                    placeholder="Enter an artist, song, or album!"
-                  />
-                  <button class="recommend-songs" type="submit">
-                    Search for Songs
-                  </button>
-                </form>
-              </section>
+              <section class="expanded-content">
+                <section class="search-form">
+                  <form @submit=${this._handleSubmit}>
+                    <input
+                      type="text"
+                      id="inputted-artist-name"
+                      name="inputted-artist-name"
+                      placeholder="Enter an artist, song, or album!"
+                    />
+                    <button class="recommend-songs" type="submit">
+                      Search for Songs
+                    </button>
+                  </form>
+                </section>
 
-              <section class="search-and-selected">
-                <section class="query-results">
-                  ${this.topTracks.length > 0
-                    ? this.topTracks
-                        .slice(0, 5)
-                        .map(
-                          (track) =>
-                            html`<track-card .track=${track}></track-card>`
-                        )
-                    : html`<h3>
-                        The tracks you search for will show up here
-                      </h3>`}
+                <section class="search-and-selected">
+                  <section class="query-results">
+                    ${this.topTracks.length > 0
+                      ? this.topTracks
+                          .slice(0, 5)
+                          .map(
+                            (track) =>
+                              html`<track-card .track=${track}></track-card>`
+                          )
+                      : html`<h3>
+                          The tracks you search for will show up here
+                        </h3>`}
+                  </section>
+                  <section class="selected-tracks">
+                    <h3>Selected Tracks</h3>
+                    ${this.selectedTracks.map(
+                      (track) => html`<track-card .track=${track}></track-card>`
+                    )}
+                  </section>
                 </section>
-                <section class="selected-tracks">
-                  <h3>Selected Tracks</h3>
-                  ${this.selectedTracks.map(
-                    (track) => html` <track-card .track=${track}></track-card> `
-                  )}
-                </section>
-              </section>
-              <section class="clear-buttons">
-                <section class="clear-results-button-section">
-                  <button class="clear-results" @click=${this._clearTopTracks}>
-                    Clear Results
-                  </button>
-                </section>
-                <section class="clear-selected-tracks-button-section">
-                  <button
-                    class="clear-selected-tracks"
-                    @click=${this._clearSelectedTracks}
-                  >
-                    Clear Selected Tracks
-                  </button>
-                </section>
-              </section>
 
-              <section class="recommend-songs-button-section">
+                <section class="clear-buttons">
+                  <div class="clear-results-section">
+                    <button
+                      class="clear-results"
+                      @click=${this._clearTopTracks}
+                    >
+                      Clear Results
+                    </button>
+                  </div>
+                  <div class="clear-selected-tracks-section">
+                    <button
+                      class="clear-selected-tracks"
+                      @click=${this._clearSelectedTracks}
+                    >
+                      Clear Selected Tracks
+                    </button>
+                  </div>
+                </section>
+
                 <button class="recommend-songs" @click=${this._recommendTracks}>
                   Recommend Tracks!
                 </button>
               </section>
-
-              <button class="recommend-songs" @click=${this._expand}>
-                Unexpand Post
-              </button>
             `
-          : html`
-              <button class="recommend-songs" @click=${this._expand}>
-                Expand
-              </button>
-            `}
+          : ""}
       </section>
     `;
   }
@@ -306,6 +309,7 @@ export class FeedPostElement extends LitElement {
       width: 10em;
       background: var(--accent-color);
       padding: 1em;
+      border-radius: 5px;
     }
 
     .search-and-selected {
@@ -313,6 +317,32 @@ export class FeedPostElement extends LitElement {
       flex-direction: row;
       width: 100%;
       min-height: 8em; /* Set minimum height and allow expansion */
+    }
+
+    button.expand-unexpand {
+      background: none;
+      color: var(--white-color);
+      border: none; /* Remove default border */
+      padding: 0; /* Remove default padding */
+      margin: 0; /* Adjust as needed */
+      outline: none; /* Remove focus outline, though consider accessibility implications */
+      -webkit-appearance: none; /* For Safari and Chrome */
+      -moz-appearance: none; /* For Firefox */
+      appearance: none; /* Standard property for removing default styling */
+      margin-left: 3em;
+      background: var(--accent-color);
+      border-radius: 5px;
+      padding: 0.5em;
+    }
+
+    svg.icon {
+      display: inline;
+      height: 2em;
+      width: 2em;
+      vertical-align: top;
+      fill: var(--white-color);
+      color: var(--white-color);
+      margin: 4px 0px 0px 13px;
     }
 
     .query-results,
@@ -326,14 +356,21 @@ export class FeedPostElement extends LitElement {
 
     .clear-buttons {
       display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin-bottom: 1.5em;
     }
 
-    .clear-results-button-section,
-    .clear-selected-tracks-button-section {
-      width: 50%;
+    .clear-results-section,
+    .clear-selected-tracks-section {
       display: flex;
       justify-content: right;
-      margin-bottom: 1.5em;
+      width: 50%;
+    }
+
+    .clear-results,
+    .clear-selected-tracks {
+      width: 12em;
     }
 
     h3 {
@@ -348,18 +385,25 @@ export class FeedPostElement extends LitElement {
       height: 1em;
     }
 
+    .name-and-time-and-expand {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
     .clear-results,
     .clear-selected-tracks {
-      background: red; /* Example style */
+      background: red;
       padding: 1em;
       border: none;
       color: white;
       cursor: pointer;
+      border-radius: 5px;
     }
 
     .clear-results:hover,
     .clear-selected-tracks:hover {
-      background: darkred; /* Example hover effect */
+      background: darkred;
     }
 
     .recommend-songs {
@@ -367,6 +411,7 @@ export class FeedPostElement extends LitElement {
       padding: 1em;
       border: none;
       color: white;
+      border-radius: 5px;
     }
 
     .recommend-songs:hover {
@@ -379,7 +424,7 @@ export class FeedPostElement extends LitElement {
     }
     .feed-name {
       font-weight: 600;
-      margin-right: 1em;
+      margin-right: 0.5em;
       font-size: 1.2em;
     }
 
