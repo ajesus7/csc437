@@ -91,7 +91,12 @@ export class FeedPostElement extends LitElement {
         body: JSON.stringify(newComment), // Ensure your server expects this format
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        console.log("Comment successfully added");
+        this._clearTopTracks();
+        this._clearSelectedTracks();
+        target.reset(); // Reset the form if the response is successful
+      } else {
         throw new Error("Failed to post comment");
       }
     } catch (error) {
@@ -164,7 +169,6 @@ export class FeedPostElement extends LitElement {
   async authenticate() {
     const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
     const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-
 
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
