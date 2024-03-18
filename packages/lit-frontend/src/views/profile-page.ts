@@ -47,6 +47,35 @@ export class ProfilePageElement extends App.View {
     super.attributeChangedCallback(name, oldValue, newValue);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener("profile-update", (ev: Event) =>
+      this._handleProfileUpdate(ev as CustomEvent)
+    );
+  }
+
+  // disconnectedCallback() {
+  //   this.removeEventListener("profile-update", this._handleProfileUpdate);
+  //   super.disconnectedCallback();
+  // }
+
+  _handleProfileUpdate(ev: CustomEvent) {
+    console.log("Profile updated", ev.detail.profile);
+    // Ensure you have the userid available
+    const userid = this.userid;
+
+    // Check if userid is available
+    if (userid) {
+      this.dispatchMessage({
+        type: "ProfileSaved",
+        userid: userid, // Use the userid here
+        profile: ev.detail.profile,
+      });
+    } else {
+      console.error("UserID is undefined.");
+    }
+  }
+
   render() {
     return html` <user-profile .using=${this.profile}> </user-profile> `;
   }

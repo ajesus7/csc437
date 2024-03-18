@@ -17,6 +17,9 @@ export class UserProfileElement extends LitElement {
   @property()
   path: string = "";
 
+  @property()
+  editMode: boolean = false;
+
   @property({ attribute: false })
   using?: Profile;
 
@@ -36,11 +39,137 @@ export class UserProfileElement extends LitElement {
   //   super.attributeChangedCallback(name, oldValue, newValue);
   // }
 
+  _changeEditMode() {
+    console.log("Edit mode changed");
+    this.editMode = !this.editMode;
+  }
+
+  _handleNameChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.profile.name = input.value;
+    this.requestUpdate();
+  }
+
+  _handleBioChange(e: Event) {
+    const input = e.target as HTMLTextAreaElement;
+    this.profile.bio = input.value;
+    this.requestUpdate();
+  }
+
+  _handleMusicTasteChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.profile.musicTaste = input.value;
+    this.requestUpdate();
+  }
+
+  _handleTimezoneChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.profile.timezone = input.value;
+    this.requestUpdate();
+  }
+
+  _handleSpotifyChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.profile.spotify = input.value === "true"; // Converts the string back to a boolean
+    this.requestUpdate();
+  }
+
+  _handleSubmit(e: Event) {
+    e.preventDefault();
+    // Dispatch a custom event with the updated profile data
+    console.log("Form submitted with:", this.profile);
+    const updateEvent = new CustomEvent("profile-update", {
+      detail: { profile: this.profile },
+      bubbles: true, // Allows the event to bubble up through the DOM
+      composed: true, // Allows the event to cross the shadow DOM boundary
+    });
+    console.log("dispatching event: ", updateEvent);
+    this.dispatchEvent(updateEvent);
+    this.editMode = !this.editMode;
+  }
+
   render() {
     const { name, profileImage, profileDescription, bio } = this.profile;
 
     return html`
+      ${this.editMode
+        ? html`
+            <section class="edit-mode-section">
+              <form @submit=${this._handleSubmit}>
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    .value=${name}
+                    @input=${this._handleNameChange}
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="bio">Bio</label>
+                  <input
+                    type="text"
+                    id="bio"
+                    name="bio"
+                    .value=${bio}
+                    @input=${this._handleBioChange}
+                  />
+              </div>
+                <div class="form-group">
+                  <label for="musicTaste">Music Taste</label>
+                  <input
+                    type="text"
+                    id="musicTaste"
+                    name="musicTaste"
+                    .value=${this.profile.musicTaste}
+                    @input=${this._handleMusicTasteChange}
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="timezone">Timezone</label>
+                  <input
+                    type="text"
+                    id="timezone"
+                    name="timezone"
+                    .value=${this.profile.timezone}
+                    @input=${this._handleTimezoneChange}
+                  />
+                </div>
+                  <fieldset class="form-group">
+                      <legend>Spotify</legend>
+                      <label>
+                        <input
+                          type="radio"
+                          name="spotify"
+                          value="true"
+                          ?checked=${this.profile.spotify === true}
+                          @change=${this._handleSpotifyChange}
+                        /> Yes
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="spotify"
+                          value="false"
+                          ?checked=${this.profile.spotify === false}
+                          @change=${this._handleSpotifyChange}
+                        /> No
+                      </label>
+                    </fieldset>
+                </fieldset>
+                <div class="form-group">
+                  <button type="submit">Save</button>
+                </div>
+              </form>
+            </section>
+          `
+        : ""}
+
       <section class="user-profile-header">
+        <p class="edit-profile-toggle" @click=${this._changeEditMode}>
+          Edit profile.
+        </p>
         <section class="user-profile-user-content">
           <section class="user-profile-picture">
             <img
@@ -111,12 +240,25 @@ export class UserProfileElement extends LitElement {
       margin-top: 25px;
       height: 8em;
     }
+
+    .edit-mode-section {
+      margin-left: 100px;
+      border: 1px solid white;
+      margin-top: 2.5em;
+      width: 38em;
+    }
+
     .user-profile-header-text {
       display: flex;
       flex-direction: column;
       justify-content: center;
       margin-left: 50px;
       height: 75%;
+    }
+
+    .edit-profile-toggle {
+      color: var(--accent-color);
+      text-decoration: underline;
     }
 
     .user-description {
@@ -213,6 +355,86 @@ export class UserProfileElement extends LitElement {
       vertical-align: top;
       fill: currentColor;
       margin: 4px 0px 0px 13px;
+    }
+
+    /* edit form styling */
+    .edit-mode-section {
+      background-color: #f8f9fa; /* Light gray background */
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      width: 90%;
+      max-width: 500px; /* Adjust the form width as needed */
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="radio"],
+    textarea {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+    }
+
+    input[type="radio"] {
+      width: auto;
+      margin-right: 5px;
+    }
+
+    textarea {
+      resize: vertical; /* Allows vertical resizing, might be useful for the bio */
+      padding: 8px; /* Adjust padding as necessary */
+      vertical-align: top; /* Align text to the top */
+      height: 100px; /* Initial height; adjust as necessary */
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    legend {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .radio-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .radio-group label {
+      margin-right: 20px; /* Space between radio buttons */
     }
   `;
 }
