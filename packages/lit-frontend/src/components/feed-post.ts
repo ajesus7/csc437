@@ -14,6 +14,7 @@ import { TrackObject } from "../../../ts-models";
 
 //import components
 import "./track-card";
+import "./comment-card";
 
 @customElement("feed-post")
 export class FeedPostElement extends LitElement {
@@ -57,8 +58,6 @@ export class FeedPostElement extends LitElement {
       // If the track is not already selected, add it to the array
       this.selectedTracks = [...this.selectedTracks, track];
     }
-
-    console.log("Selected tracks:", this.selectedTracks);
   }
 
   // * make a PUT request to the post that the button was clicked on,
@@ -66,14 +65,11 @@ export class FeedPostElement extends LitElement {
   // * add the comment to the list of comments of that post in the database
   async _recommendTracks(ev: Event) {
     ev.preventDefault();
-    console.log("Recommend Tracks Called!");
     const target = ev.target as HTMLFormElement;
     const formData = new FormData(target);
 
     // Retrieve the value of the input field by its name
     let message = formData.get("input-comment") as string;
-
-    console.log("Comment Message: ", message);
 
     const trackIds = this.selectedTracks.map((track) => track.id);
     const url = `http://localhost:3000/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
@@ -86,7 +82,6 @@ export class FeedPostElement extends LitElement {
       SongIDs: trackIds,
     };
 
-    console.log("COMMENT TO BE APPENDED: ", newComment);
     try {
       const response = await fetch(url, {
         method: "PUT",
@@ -99,24 +94,18 @@ export class FeedPostElement extends LitElement {
       if (!response.ok) {
         throw new Error("Failed to post comment");
       }
-
-      const updatedPost = await response.json();
-      console.log("Updated post with new comment:", updatedPost);
     } catch (error) {
       console.error("Error:", error);
     }
   }
 
   _expand() {
-    console.log("EXPAND CALLED");
     this.expanded = !this.expanded;
-    console.log("class was: ", this.expandedClass);
     if (this.expandedClass === "feed-single-post") {
       this.expandedClass = "feed-single-post-expanded";
     } else {
       this.expandedClass = "feed-single-post";
     }
-    console.log("class now is: ", this.expandedClass);
   }
 
   _handleSubmit(ev: Event) {
@@ -127,22 +116,17 @@ export class FeedPostElement extends LitElement {
     // Retrieve the value of the input field by its name
     this.requestedSearchQuery = formData.get("inputted-artist-name") as string;
 
-    console.log("Artist Name: ", this.requestedSearchQuery);
     this.searchSpotify();
   }
 
   _clearTopTracks() {
     this.topTracks = []; // This empties the array, removing all tracks
-    console.log("Top tracks cleared");
   }
   _clearSelectedTracks() {
     this.selectedTracks = []; // This empties the array, removing all tracks
-    console.log("Selected tracks cleared");
   }
 
   async fetchTopTracks(artistId: string) {
-    console.log("WITHIN FETCH TOP TRACKS\n ArtistId: ", artistId);
-
     const response = await fetch(
       `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`, // Ensure to add a market parameter as it's required by the Spotify API.
       {
@@ -159,7 +143,6 @@ export class FeedPostElement extends LitElement {
       if (data && data.tracks) {
         // Check if 'data' and 'data.tracks' are present
         this.topTracks = data.tracks; // Assuming 'data.tracks' is the array you're interested in
-        console.log("body: ", this.topTracks);
       } else {
         console.log("No tracks found or data is malformed");
       }
@@ -179,11 +162,9 @@ export class FeedPostElement extends LitElement {
   }
 
   async authenticate() {
-    console.log("AUTHENTICATING");
     const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
     const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
 
-    console.log("CLIENTID: ", clientId, "\n", "CLIENTSECRET: ", clientSecret);
 
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
@@ -197,9 +178,7 @@ export class FeedPostElement extends LitElement {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log("Authentication response data: ", data);
       this.accessToken = data.access_token;
-      console.log("Access Token:", this.accessToken); // Add this line to log the token
     } else {
       console.error("Spotify authentication failed");
     }
@@ -231,12 +210,10 @@ export class FeedPostElement extends LitElement {
       }
 
       const data = await response.json();
-      console.log("Tracks Search Response: ", data);
 
       // Update the component state with the found tracks
       if (data.tracks.items.length > 0) {
         this.topTracks = data.tracks.items;
-        console.log("Tracks found:", this.topTracks);
       } else {
         this.topTracks = [];
         alert("No tracks found. Please try another search.");
@@ -263,9 +240,18 @@ export class FeedPostElement extends LitElement {
           </button>
         </section>
         <p class="message">${this.post?.postMessage}</p>
+        <section class="post-comments">
+          <h3 class="comments-header">Comments</h3>
+          ${this.post?.comments.map(
+            (comment) => html`<comment-card .comment=${comment}></comment-card>`
+          )}
+        </section>
         ${this.expanded
           ? html`
               <section class="expanded-content">
+                <h3 class="expanded-header">
+                  Leave a Comment and Recommend Some Songs!
+                </h3>
                 <section class="search-form">
                   <form @submit=${this._handleSubmit}>
                     <input
@@ -355,7 +341,7 @@ export class FeedPostElement extends LitElement {
     }
 
     .search-form {
-      margin-bottom: 1.5em;
+      margin-bottom: 0.75em;
     }
 
     .button-recommend-tracks {
@@ -365,6 +351,19 @@ export class FeedPostElement extends LitElement {
       border-radius: 5px;
     }
 
+    .message {
+      border-bottom: 2px solid white;
+      padding-bottom: 1em;
+    }
+
+    .comments-header {
+      margin-bottom: 0.5em;
+    }
+
+    .expanded-header {
+      margin-top: 2em;
+      margin-bottom: 1em;
+    }
     .search-and-selected {
       display: flex;
       flex-direction: row;
@@ -423,7 +422,10 @@ export class FeedPostElement extends LitElement {
 
     .clear-results,
     .clear-selected-tracks {
-      width: 12em;
+      text-align: center;
+      width: 8em;
+      height: 3em;
+      font-size: 0.8em;
     }
 
     h3 {
@@ -447,7 +449,8 @@ export class FeedPostElement extends LitElement {
     .clear-results,
     .clear-selected-tracks {
       background: red;
-      padding: 1em;
+      font-size: 0.5em;
+      padding: 0.5em;
       border: none;
       color: white;
       cursor: pointer;
@@ -475,6 +478,7 @@ export class FeedPostElement extends LitElement {
     .message {
       margin-bottom: 1em;
     }
+
     .feed-name {
       font-weight: 600;
       margin-right: 0.5em;

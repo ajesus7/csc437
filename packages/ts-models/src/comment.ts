@@ -5,5 +5,5 @@ export interface IComment {
   userName: string;
   commentTime: Date;
   commentMessage: string;
-  spotifyTrackIds: string[];
+  SongIDs: string[];
 }

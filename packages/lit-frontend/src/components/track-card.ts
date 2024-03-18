@@ -73,13 +73,13 @@ export class TrackCardElement extends LitElement {
     }
     .artist-name {
       color: darkgray;
-      font-size: 0.8em;
+      font-size: 0.6em;
       margin: 0;
       padding: 0;
     }
     .track-image {
-      width: 4em;
-      height: 4em;
+      width: 2.5em;
+      height: 2.5em;
     }
   `;
 }
