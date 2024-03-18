@@ -1,11 +1,10 @@
-import { Schema, Model, Document, model } from "mongoose";
-import CommentSchema from "./comment";
-import { IPost } from "../../../ts-models";
-import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
+import Models from "./comment";
+const { CommentSchema } = Models;
 
-const postSchema = new Schema<IPost>({
+const PostSchema = new mongoose.Schema({
   userid: {
-    type: ObjectId, // Using ObjectId for userid
+    type: mongoose.Schema.Types.ObjectId, // Using ObjectId for userid
     required: true,
   },
   userName: {
@@ -20,15 +19,10 @@ const postSchema = new Schema<IPost>({
     type: String,
     required: true,
   },
-  comments: [
-    {
-      type: Schema.Types.ObjectId, // Defines a reference to another document
-      ref: "Comment", // The name of the model you're referring to
-    },
-  ],
+  comments: [CommentSchema], // List of adjusted Comment objects
 });
 
 // Create models from the schemas
-const postModel = model<IPost>("Post", postSchema);
+const Post = mongoose.model("Post", PostSchema);
 
-export default postModel;
+export { PostSchema, Post as PostModel };

@@ -33,11 +33,6 @@ __export(comment_exports, {
 module.exports = __toCommonJS(comment_exports);
 var import_mongoose = __toESM(require("mongoose"));
 const CommentSchema = new import_mongoose.default.Schema({
-  userid: {
-    type: import_mongoose.default.Schema.Types.ObjectId,
-    // Using ObjectId for userid
-    required: true
-  },
   userName: {
     type: String,
     required: true
@@ -55,12 +50,6 @@ const CommentSchema = new import_mongoose.default.Schema({
     {
       type: String
       // String identifiers for songs
-    }
-  ],
-  SongRecs: [
-    {
-      type: String
-      // String recommendations or identifiers
     }
   ]
 });

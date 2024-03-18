@@ -61,9 +61,52 @@ export class FeedPostElement extends LitElement {
     console.log("Selected tracks:", this.selectedTracks);
   }
 
-  _recommendTracks() {
+  // * make a PUT request to the post that the button was clicked on,
+  // * create a comment with the inputted information (songs, userid, time, message)
+  // * add the comment to the list of comments of that post in the database
+  async _recommendTracks(ev: Event) {
+    ev.preventDefault();
     console.log("Recommend Tracks Called!");
+    const target = ev.target as HTMLFormElement;
+    const formData = new FormData(target);
+
+    // Retrieve the value of the input field by its name
+    let message = formData.get("input-comment") as string;
+
+    console.log("Comment Message: ", message);
+
+    const trackIds = this.selectedTracks.map((track) => track.id);
+    const url = `http://localhost:3000/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
+
+    // todo USERID NEEDS TO BE CHANGED TO BE DYNAMIC based on given profile
+    const newComment = {
+      userName: "Aidan",
+      commentTime: new Date(), // Current time as the comment time
+      commentMessage: message,
+      SongIDs: trackIds,
+    };
+
+    console.log("COMMENT TO BE APPENDED: ", newComment);
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newComment), // Ensure your server expects this format
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to post comment");
+      }
+
+      const updatedPost = await response.json();
+      console.log("Updated post with new comment:", updatedPost);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
+
   _expand() {
     console.log("EXPAND CALLED");
     this.expanded = !this.expanded;
@@ -277,9 +320,19 @@ export class FeedPostElement extends LitElement {
                   </div>
                 </section>
 
-                <button class="recommend-songs" @click=${this._recommendTracks}>
-                  Recommend Tracks!
-                </button>
+                <section class="recommend-form">
+                  <form @submit=${this._recommendTracks}>
+                    <input
+                      type="text"
+                      id="input-comment"
+                      name="input-comment"
+                      placeholder="Leave a message!"
+                    />
+                    <button class="recommend-songs" type="submit">
+                      Recommend Tracks!
+                    </button>
+                  </form>
+                </section>
               </section>
             `
           : ""}

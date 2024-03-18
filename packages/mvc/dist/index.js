@@ -28,7 +28,7 @@ var import_mongoConnect = require("./mongoConnect");
 var import_auth = require("./auth");
 var import_api = __toESM(require("./routes/api"));
 var import_posts = __toESM(require("./services/posts"));
-var import_spotifySearch = __toESM(require("./services/spotifySearch"));
+var import_post = require("./mongo/post");
 const app = (0, import_express.default)();
 const port = process.env.PORT || 3e3;
 let dist;
@@ -51,90 +51,6 @@ app.post("/signup", import_auth.registerUser);
 app.use("/api", import_api.default);
 const distPath = path.resolve(__dirname, "..", "..", "lit-frontend", "dist");
 app.use(import_express.default.static(distPath));
-var generateRandomString = function(length) {
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (var i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
-app.get("/auth/login", (req, res) => {
-});
-app.get("/auth/callback", (req, res) => {
-});
-var redirect_uri = "http://localhost:3000/callback";
-app.get("/login", function(req, res) {
-  var state = generateRandomString(16);
-  var scope = "user-read-private user-read-email";
-  res.redirect(
-    "https://accounts.spotify.com/authorize?" + querystring.stringify({
-      response_type: "code",
-      client_id,
-      scope,
-      redirect_uri,
-      state
-    })
-  );
-});
-app.get("/callback", function(req, res) {
-  var code = req.query.code || null;
-  var state = req.query.state || null;
-  if (state === null) {
-    res.redirect(
-      "/#" + querystring.stringify({
-        error: "state_mismatch"
-      })
-    );
-  } else {
-    var authOptions = {
-      url: "https://accounts.spotify.com/api/token",
-      form: {
-        code,
-        redirect_uri,
-        grant_type: "authorization_code"
-      },
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-        Authorization: "Basic " + new Buffer.from(
-          process.env.SPOTIFY_CLIENT_ID + ":" + process.env.SPOTIFY_CLIENT_SECRET
-        ).toString("base64")
-      },
-      json: true
-    };
-  }
-});
-app.get("/auth/login", (req, res) => {
-  var scope = "streaming                user-read-email                user-read-private";
-  var state = generateRandomString(16);
-  let spotify_client_id = process.env.SPOTIFY_CLIENT_ID;
-  var auth_query_parameters = new URLSearchParams({
-    response_type: "code",
-    client_id: spotify_client_id,
-    scope,
-    redirect_uri: "http://localhost:3000/auth/callback",
-    state
-  });
-  res.redirect(
-    "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString()
-  );
-});
-app.get("/spotify", (req, res) => {
-  console.log("REQUEST MADE IT TO /POST ENDPOINT");
-  let query = typeof req.query.query === "string" ? req.query.query : "";
-  let songFinder = new import_spotifySearch.default();
-  songFinder.authenticate().then(() => {
-    songFinder.searchSongs(query).then((searchResults) => {
-      res.json(searchResults);
-    }).catch((error) => {
-      console.error("Spotify search failed", error);
-      res.status(500).send("Error searching Spotify");
-    });
-  }).catch((error) => {
-    console.error("Authentication failed", error);
-    res.status(500).send("Authentication failed");
-  });
-});
 app.get("/posts", (req, res) => {
   import_posts.default.getAll().then((allPosts) => {
     if (!allPosts || allPosts.length === 0)
@@ -149,6 +65,23 @@ app.get("/posts", (req, res) => {
 app.post("/posts", (req, res) => {
   const newPost = req.body;
   import_posts.default.create(newPost).then((post) => res.status(201).send(post)).catch((err) => res.status(500).send(err));
+});
+app.put("/posts/:postid", (req, res) => {
+  const postid = req.params.postid;
+  const newComment = req.body;
+  console.log(newComment);
+  const updateOperation = {
+    $push: { comments: newComment }
+  };
+  import_post.PostModel.findOneAndUpdate({ _id: postid }, updateOperation, { new: true }).then((updatedPost) => {
+    if (!updatedPost) {
+      return res.status(404).send("Post not found");
+    }
+    res.json(updatedPost);
+  }).catch((err) => {
+    console.error("Error adding comment:", err);
+    res.status(500).send(err);
+  });
 });
 app.get("*", (req, res) => {
   if (/\.[^\/]+$/.test(req.path)) {

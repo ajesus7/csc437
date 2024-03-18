@@ -33,6 +33,7 @@ __export(posts_exports, {
 module.exports = __toCommonJS(posts_exports);
 var import_express = __toESM(require("express"));
 var import_posts = __toESM(require("../services/posts"));
+var import_posts2 = require("../services/posts");
 const router = import_express.default.Router();
 router.post("/", (req, res) => {
   const newPost = req.body;
@@ -49,9 +50,12 @@ router.get("/posts", (req, res) => {
     res.status(404).send("Posts not found");
   });
 });
-router.put("/:userid", (req, res) => {
-  const { ObjectId } = req.params;
-  const newPost = req.body;
-  import_posts.default.update(ObjectId, newPost).then((post) => res.json(post)).catch((err) => res.status(404).end());
+router.put("/:postid", (req, res) => {
+  const postid = req.params.postid;
+  const newComment = req.body;
+  const updateOperation = {
+    $push: { comments: newComment }
+  };
+  (0, import_posts2.update)(postid, updateOperation).then((updatedPost) => res.json(updatedPost)).catch((err) => res.status(500).send(err));
 });
 var posts_default = router;

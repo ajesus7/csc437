@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const CommentSchema = new mongoose.Schema({
-  userid: {
-    type: mongoose.Schema.Types.ObjectId, // Using ObjectId for userid
-    required: true,
-  },
+  // userid: {
+  //   _user: { type: Schema.Types.ObjectId, ref: "Profile" },
+  //   required: true,
+  // },
   userName: {
     type: String,
     required: true,
@@ -17,17 +17,19 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  SongIDs: [
+  spotifyTrackIds: [
     {
       type: String, // String identifiers for songs
     },
   ],
-  SongRecs: [
-    {
-      type: String, // String recommendations or identifiers
-    },
-  ],
 });
+
+// const CommentSchema = new mongoose.Schema({
+//   _user: {
+//     userid: { type: Schema.Types.ObjectId, ref: "Profile" },
+//     required: true,
+//   },
+// });
 
 const Comment = mongoose.model("Comment", CommentSchema);
 

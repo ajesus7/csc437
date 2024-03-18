@@ -1,6 +1,6 @@
 import { Document } from "mongoose";
 import { IPost } from "../../../ts-models";
-import PostModel from "../mongo/post";
+import { PostModel } from "../mongo/post"; // Adjust the path as necessary
 
 function index(): Promise<IPost[]> {
   return PostModel.find();
@@ -30,14 +30,15 @@ function create(post: IPost): Promise<IPost> {
   return p.save();
 }
 
-function update(ObjectId: String, post: IPost): Promise<IPost> {
+function update(ObjectId: String, updateData: any): Promise<IPost> {
   return new Promise((resolve, reject) => {
-    PostModel.findOneAndUpdate({ ObjectId }, post, {
-      new: true,
-    }).then((post) => {
-      if (post) resolve(post);
-      else reject("Failed to update post");
-    });
+    // Correctly using the _id field to find the document
+    PostModel.findOneAndUpdate({ _id: ObjectId }, updateData, { new: true })
+      .then((updatedPost) => {
+        if (updatedPost) resolve(updatedPost);
+        else reject("Failed to update post");
+      })
+      .catch((err) => reject(err));
   });
 }
 

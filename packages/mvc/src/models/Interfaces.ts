@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ObjectId, Schema } from "mongoose";
 
 //for now the spotify boolean (if true) means they are a spotify user, false means Apple Music
 export interface Profile {
@@ -53,6 +53,14 @@ export interface Game {
   dateCompleted: string;
 }
 
+// export interface IPost {
+//   userid: ObjectId;
+//   userName: string;
+//   postTime: Date;
+//   postMessage: string;
+//   comments: [{ type: Schema.Types.ObjectId; ref: "Comment" }];
+// }
+
 export interface IPost {
   userid: ObjectId;
   userName: string;
@@ -62,10 +70,9 @@ export interface IPost {
 }
 
 export interface IComment {
-  userid: ObjectId;
+  // _user: ObjectId;
   userName: string;
   commentTime: Date;
   commentMessage: string;
   SongIDs: string[];
-  SongRecs: string[];
 }

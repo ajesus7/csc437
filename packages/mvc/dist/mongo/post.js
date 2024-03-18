@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,17 +17,27 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var post_exports = {};
 __export(post_exports, {
-  default: () => post_default
+  PostModel: () => Post,
+  PostSchema: () => PostSchema
 });
 module.exports = __toCommonJS(post_exports);
-var import_mongoose = require("mongoose");
-var import_mongodb = require("mongodb");
-const postSchema = new import_mongoose.Schema({
+var import_mongoose = __toESM(require("mongoose"));
+var import_comment = __toESM(require("./comment"));
+const { CommentSchema } = import_comment.default;
+const PostSchema = new import_mongoose.default.Schema({
   userid: {
-    type: import_mongodb.ObjectId,
+    type: import_mongoose.default.Schema.Types.ObjectId,
     // Using ObjectId for userid
     required: true
   },
@@ -42,14 +54,12 @@ const postSchema = new import_mongoose.Schema({
     type: String,
     required: true
   },
-  comments: [
-    {
-      type: import_mongoose.Schema.Types.ObjectId,
-      // Defines a reference to another document
-      ref: "Comment"
-      // The name of the model you're referring to
-    }
-  ]
+  comments: [CommentSchema]
+  // List of adjusted Comment objects
 });
-const postModel = (0, import_mongoose.model)("Post", postSchema);
-var post_default = postModel;
+const Post = import_mongoose.default.model("Post", PostSchema);
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  PostModel,
+  PostSchema
+});
