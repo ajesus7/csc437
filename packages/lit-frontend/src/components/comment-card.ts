@@ -152,7 +152,7 @@ export class CommentCardElement extends LitElement {
     .single-comment {
       display: flex;
       flex-direction: row;
-      border: 2px solid white;
+      border: 1px solid white;
       font-weight: 500;
     }
 

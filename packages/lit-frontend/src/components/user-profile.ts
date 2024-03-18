@@ -26,7 +26,6 @@ export class UserProfileElement extends LitElement {
 
   // //runs once when instantiated
 
-
   // // in class UserProfileElement
   // attributeChangedCallback(name: string, oldValue: string, newValue: string) {
   //   console.log("PROFILE");
@@ -36,7 +35,6 @@ export class UserProfileElement extends LitElement {
 
   //   super.attributeChangedCallback(name, oldValue, newValue);
   // }
-
 
   render() {
     const { name, profileImage, profileDescription, bio } = this.profile;

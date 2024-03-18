@@ -1,5 +1,6 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
 // import { Profile } from "../models/profile";
 // import { authContext } from "./auth-required";
 // import { consume } from "@lit/context";
@@ -80,7 +81,7 @@ export class FeedPostElement extends LitElement {
 
     // todo USERID NEEDS TO BE CHANGED TO BE DYNAMIC based on given profile
     const newComment = {
-      userName: "Aidan",
+      userName: "aidan",
       commentTime: new Date(), // Current time as the comment time
       commentMessage: message,
       SongIDs: trackIds,
@@ -368,7 +369,7 @@ export class FeedPostElement extends LitElement {
     }
 
     .message {
-      border-bottom: 2px solid white;
+      border-bottom: 1px solid white;
       padding-bottom: 1em;
     }
 
@@ -418,7 +419,7 @@ export class FeedPostElement extends LitElement {
       flex: 1; /* Each takes up half of the container */
       min-height: 8em; /* Set minimum height and allow expansion */
       box-sizing: border-box; /* Ensures padding is included in dimensions */
-      border: 2px solid white;
+      border: 1px solid white;
       margin-bottom: 0.5em;
     }
 
