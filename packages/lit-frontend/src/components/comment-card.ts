@@ -152,8 +152,17 @@ export class CommentCardElement extends LitElement {
     .single-comment {
       display: flex;
       flex-direction: row;
-      border: 1px solid white;
-      font-weight: 500;
+      background-color: #2c2c2e;
+      color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .comment-left,
+    .comment-right {
+      flex: 1;
     }
 
     .details-header {
@@ -163,59 +172,50 @@ export class CommentCardElement extends LitElement {
       margin-bottom: 0.5em;
     }
 
+    .comment-name {
+      font-weight: 600;
+      margin-right: 0.5em;
+    }
+
+    .comment-time {
+      font-size: 0.8em;
+      color: #a9a9a9;
+    }
+
+    .comment-message {
+      margin-top: 1em;
+      font-size: 1em;
+    }
+
     .track-info {
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin-bottom: 0.2em;
+      margin-top: 10px;
     }
 
     .track-name-and-artist {
       display: flex;
       flex-direction: column;
       align-content: center;
-      text-align: left:
-    }
-
-    .comment-left {
-      width: 30%;
-    }
-
-    .comment-right {
-      width: 65%;
-      display: flex;
-      flex-direction: column;
-      align-content: center;
+      margin-left: 10px;
     }
 
     .track-name,
     .track-artist {
-      font-size: 0.8em;
-      padding: 0;
       margin: 0;
     }
 
-    .comment-name {
-      color: white;
-      font-size: 1em;
-      margin: 0;
-      padding: 0;
-      margin-right: 1em;
-    }
-    .comment-time {
-      color: darkgray;
-      font-size: 0.6em;
-      margin: 0;
-      padding: 0;
+    .track-artist {
+      font-size: 0.875em;
+      color: #a9a9a9;
     }
 
-    .comment-message {
-      font-size: 1em;
-      font-weight: 300;
-    }
     .track-image {
-      width: 2.5em;
-      height: 2.5em;
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
     }
   `;
 }

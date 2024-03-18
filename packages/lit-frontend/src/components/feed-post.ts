@@ -276,7 +276,7 @@ export class FeedPostElement extends LitElement {
                     </button>
                   </form>
                 </section>
-
+                
                 <section class="search-and-selected">
                   <section class="query-results">
                     ${this.topTracks.length > 0
@@ -346,166 +346,168 @@ export class FeedPostElement extends LitElement {
   static styles = css`
     .feed-single-post,
     .feed-single-post-expanded {
-      border: 1px solid white;
-      width: 47.5em;
-      padding: 1.25em;
-      box-sizing: border-box; /* Ensures padding is included in width */
-    }
-
-    #inputted-artist-name {
-      width: 15em;
-      height: 2em;
-    }
-
-    .search-form {
-      margin-bottom: 0.75em;
-    }
-
-    .button-recommend-tracks {
-      width: 10em;
-      background: var(--accent-color);
-      padding: 1em;
-      border-radius: 5px;
+      background-color: #2c2c2e;
+      color: #ffffff;
+      padding: 20px;
+      margin-bottom: 1em;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     .message {
-      border-bottom: 1px solid white;
-      padding-bottom: 1em;
-    }
-
-    .comments-header {
-      margin-bottom: 0.5em;
-    }
-
-    .expanded-header {
-      margin-top: 2em;
-      margin-bottom: 1em;
-    }
-    .search-and-selected {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      min-height: 8em; /* Set minimum height and allow expansion */
-    }
-
-    button.expand-unexpand {
-      background: none;
-      color: var(--white-color);
-      border: none; /* Remove default border */
-      padding: 0; /* Remove default padding */
-      margin: 0; /* Adjust as needed */
-      outline: none; /* Remove focus outline, though consider accessibility implications */
-      -webkit-appearance: none; /* For Safari and Chrome */
-      -moz-appearance: none; /* For Firefox */
-      appearance: none; /* Standard property for removing default styling */
-      margin-left: 3em;
-      background: var(--accent-color);
-      border-radius: 5px;
-      padding: 0.5em;
-    }
-
-    svg.icon {
-      display: inline;
-      height: 2em;
-      width: 2em;
-      vertical-align: top;
-      fill: var(--white-color);
-      color: var(--white-color);
-      margin: 4px 0px 0px 13px;
-    }
-
-    .query-results,
-    .selected-tracks {
-      flex: 1; /* Each takes up half of the container */
-      min-height: 8em; /* Set minimum height and allow expansion */
-      box-sizing: border-box; /* Ensures padding is included in dimensions */
-      border: 1px solid white;
-      margin-bottom: 0.5em;
-    }
-
-    .clear-buttons {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      margin-bottom: 1.5em;
-    }
-
-    .clear-results-section,
-    .clear-selected-tracks-section {
-      display: flex;
-      justify-content: right;
-      width: 50%;
-    }
-
-    .clear-results,
-    .clear-selected-tracks {
-      text-align: center;
-      width: 8em;
-      height: 3em;
-      font-size: 0.8em;
-    }
-
-    h3 {
-      margin: 0;
-      height: auto;
-    }
-
-    .name-and-time {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      height: 1em;
+      padding-bottom: 1.5em;
     }
 
     .name-and-time-and-expand {
       display: flex;
-      flex-direction: row;
       align-items: center;
-    }
-
-    .clear-results,
-    .clear-selected-tracks {
-      background: red;
-      font-size: 0.5em;
-      padding: 0.5em;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    .clear-results:hover,
-    .clear-selected-tracks:hover {
-      background: darkred;
-    }
-
-    .recommend-songs {
-      background: var(--accent-color);
-      padding: 1em;
-      border: none;
-      color: white;
-      border-radius: 5px;
-    }
-
-    .recommend-songs:hover {
-      cursor: pointer;
-      background: rgb(194, 135, 39);
-    }
-
-    .message {
+      justify-content: space-between;
       margin-bottom: 1em;
+    }
+
+    .name-and-time {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
     }
 
     .feed-name {
       font-weight: 600;
-      margin-right: 0.5em;
-      font-size: 1.2em;
+      margin-right: 1em; /* Adjust as needed */
     }
 
     .time-posted {
       font-size: 0.8em;
-      font-weight: 300;
-      color: lightgray;
+      color: #a9a9a9;
+      margin-left: 1em; /* Ensures the time is to the right of the name */
+      flex-grow: 1;
+    }
+
+    .expand-unexpand {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 8px 16px;
+      font-size: 0.875em;
+      white-space: nowrap; /* Prevents wrapping on small screens */
+    }
+
+    .expand-unexpand:hover {
+      background: #0056b3;
+    }
+
+    .message {
+      font-size: 1em;
+      margin-bottom: 1em;
+    }
+    /* Additional Styles for Expanded Content */
+    .query-results,
+    .selected-tracks {
+      background-color: #3a3a3c;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      overflow: auto; /* Allow scrolling if content exceeds container size */
+    }
+
+    .query-results h3,
+    .selected-tracks h3 {
+      color: #ddd;
+      font-size: 1.2em;
+    }
+
+    .track-card {
+      display: flex;
+      align-items: center;
+      background-color: #2c2c2e;
+      color: #fff;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .track-card:hover {
+      background-color: #424244;
+    }
+
+    .track-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    .track-details {
+      flex-grow: 1;
+    }
+
+    .track-name,
+    .track-artist {
+      margin: 0;
+      padding: 0;
+    }
+
+    .track-name {
+      font-weight: bold;
+    }
+
+    .track-artist {
+      font-size: 0.875em;
+      color: #bbbbbb;
+    }
+
+    /* Search Form */
+    .search-form input[type="text"] {
+      width: calc(
+        100% - 130px
+      ); /* Adjust based on button width to fit on one line */
+      padding: 8px;
+      margin-right: 10px; /* Space between input and button */
+      border: 1px solid #555;
+      background-color: #2c2c2e;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    .search-form button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .search-form button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Clear Buttons */
+    .clear-results,
+    .clear-selected-tracks {
+      padding: 8px 16px;
+      background-color: #444;
+      border: none;
+      color: #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875em;
+    }
+
+    .clear-results:hover,
+    .clear-selected-tracks:hover {
+      background-color: #555;
+    }
+
+    /* Styling for the entire expanded content section */
+    .expanded-content {
+      border-top: 1px solid #555; /* Adds a subtle separation line */
+      padding-top: 20px; /* Space above the content */
     }
   `;
 }

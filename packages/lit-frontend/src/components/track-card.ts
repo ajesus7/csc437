@@ -57,29 +57,42 @@ export class TrackCardElement extends LitElement {
   static styles = css`
     .single-track {
       display: flex;
-      flex-direction: row;
-      border: 1px solid white;
-      font-weight: 500;
+      align-items: center;
+      padding: 10px;
+      background-color: #ffffff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
     }
 
     .single-track:hover {
-      background: var(--accent-color);
+      background-color: #f0f0f0;
+    }
+
+    .track-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+
+    .track-name,
+    .artist-name {
+      margin: 0;
+      padding: 0;
     }
 
     .track-name {
-      font-size: 1.25em;
-      padding: 0;
-      margin: 0;
+      font-weight: bold;
+      color: var(--darker-color);
     }
+
     .artist-name {
-      color: darkgray;
-      font-size: 0.6em;
-      margin: 0;
-      padding: 0;
-    }
-    .track-image {
-      width: 2.5em;
-      height: 2.5em;
+      font-size: 0.875em;
+      color: #666;
     }
   `;
 }
