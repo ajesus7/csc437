@@ -13,16 +13,19 @@ import { PostModel } from "./mongo/post"; // Adjust the path as necessary
 const app = express();
 const port = process.env.PORT || 3000;
 
-let dist: string | undefined;
+// * the following commented out for deployment
+// let dist: string | undefined;
 let frontend: string | undefined;
+// try {
+//   frontend = require.resolve("lit-frontend");
+//   dist = path.resolve(frontend, "..", "..");
+//   console.log("Serving lit-frontend from", dist);
+// } catch (error: any) {
+//   console.log("Cannot find static assets in lit-frontend", error.code);
+// }
 
-try {
-  frontend = require.resolve("lit-frontend");
-  dist = path.resolve(frontend, "..", "..");
-  console.log("Serving lit-frontend from", dist);
-} catch (error: any) {
-  console.log("Cannot find static assets in lit-frontend", error.code);
-}
+const indexHtml = require.resolve("lit-frontend");
+const dist = path.dirname(indexHtml);
 
 connect("vibing");
 
@@ -34,7 +37,16 @@ app.options("*", cors());
 
 app.post("/login", loginUser);
 app.post("/signup", registerUser);
+
+// * for deployment
+
 app.use("/api", apiRouter);
+// static assets: /styles, /images, /icons, etc.
+app.use(express.static(dist));
+// SPA routes: /app/...
+app.use("/app", (req, res) => {
+  fs.readFile(indexHtml, { encoding: "utf8" }).then((html) => res.send(html));
+});
 
 // Base directory for the built frontend files
 const distPath = path.resolve(__dirname, "..", "..", "lit-frontend", "dist");

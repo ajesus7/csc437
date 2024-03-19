@@ -1,8 +1,8 @@
 {
   "name": "lit-frontend",
+  "main": "dist/index.html",
   "version": "1.0.0",
   "description": "",
-  "main": "app/index.html",
   "scripts": {
     "dev": "npx vite",
     "build": "npx tsc && npx vite build",
