@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/page.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>aidan's page</title>
+  </head>
+  <body>
+    <main>
+      <!--Bar on Top of Page with 'Match the Vibe Logo', will be changed to nav -->
+      <section class="match-the-vibe-header">
+        <a href="./index.html">match the vibe home</a>
+      </section>
+
+      <!--User Info Header with Profile Picture, Name, Bio, and Nav link back to home.-->
+      <section class="user-profile-header">
+        <section class="user-profile-user-content">
+          <section class="user-profile-picture">
+            <img
+              src="images/aidan_pfp.png"
+              alt="Aidan wearing a hat."
+              width="150"
+            />
+          </section>
+          <section class="user-profile-header-text">
+            <h1>Aidan's Page</h1>
+            <p class="user-description">swag.</p>
+          </section>
+        </section>
+      </section>
+
+      <section class="friends-list">
+        <section class="subsection-header-line">
+          <h2>friend's list</h2>
+          <svg class="icon">
+            <use href="/icons/user-icons.svg#icon-friends-list" />
+          </svg>
+        </section>
+        <a href="./friends.html" class="profile-section-description"
+          >... see all friends</a
+        >
+        <section class="friends-list-friends">
+          <div class="user-friend">
+            <a href="./user2.html">thea</a>
+          </div>
+          <div class="user-friend">
+            <p>robby</p>
+          </div>
+          <div class="user-friend">
+            <p>lauryn</p>
+          </div>
+          <div class="user-friend">
+            <p>ethan</p>
+          </div>
+          <div class="user-friend">
+            <p>jonathan</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="playlist">
+        <section class="subsection-header-line">
+          <h2>playlists</h2>
+          <svg class="icon">
+            <use href="/icons/user-icons.svg#icon-playlist" />
+          </svg>
+        </section>
+        <p class="profile-section-description">see all playlists...</p>
+        <section class="playlist-list">
+          <div class="single-playlist">
+            <a href="./playlist1.html">chill vibes</a>
+          </div>
+          <div class="single-playlist">
+            <p>morongo mondays</p>
+          </div>
+          <div class="single-playlist">
+            <p>non chill vibes</p>
+          </div>
+          <div class="single-playlist">
+            <p>beach</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="past-games">
+        <section class="subsection-header-line">
+          <h2>past games</h2>
+          <svg class="icon">
+            <use href="/icons/user-icons.svg#icon-general-list" />
+          </svg>
+        </section>
+        <p class="profile-section-description">see all past games...</p>
+        <section class="past-games-list">
+          <div class="game">
+            <a href="./game1.html">game1</a>
+          </div>
+          <div class="game">
+            <p>game2</p>
+          </div>
+          <div class="game">
+            <p>game3</p>
+          </div>
+        </section>
+      </section>
+
+      <!--Favorites section has 3 sub section 'lists' that will become components. -->
+      <section class="current-favorites">
+        <section class="subsection-header-line">
+          <h2>current favorites</h2>
+          <svg class="icon">
+            <use href="/icons/user-icons.svg#icon-heart" />
+          </svg>
+        </section>
+        <p class="profile-section-description">what aidan loves right now</p>
+
+        <section class="favorites-all-lists">
+          <section class="favorite-artists-list">
+            <h3 class="current-favorites-h3">artists</h3>
+            <div class="favorite-artist">
+              <a href="./artist1.html" class="artist-title"
+                >the backseat lovers</a
+              >
+              <p>4.6M monthly listeners</p>
+            </div>
+            <div class="favorite-artist">
+              <p class="artist-title">palace</p>
+              <p>1.8M monthly listeners</p>
+            </div>
+            <div class="favorite-artist">
+              <p class="artist-title">matt maltese</p>
+              <p>7.6M monthly listeners</p>
+            </div>
+          </section>
+
+          <section class="favorite-songs-list">
+            <h3 class="current-favorites-h3">songs</h3>
+            <div class="favorite-song">
+              <a href="./song1.html" class="song-title">words I used</a>
+              <p>the backseat lovers</p>
+            </div>
+            <div class="favorite-song">
+              <p class="song-title">disciples</p>
+              <p>tame impala</p>
+            </div>
+            <div class="favorite-song">
+              <p class="song-title">jigsaw falling into place</p>
+              <p>radiohead</p>
+            </div>
+          </section>
+
+          <section class="favorite-albums-list">
+            <h3 class="current-favorites-h3">albums</h3>
+            <div class="favorite-album">
+              <a href="./album1.html" class="album-title">silhouette</a>
+              <p>the backseat lovers</p>
+            </div>
+            <div class="favorite-album">
+              <p class="album-title">lost in the night ep</p>
+              <p>palace</p>
+            </div>
+            <div class="favorite-album">
+              <p class="album-title">orange blood</p>
+              <p>mt joy</p>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

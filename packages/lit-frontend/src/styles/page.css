@@ -1,0 +1,179 @@
+/*
+I have a lot of duplicate styling here, and I will work to consolidate the styling so 
+that components/sections that reuse the same styling can be declared together */
+
+/* Default HTML Elements */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font);
+  background: var(--background-color);
+  color: var(--white-color);
+  font-weight: var(--light-weight);
+  font-size: 1.2em;
+}
+
+main {
+  width: 55%;
+  border: 0.9px solid var(--white-color);
+}
+
+h1 {
+  color: var(--white-color);
+  font-size: 4rem;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+a {
+  color: var(--accent-color);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: var(--bold-weight);
+}
+
+/* End Default HTML ELements */
+
+.accent {
+  background: var(--accent-color);
+}
+
+.accent-text {
+  color: var(--accent-color);
+}
+
+/******** HEADER SECTION ********/
+
+.match-the-vibe-header a {
+  font-weight: var(--bold-weight);
+  color: var(--background-color);
+  padding: var(--component-inside-padding);
+}
+
+.match-the-vibe-header {
+  display: flex;
+  justify-content: space-between;
+  background: var(--white-color);
+  padding: 15px 15px 15px 0px;
+  height: 4.3em;
+}
+
+.page-hero-information {
+  padding: var(--component-inside-padding);
+  margin-top: 10px;
+}
+
+.page-hero-information h1 {
+  margin-top: 13px;
+}
+
+/******** END HEADER SECTION ********/
+
+/*********** SVG SECTION **********/
+
+svg.icon {
+  display: inline;
+  height: 1.4em;
+  width: 1.4em;
+  vertical-align: top;
+  fill: currentColor;
+  margin: 4px 0px 0px 13px;
+}
+
+/********** STYLINGS THAT ARE REUSED AND TO BE REFACTORED **********/
+
+.friends-list-friends {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  gap: 25px;
+  margin-top: 15px;
+}
+
+.user-friend {
+  border: 0.9px solid var(--white-color);
+  width: 120px;
+  height: 120px;
+  border-radius: var(--box-border-radius);
+}
+
+.user-friend p,
+.user-friend a {
+  display: flex;
+  margin-top: 60px;
+  font-weight: var(--bold-weight);
+  padding-left: 15px;
+  /* using margin here is definitely not the most elegant solution
+but I couldnt get flex working for aligning the text within the cards */
+}
+
+.subsection-header-line {
+  display: flex;
+}
+
+.friends-list,
+.playlist-list,
+.past-games-list,
+.find-friends,
+.playlist-display {
+  width: 20%;
+}
+
+.friends-list,
+.past-games,
+.playlist,
+.current-favorites,
+.find-friends {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--component-inside-padding);
+  margin-bottom: 10px;
+}
+
+/* classes used in tandem with the toggle switch component */
+
+.dark-mode {
+  --background-color: #36454f;
+  --white-color: #faf9f6;
+  --darker-color: #20282e;
+  --hover-color: #0d1013;
+}
+
+.light-mode {
+  --background-color: #faf9f6;
+  --white-color: #36454f;
+  --darker-color: #e1e1df;
+  --hover-color: #cdcdca;
+}
+
+/* banner classes used for dev notes (currently) */
+
+.banner {
+  background: var(--accent-color);
+  font-size: 0.8em;
+  text-align: center;
+  padding: 1em;
+  color: var(--background-color);
+}
+
+.banner h3 {
+  font-weight: var(--heavy-weight);
+  margin: 0;
+  padding: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.5em;
+}
+
+.bold {
+  font-weight: var(--heavy-weight);
+}
