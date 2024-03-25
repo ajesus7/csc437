@@ -24,25 +24,40 @@ export class CreatePostElement extends LitElement {
   expanded: boolean = false;
 
   @state()
-  submissionSuccess: boolean | null = null;
+  submissionSuccess: boolean = false;
 
-  _createPost() {
-    console.log("creating post!");
+  @state()
+  errorMessage: boolean = false;
+
+  _togglePost() {
     this.expanded = !this.expanded;
+    this.submissionSuccess = false;
+    this.errorMessage = false; //always reset errorMessage on toggle
   }
 
-  // submitted by the button within the create post form, grab message from form, create post
-  // attempt to make POST request with new post, render response accordingly
+  // submitted by the button within the create post form, grab message from form
+  // if message not empty, call sendPostRequest, otherwise, prompt user to enter a message
   async _submitPost(ev: Event) {
     ev.preventDefault();
-    this.submissionSuccess = null; //reset submission success message state
-    console.log("submitting post!");
+    this.submissionSuccess = false; //reset submission success message state
 
     // grab message from form input and save it as string
     const target = ev.target as HTMLFormElement;
     const formData = new FormData(target);
     let message = formData.get("input-message") as string;
 
+    //if message is not empty, submit the post. if empty, prompt user to input a message
+    if (message) {
+      console.log("submitting post!");
+      this._sendPostRequest(message, target);
+    } else {
+      console.log("error with message!");
+      this.errorMessage = true;
+    }
+  }
+
+  //handles the submission of the post
+  async _sendPostRequest(message: string, target: HTMLFormElement) {
     // TODO at some point change this userid to be dynamic based on the user profile, same with userName
     const newPost: IPost = {
       userid: "65caf83fcdc541534288d60b" as any,
@@ -79,11 +94,6 @@ export class CreatePostElement extends LitElement {
       console.error("Error: ", error);
       this.submissionSuccess = false; // dont render submission message
     }
-
-    // * create Post object
-    // * submit POST request with ^ object
-    // * if successful: reset this.expanded, show success message, reset page?
-    // * if not successful: show error message, don't highlight error section.
   }
 
   render() {
@@ -93,7 +103,9 @@ export class CreatePostElement extends LitElement {
         <section class="create-post-ui">
             <section class="post-top-bar">
                 <h3>Create a Post!</h3>
-                <button class="close-form">Close Form</button>
+                <button class="close-form" @click=${
+                  this._togglePost
+                }>Close Form</button>
             </section>
             <form class="create-post-form" @submit=${this._submitPost}>
               <label for="input-message">Message</label>
@@ -103,12 +115,22 @@ export class CreatePostElement extends LitElement {
                 placeholder="What do you want to say?"
                 rows="4" // You can adjust the rows as needed
               ></textarea>
+              ${
+                this.errorMessage
+                  ? html`<p class="error-message">please enter a message</p>`
+                  : ``
+              }
               <button class="post-button">Submit your post!</button>
             </form>
           </section>`
-        : html`<button class="post-button" @click=${this._createPost}>
-            Create New Post &#43;
-          </button>`}
+        : html` ${this.submissionSuccess
+              ? html`<p class="submit-success-message">
+                  post successfully submitted
+                </p>`
+              : ``}
+            <button class="post-button" @click=${this._togglePost}>
+              Create New Post &#43;
+            </button>`}
     `;
   }
 
@@ -119,18 +141,25 @@ export class CreatePostElement extends LitElement {
 
     #input-message {
       width: 30em;
-      margin-bottom: 1.5em;
     }
 
     .post-button {
       background: var(--accent-color);
       color: white;
       border: none;
+      margin-top: 1.5em;
       border-radius: 4px;
       cursor: pointer;
       padding: 8px 16px;
       font-size: 0.875em;
       white-space: nowrap; /* Prevents wrapping on small screens */
+    }
+
+    .error-message {
+      color: red;
+      background: lightgray;
+      font-size: 0.8em;
+      width: 27em;
     }
 
     .post-top-bar {
