@@ -1,8 +1,8 @@
-// import { ObjectId, Schema } from "mongoose";
+import { Schema } from "mongoose";
 import { IComment } from "./comment";
 
 export interface IPost {
-  // userid: ObjectId;
+  userid: Schema.Types.ObjectId;
   userName: string;
   postTime: Date;
   postMessage: string;

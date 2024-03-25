@@ -1,6 +1,10 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+// components
 import "./feed-post-list";
+import "./create-post";
+
 import Post from "../models/post";
 
 @customElement("main-feed")
@@ -34,6 +38,7 @@ export class MainFeedElement extends LitElement {
     return html`
       <section class="feed-container">
         <h2 class="feed-header">Song Recommendation Feed</h2>
+        <create-post></create-post>
         <feed-post-list .posts=${this.posts}></feed-post-list>
       </section>
     `;

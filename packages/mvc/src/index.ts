@@ -8,7 +8,8 @@ import apiRouter from "./routes/api";
 import posts from "./services/posts";
 import SpotifyService from "./services/spotifySearch";
 
-import { PostModel } from "./mongo/post"; // Adjust the path as necessary
+import { PostModel } from "./mongo/post";
+import { IPost } from "../../ts-models";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -58,13 +59,18 @@ app.get("/posts", (req, res) => {
 });
 
 // * Creates New Post
-app.post("/posts", (req: Request, res: Response) => {
-  const newPost = req.body;
+app.post("/posts", async (req: Request, res: Response) => {
+  try {
+    //grab the data from req.body
+    const newPostData: IPost = req.body;
 
-  posts
-    .create(newPost)
-    .then((post: IPost) => res.status(201).send(post))
-    .catch((err) => res.status(500).send(err));
+    //create a document based on the mongoose model imported
+    const newPost = await PostModel.create(newPostData); 
+    res.status(201).send(newPost); // Send the created post back
+  } catch (err) {
+    console.error("Error creating new post: ", err);
+    res.status(500).send(err);
+  }
 });
 
 // TODO TESTING PUSH COMMENT
