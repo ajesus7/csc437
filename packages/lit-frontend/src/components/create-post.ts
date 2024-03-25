@@ -14,7 +14,7 @@ import { customElement, state } from "lit/decorators.js";
 // ! on fail: show error message, highlight why error occurred (for example blank message)
 // ! and do not re render the page.
 
-// import Post from "../models/post";
+import { IPost } from "../../../ts-models";
 
 //import components
 
@@ -23,14 +23,62 @@ export class CreatePostElement extends LitElement {
   @state()
   expanded: boolean = false;
 
+  @state()
+  submissionSuccess: boolean | null = null;
+
   _createPost() {
     console.log("creating post!");
     this.expanded = !this.expanded;
   }
 
-  _submitPost(e: Event) {
-    e.preventDefault();
+  // submitted by the button within the create post form, grab message from form, create post
+  // attempt to make POST request with new post, render response accordingly
+  async _submitPost(ev: Event) {
+    ev.preventDefault();
+    this.submissionSuccess = null; //reset submission success message state
     console.log("submitting post!");
+
+    // grab message from form input and save it as string
+    const target = ev.target as HTMLFormElement;
+    const formData = new FormData(target);
+    let message = formData.get("input-message") as string;
+
+    // TODO at some point change this userid to be dynamic based on the user profile, same with userName
+    const newPost: IPost = {
+      userid: "65caf83fcdc541534288d60b" as any,
+      userName: "aidan",
+      postTime: new Date(),
+      postMessage: message,
+      comments: [],
+    };
+
+    console.log("new post: ", newPost);
+
+    //attempt to create a POST request with the post data
+    try {
+      const url = `http://localhost:3000/posts`;
+
+      //make the post request
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newPost),
+      });
+
+      if (response.ok) {
+        console.log("Post added successfully!");
+        this.submissionSuccess = true; //renders submission message
+        this.expanded = !this.expanded; //close create post component
+        target.reset(); // reset form input
+      } else {
+        throw new Error("Failed to create post.");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+      this.submissionSuccess = false; // dont render submission message
+    }
 
     // * create Post object
     // * submit POST request with ^ object

@@ -21,6 +21,26 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
 var import_express = __toESM(require("express"));
 var path = __toESM(require("path"));
 var import_cors = __toESM(require("cors"));
@@ -62,10 +82,16 @@ app.get("/posts", (req, res) => {
     res.status(404).send("Posts not found");
   });
 });
-app.post("/posts", (req, res) => {
-  const newPost = req.body;
-  import_posts.default.create(newPost).then((post) => res.status(201).send(post)).catch((err) => res.status(500).send(err));
-});
+app.post("/posts", (req, res) => __async(exports, null, function* () {
+  try {
+    const newPostData = req.body;
+    const newPost = yield import_post.PostModel.create(newPostData);
+    res.status(201).send(newPost);
+  } catch (err) {
+    console.error("Error creating new post: ", err);
+    res.status(500).send(err);
+  }
+}));
 app.put("/posts/:postid", (req, res) => {
   const postid = req.params.postid;
   const newComment = req.body;
