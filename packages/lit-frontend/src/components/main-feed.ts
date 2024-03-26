@@ -25,6 +25,7 @@ export class MainFeedElement extends LitElement {
         // Check if response is ok (status in the range 200-299)
         const json = await response.json();
         this.posts = json; // This will trigger an update and re-render if needed
+        this.posts = this.posts.reverse(); // reverse the posts to make them in chronological order
         console.log("POSTS RECEIVED: ", this.posts);
       } else {
         console.error("Failed to fetch posts:", response.status);
