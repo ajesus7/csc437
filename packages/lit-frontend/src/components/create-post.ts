@@ -87,6 +87,7 @@ export class CreatePostElement extends LitElement {
         this.submissionSuccess = true; //renders submission message
         this.expanded = !this.expanded; //close create post component
         target.reset(); // reset form input
+        this._sendUpdateToRefreshMainFeed();
       } else {
         throw new Error("Failed to create post.");
       }
@@ -94,6 +95,16 @@ export class CreatePostElement extends LitElement {
       console.error("Error: ", error);
       this.submissionSuccess = false; // dont render submission message
     }
+  }
+
+  // * Send an update to the parent (main-feed component) that will re render the feed when a new post is created
+  _sendUpdateToRefreshMainFeed() {
+    const updateEvent = new CustomEvent("post-created", {
+      bubbles: true, // Allows the event to bubble up through the DOM
+      composed: true, // Allows the event to cross the shadow DOM boundary
+    });
+    console.log("dispatching event: ", updateEvent);
+    this.dispatchEvent(updateEvent);
   }
 
   render() {

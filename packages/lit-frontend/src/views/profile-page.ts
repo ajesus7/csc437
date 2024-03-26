@@ -54,11 +54,6 @@ export class ProfilePageElement extends App.View {
     );
   }
 
-  // disconnectedCallback() {
-  //   this.removeEventListener("profile-update", this._handleProfileUpdate);
-  //   super.disconnectedCallback();
-  // }
-
   _handleProfileUpdate(ev: CustomEvent) {
     console.log("Profile updated", ev.detail.profile);
     // Ensure you have the userid available

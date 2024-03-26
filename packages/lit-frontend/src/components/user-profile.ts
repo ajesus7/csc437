@@ -27,18 +27,6 @@ export class UserProfileElement extends LitElement {
     return this.using || ({} as Profile);
   }
 
-  // //runs once when instantiated
-
-  // // in class UserProfileElement
-  // attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-  //   console.log("PROFILE");
-  //   if (name === "path" && oldValue !== newValue && oldValue) {
-  //     this._fetchData(newValue);
-  //   }
-
-  //   super.attributeChangedCallback(name, oldValue, newValue);
-  // }
-
   _changeEditMode() {
     console.log("Edit mode changed");
     this.editMode = !this.editMode;

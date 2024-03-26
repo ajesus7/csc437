@@ -1,5 +1,5 @@
 import { css, html, LitElement } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 // components
 import "./feed-post-list";
@@ -9,11 +9,20 @@ import Post from "../models/post";
 
 @customElement("main-feed")
 export class MainFeedElement extends LitElement {
-  @property({ type: Array })
+  @state()
   posts: Post[] = []; // Initialize posts as an empty array to ensure type correctness
 
   async connectedCallback() {
     super.connectedCallback();
+    this.addEventListener("post-created", () => this._handlePostCreated());
+    await this._fetchData();
+  }
+
+  // * when called, re fetches the posts
+  // * is this the most efficient way to do it? or should it just append the newly created post to the top of the list?
+  // * in the case where there are many users, you might want to update all posts in case multiple are created at the same time
+  async _handlePostCreated() {
+    console.log("Post Created, Now Refreshing Component");
     await this._fetchData();
   }
 
