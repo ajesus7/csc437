@@ -23,7 +23,7 @@ export class FeedPostElement extends LitElement {
   post?: Post;
 
   @state()
-  getPostComments?: IComment[] = this.post?.comments;
+  getPostComments?: IComment[] = [];
 
   @state()
   expanded: boolean = false;
@@ -176,6 +176,15 @@ export class FeedPostElement extends LitElement {
     });
   }
 
+  connectedCallback(): void {
+    super.connectedCallback(); // Always call super first in connectedCallback
+
+    //if not already initialized, set initial post comments state to getPostComments, this will be updated later when a comment is submitted
+    if (!this.getPostComments || this.getPostComments.length === 0) {
+      this.getPostComments = this.post?.comments || [];
+    }
+  }
+
   // * when called, re renders the specific post to show new comment
   async _handleCommentAdded() {
     console.log("Comment Created, Now Refreshing Component");
@@ -185,23 +194,20 @@ export class FeedPostElement extends LitElement {
       return;
     }
 
-    const response = await fetch(
-      `http://localhost:3000/comments/${this.post._id}`,
-      {
-        method: "GET",
-      }
-    );
+    try {
+      const response = await fetch(
+        `http://localhost:3000/comments/${this.post._id}`,
+        { method: "GET" }
+      );
+      if (!response.ok) throw new Error("Failed to fetch comments");
 
-    // TODO more elegant way to display error to user?
-    if (!response.ok) {
-      console.error("Failed to fetch comments:", response.statusText);
-      console.log("error fetching comments for this post");
-      return;
+      const comments = await response.json();
+
+      // Ensure this is treated as a new array for reactivity
+      this.getPostComments = [...comments];
+    } catch (error) {
+      console.error("Error fetching comments:", error);
     }
-
-    const comments = await response.json();
-
-    this.getPostComments = comments;
   }
 
   async authenticate() {
