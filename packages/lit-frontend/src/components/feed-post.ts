@@ -11,7 +11,7 @@ import { Buffer } from "buffer";
 // * then generate a post object for each post. Should handle overflow of posts well.
 
 import Post from "../models/post";
-import { TrackObject } from "../../../ts-models";
+import { TrackObject, IComment } from "../../../ts-models";
 
 //import components
 import "./track-card";
@@ -21,6 +21,9 @@ import "./comment-card";
 export class FeedPostElement extends LitElement {
   @property({ type: Object })
   post?: Post;
+
+  @state()
+  getPostComments?: IComment[] = this.post?.comments;
 
   @state()
   expanded: boolean = false;
@@ -102,6 +105,7 @@ export class FeedPostElement extends LitElement {
         this._clearSelectedTracks();
         this.submissionSuccess = true;
         target.reset(); // Reset the form if the response is successful
+        this._handleCommentAdded(); // calls fn that fetches comments of specific post
       } else {
         throw new Error("Failed to post comment");
       }
@@ -165,12 +169,39 @@ export class FeedPostElement extends LitElement {
 
   constructor() {
     super();
-
     // ! deals with adding tracks to the selected tracks section when a click event bubbles up
     this.addEventListener("track-selected", (event: Event) => {
       const customEvent = event as CustomEvent;
       this._selectTrack(customEvent.detail.track);
     });
+  }
+
+  // * when called, re renders the specific post to show new comment
+  async _handleCommentAdded() {
+    console.log("Comment Created, Now Refreshing Component");
+
+    if (!this.post?._id) {
+      console.error("Post ID is undefined.");
+      return;
+    }
+
+    const response = await fetch(
+      `http://localhost:3000/comments/${this.post._id}`,
+      {
+        method: "GET",
+      }
+    );
+
+    // TODO more elegant way to display error to user?
+    if (!response.ok) {
+      console.error("Failed to fetch comments:", response.statusText);
+      console.log("error fetching comments for this post");
+      return;
+    }
+
+    const comments = await response.json();
+
+    this.getPostComments = comments;
   }
 
   async authenticate() {
@@ -253,7 +284,7 @@ export class FeedPostElement extends LitElement {
         <p class="message">${this.post?.postMessage}</p>
         <section class="post-comments">
           <h3 class="comments-header">Comments</h3>
-          ${this.post?.comments.map(
+          ${this.getPostComments?.map(
             (comment) => html`<comment-card .comment=${comment}></comment-card>`
           )}
         </section>
@@ -276,7 +307,7 @@ export class FeedPostElement extends LitElement {
                     </button>
                   </form>
                 </section>
-                
+
                 <section class="search-and-selected">
                   <section class="query-results">
                     ${this.topTracks.length > 0
