@@ -141,18 +141,32 @@ but I couldnt get flex working for aligning the text within the cards */
 
 /* classes used in tandem with the toggle switch component */
 
+/* TODO Update to be my own dark/light mode colorscheme; but for now taking inspiration from Youtube UX. */
+
 .dark-mode {
-  --background-color: #36454f;
-  --white-color: #faf9f6;
-  --darker-color: #20282e;
-  --hover-color: #0d1013;
+  /* used for entire site background in darkmode UI*/
+  --dark-background-color: rgb(15, 15, 15);
+  /* used for a menu background in darkmode UI*/
+  --dark-menu-color: rgb(40, 40, 40);
+  /* used for text in darkmode UI*/
+  --dark-text-color: rgb(241, 241, 241);
+  /* used for hovering over an element in darkmode UI*/
+  --dark-hover-color: rgb(62, 62, 62);
+  /* used for dividing sections in darkmode UI*/
+  --dark-section-border: rgb(83, 83, 83);
 }
 
 .light-mode {
-  --background-color: #faf9f6;
-  --white-color: #36454f;
-  --darker-color: #e1e1df;
-  --hover-color: #cdcdca;
+  /* used for entire site background in darkmode UI*/
+  --light-background-color: rgb(255, 255, 255);
+  /* for now menu background is the same as the entire site background - subject to change */
+  --light-menu-color: rgb(255, 255, 255);
+  /* used for text in lightmode UI - note: same as the darkmode background*/
+  --light-text-color: rgb(15, 15, 15);
+  /* used for hovering over an element in lightmode UI*/
+  --light-hover-color: rgb(242, 242, 242);
+  /* used for dividing sections in lightmode UI*/
+  --light-section-border: rgb(229, 229, 229);
 }
 
 /* banner classes used for dev notes (currently) */
