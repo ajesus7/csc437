@@ -152,12 +152,12 @@ export class CommentCardElement extends LitElement {
     .single-comment {
       display: flex;
       flex-direction: row;
-      background-color: #2c2c2e;
-      color: #ffffff;
+      background-color: var(--background-color);
+      color: var(--text-color);
       padding: 15px;
-      border-radius: 8px;
+      border-radius: var(--default-border-radius);
       margin-bottom: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--box-shadow);
     }
 
     .comment-left,
@@ -178,8 +178,8 @@ export class CommentCardElement extends LitElement {
     }
 
     .comment-time {
-      font-size: 0.8em;
-      color: #a9a9a9;
+      font-size: var(--small-size);
+      color: var(--subtext-color);
     }
 
     .comment-message {
@@ -208,7 +208,7 @@ export class CommentCardElement extends LitElement {
 
     .track-artist {
       font-size: 0.875em;
-      color: #a9a9a9;
+      color: var(--subtext-color);
     }
 
     .track-image {

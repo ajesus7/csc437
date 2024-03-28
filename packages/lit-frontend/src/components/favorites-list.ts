@@ -53,8 +53,8 @@ export class FavoritesListElement extends LitElement {
     }
 
     .favorite-list {
-      border: 0.9px solid var(--white-color);
-      border-radius: var(--box-border-radius);
+      border: 1.5px solid var(--section-border-color);
+      border-radius: var(--default-border-radius);
       width: 265px;
     }
 

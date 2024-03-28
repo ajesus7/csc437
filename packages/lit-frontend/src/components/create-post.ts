@@ -150,15 +150,11 @@ export class CreatePostElement extends LitElement {
   static styles = css`
     :host {
       display: block;
-      --background-color: #121212;
-      --text-color: #e0e0e0;
-      --accent-color: #bb86fc;
-      --error-color: #cf6679;
     }
 
     .post-button,
     .close-form {
-      background: var(--accent-color);
+      background: var(--button-color);
       color: white;
       border: none;
       margin-top: 1.5em;
@@ -175,16 +171,16 @@ export class CreatePostElement extends LitElement {
 
     .post-button:hover,
     .close-form:hover {
-      background: #9277ff;
+      background: var(--button-hover-color);
     }
 
     .create-post-ui {
-      background-color: #2c2c2e; /* Lighter dark mode background color, matching the Feed Post component */
+      background-color: var(--menu-color);
       color: var(--text-color);
-      border: 1px solid #333;
+      border: 1.5px solid var(--section-border-color);
       padding: 2em;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--box-shadow);
       margin-bottom: 1em;
     }
 
@@ -195,11 +191,11 @@ export class CreatePostElement extends LitElement {
     }
 
     textarea {
-      background-color: #333;
+      background-color: var(--background-color);
       color: var(--text-color);
       padding: 8px;
       border-radius: 4px;
-      border: 1px solid #555;
+      border: 1px solid var(--section-border-color);
       resize: vertical;
     }
 

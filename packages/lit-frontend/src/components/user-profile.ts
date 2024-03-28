@@ -20,6 +20,9 @@ export class UserProfileElement extends LitElement {
   @property()
   editMode: boolean = false;
 
+  @property()
+  profileEditText: string = "Edit Profile.";
+
   @property({ attribute: false })
   using?: Profile;
 
@@ -30,6 +33,11 @@ export class UserProfileElement extends LitElement {
   _changeEditMode() {
     console.log("Edit mode changed");
     this.editMode = !this.editMode;
+    if (this.profileEditText === "Edit Profile.") {
+      this.profileEditText = "Close Edit Menu.";
+    } else {
+      this.profileEditText = "Edit Profile.";
+    }
   }
 
   _handleNameChange(e: Event) {
@@ -156,7 +164,7 @@ export class UserProfileElement extends LitElement {
 
       <section class="user-profile-header">
         <p class="edit-profile-toggle" @click=${this._changeEditMode}>
-          Edit profile.
+          ${this.profileEditText}
         </p>
         <section class="user-profile-user-content">
           <section class="user-profile-picture">
@@ -256,38 +264,9 @@ export class UserProfileElement extends LitElement {
     }
 
     h1 {
-      color: var(--white-color);
+      color: var(--text-color);
       font-size: 4rem;
       margin: 0;
-    }
-
-    .current-favorites-h3 {
-      margin-bottom: 15px;
-      padding: 10px 0px 0px 10px;
-    }
-
-    .current-favorites {
-      padding-bottom: 50px;
-    }
-
-    .favorite-album,
-    .favorite-song,
-    .favorite-artist {
-      padding: 10px 0px 5px 10px;
-    }
-
-    .favorite-artist p,
-    .favorite-album p,
-    .favorite-song p {
-      margin-top: 3px;
-    }
-
-    .favorite-artists-list,
-    .favorite-songs-list,
-    .favorite-albums-list {
-      border: 0.9px solid var(--white-color);
-      border-radius: var(--box-border-radius);
-      width: 265px;
     }
 
     .favorites-all-lists {
@@ -302,12 +281,6 @@ export class UserProfileElement extends LitElement {
       display: flex;
       flex-direction: column;
       margin-bottom: 2em;
-    }
-
-    .song-title,
-    .album-title,
-    .artist-title {
-      font-weight: var(--bold-weight);
     }
 
     .subsection-header-line {
@@ -347,10 +320,10 @@ export class UserProfileElement extends LitElement {
 
     /* edit form styling */
     .edit-mode-section {
-      background-color: #f8f9fa; /* Light gray background */
-      border-radius: 8px;
+      background-color: var(--menu-color);
+      border-radius: var(--default-border-radius);
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--box-shadow);
       margin: 20px auto;
       width: 90%;
       max-width: 500px; /* Adjust the form width as needed */
@@ -364,7 +337,7 @@ export class UserProfileElement extends LitElement {
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
-      color: #333;
+      color: var(--text-color);
     }
 
     input[type="text"],
@@ -392,8 +365,8 @@ export class UserProfileElement extends LitElement {
     button[type="submit"] {
       width: 100%;
       padding: 10px;
-      background-color: #007bff;
-      color: white;
+      background-color: var(--button-color);
+      color: var(--text-color);
       border: none;
       border-radius: 4px;
       cursor: pointer;
@@ -401,7 +374,7 @@ export class UserProfileElement extends LitElement {
     }
 
     button[type="submit"]:hover {
-      background-color: #0056b3;
+      background-color: var(--button-hover-color);
     }
 
     fieldset {
@@ -413,7 +386,7 @@ export class UserProfileElement extends LitElement {
     legend {
       margin-bottom: 10px;
       font-weight: bold;
-      color: #333;
+      color: var(--text-color);
     }
 
     .radio-group {
@@ -426,201 +399,3 @@ export class UserProfileElement extends LitElement {
     }
   `;
 }
-
-// in src/user-profile.ts, after the previous component
-// @customElement("user-profile-edit")
-// export class UserProfileEditElement extends UserProfileElement {
-//   @property()
-//   path: string = "";
-
-//   // @state()
-//   // profile?: Profile;
-
-//   //from form tag @submit=${this._handleSubmit
-//   render() {
-//     return html` <section class="form-container">
-//       <h2>edit profile form</h2>
-
-//       <form }>
-//         <div class="form-group">
-//           <label for="name">First Name</label>
-//           <input type="text" id="name" name="name" placeholder="e.g John" />
-//         </div>
-//         <div class="form-group">
-//           <label for="timezone">Timezone</label>
-//           <input
-//             type="text"
-//             id="timezone"
-//             name="timezone"
-//             placeholder="e.g PST"
-//           />
-//         </div>
-//         <div class="form-group">
-//           <label for="music-taste">Music Taste</label>
-//           <input
-//             type="text"
-//             id="music-taste"
-//             name="musicTaste"
-//             placeholder="e.g Indie Rock"
-//           />
-//         </div>
-//         <div class="form-group">
-//           <label for="profile-image">Profile Image</label>
-//           <input
-//             type="text"
-//             id="profile-image"
-//             name="profileImage"
-//             placeholder="(slug)"
-//           />
-//         </div>
-//         <div class="form-group">
-//           <label for="bio">Bio</label>
-//           <textarea id="bio" name="bio" placeholder="A short bio..."></textarea>
-//         </div>
-//         <div class="form-group">
-//           <label for="image-description" name="profileDescription"
-//             >Profile Image Description</label
-//           >
-//           <input
-//             type="text"
-//             id="image-description"
-//             placeholder="Describe your profile image"
-//           />
-//         </div>
-//         <div class="form-group">
-//           <label>Spotify</label>
-//           <div class="radio-group">
-//             <input type="radio" id="spotify-yes" name="spotify" value="yes" />
-//             <label for="spotify-yes">Yes</label>
-//             <input type="radio" id="spotify-no" name="spotify" value="no" />
-//             <label for="spotify-no">No</label>
-//           </div>
-//         </div>
-//         <div class="form-group">
-//           <button type="submit" class="btn">Submit</button>
-//         </div>
-//       </form>
-//     </section>`;
-//   }
-
-// _handleSubmit(ev: Event) {
-//   ev.preventDefault(); // prevent browser from submitting form data itself
-//   const target = ev.target as HTMLFormElement;
-//   const formdata = new FormData(target);
-
-//   const entries = Array.from(formdata.entries())
-//     .map(([k, v]) => (v === "" ? [k] : [k, v]))
-//     .map(([k, v]) =>
-//       k === "airports"
-//         ? [k, (v as string).split(",").map((s) => s.trim())]
-//         : [k, v]
-//     );
-//   const json = Object.fromEntries(entries);
-//   this._putData(json);
-// }
-
-// _putData(json: Profile) {
-//   fetch(serverPath(this.path), {
-//     method: "PUT",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(json),
-//   })
-//     .then((response) => {
-//       if (response.status === 200) return response.json();
-//       else return null;
-//     })
-//     .then((json: unknown) => {
-//       if (json) this.profile = json as Profile;
-//     })
-//     .catch((err) => console.log("Failed to PUT form data", err));
-// }
-
-//   static styles = css`
-//     ${UserProfileElement.styles}
-
-//     .form-container {
-//       border: 0.05em solid white;
-//       border-radius: var(--box-border-radius);
-//       width: 70%;
-//       margin: 25px 0 100px 100px;
-//       display: flex;
-//       flex-direction: column;
-//       justify-content: center;
-//       align-items: center;
-//     }
-
-//     .form-container h2 {
-//       font-weight: var(--medium-weight);
-//     }
-
-//     .form-group,
-//     .form-container {
-//       background-color: var(--background-color);
-//       padding: .6em;
-//       border-radius: 8px;
-//       width: 95%;
-//       max-width: 625px;
-//     }
-
-//     form {
-//       width: 90%;
-//       margin: 0;
-//       padding: 0;
-//       display: flex;
-//       flex-direction: column;
-//       justify-content: center;
-//       align-items; center;
-//     }
-
-//     label {
-//       display: block;
-//       margin-bottom: 0.5rem;
-//       color: var(--white-color);
-//     }
-
-//     input[type="text"],
-//     input[type="email"],
-//     input[type="password"],
-//     select,
-//     textarea {
-//       width: 100%;
-//       padding: 0.75rem;
-//       border: 1px solid var(--darker-color);
-//       border-radius: 4px;
-//       box-sizing: border-box;
-//     }
-
-//     .radio-group {
-//       display: flex;
-//       align-items: center;
-//     }
-
-//     .radio-group label {
-//       margin-left: 0.5rem;
-//       margin-right: 1rem;
-//     }
-
-//     .radio-group input[type="radio"] {
-//       margin-right: 0.25rem;
-//     }
-
-//     .btn {
-//       display: block;
-//       width: 100%;
-//       padding: 1rem;
-
-//       background-color: var(--accent-color);
-//       color: var(--white-color);
-//       border: none;
-//       border-radius: 4px;
-//       margin-top: .85rem;
-//       cursor: pointer;
-//       text-transform: uppercase;
-//       font-weight: bold;
-//     }
-
-//     .btn:hover {
-//       background-color: var(--accent-color-hover);
-//     }
-//   `;
-// }

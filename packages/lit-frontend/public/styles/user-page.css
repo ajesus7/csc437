@@ -15,14 +15,14 @@
   margin-top: 15px;
 }
 
-.user-friend,
+/* .user-friend,
 .single-playlist,
 .game {
   border: 0.9px solid var(--white-color);
   width: 120px;
   height: 120px;
   border-radius: var(--box-border-radius);
-}
+} */
 
 .user-friend p,
 .single-playlist p,
@@ -114,13 +114,13 @@ p.music-taste {
   margin-top: 3px;
 }
 
-.favorite-artists-list,
+/* .favorite-artists-list,
 .favorite-songs-list,
 .favorite-albums-list {
   border: 0.9px solid var(--white-color);
   border-radius: var(--box-border-radius);
   width: 265px;
-}
+} */
 
 .favorites-all-lists {
   display: flex;

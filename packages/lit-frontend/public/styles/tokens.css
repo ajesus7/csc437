@@ -1,12 +1,21 @@
 /* Design Tokens */
 :root {
-  /* Colors */
-  --background-color: #36454f;
-  --white-color: #faf9f6;
+  /* * note these colors aren't necessarily used as they are updated by the dark/lightmode class declaration, but they are needed to be defined here? */
+  /* Colors for a lightmode UI*/
+  --background-color: rgb(255, 255, 255);
+  --menu-color: rgb(255, 255, 255);
+  --text-color: rgb(15, 15, 15);
+  --hover-color: rgb(242, 242, 242);
+  --section-border-color: rgb(229, 229, 229);
+  --subtext-color: #a9a9a9;
+
+  /* header color is set to the dark color in light mode*/
+  --header-color: rgb(15, 15, 15);
+
   --accent-color: #feba4f;
-  --accent-color: #d89f45;
-  --darker-color: #20282e;
-  --hover-color: #0d1013;
+  --button-color: #feba4f;
+  --button-hover-color: #bb7f1f;
+
   /* Font Weights */
   --light-weight: 300;
   --medium-weight: 400;
@@ -17,7 +26,9 @@
   --component-inside-padding: 15px 15px 15px 100px;
   --component-bottom-margin: 100px;
 
-  --box-border-radius: 5px;
+  --default-border-radius: 8px;
+  --border-radius-minus-one: 7px;
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
   --font: "Inter", Helvetica, sans-serif;
   --small-size: 0.8em;

@@ -28,7 +28,6 @@ export class MatchTheVibeHeaderElement extends LitElement {
     `;
   }
 
-  //change the property definition to take a list of lists, add another loop within the above loop?, or maybe do i or j?
   static styles = css`
     .match-the-vibe-header a {
       font-weight: var(--bold-weight);
@@ -39,7 +38,7 @@ export class MatchTheVibeHeaderElement extends LitElement {
     .match-the-vibe-header {
       display: flex;
       justify-content: space-between;
-      background: var(--white-color);
+      background: var(--header-color);
       padding: 15px 15px 15px 0px;
       height: 4.3em;
       width: 100%;

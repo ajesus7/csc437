@@ -10,7 +10,7 @@ body {
   align-items: center;
   font-family: var(--font);
   background: var(--background-color);
-  color: var(--white-color);
+  color: var(--text-color);
   font-weight: var(--light-weight);
   font-size: 1.2em;
 }
@@ -20,7 +20,7 @@ main {
 }
 
 h1 {
-  color: var(--white-color);
+  color: var(--text-color);
   font-size: 4rem;
   margin-bottom: 8px;
 }
@@ -48,22 +48,6 @@ h4 {
 
 .accent-text {
   color: var(--accent-color);
-}
-
-/******** HEADER SECTION ********/
-
-.match-the-vibe-header a {
-  font-weight: var(--bold-weight);
-  color: var(--background-color);
-  padding: var(--component-inside-padding);
-}
-
-.match-the-vibe-header {
-  display: flex;
-  justify-content: space-between;
-  background: var(--white-color);
-  padding: 15px 15px 15px 0px;
-  height: 4.3em;
 }
 
 .page-hero-information {
@@ -99,7 +83,7 @@ svg.icon {
 }
 
 .user-friend {
-  border: 0.9px solid var(--white-color);
+  border: 0.9px solid var(--section-border-color);
   width: 120px;
   height: 120px;
   border-radius: var(--box-border-radius);
@@ -145,28 +129,34 @@ but I couldnt get flex working for aligning the text within the cards */
 
 .dark-mode {
   /* used for entire site background in darkmode UI*/
-  --dark-background-color: rgb(15, 15, 15);
+  --background-color: rgb(15, 15, 15);
   /* used for a menu background in darkmode UI*/
-  --dark-menu-color: rgb(40, 40, 40);
+  --menu-color: rgb(40, 40, 40);
   /* used for text in darkmode UI*/
-  --dark-text-color: rgb(241, 241, 241);
+  --text-color: rgb(241, 241, 241);
   /* used for hovering over an element in darkmode UI*/
-  --dark-hover-color: rgb(62, 62, 62);
+  --hover-color: rgb(62, 62, 62);
   /* used for dividing sections in darkmode UI*/
-  --dark-section-border: rgb(83, 83, 83);
+  --section-border-color: rgb(83, 83, 83);
+  /* header set to text color in each mode */
+  --header-color: rgb(241, 241, 241);
+  --box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 .light-mode {
   /* used for entire site background in darkmode UI*/
-  --light-background-color: rgb(255, 255, 255);
+  --background-color: rgb(255, 255, 255);
   /* for now menu background is the same as the entire site background - subject to change */
-  --light-menu-color: rgb(255, 255, 255);
+  --menu-color: rgb(255, 255, 255);
   /* used for text in lightmode UI - note: same as the darkmode background*/
-  --light-text-color: rgb(15, 15, 15);
+  --text-color: rgb(15, 15, 15);
   /* used for hovering over an element in lightmode UI*/
-  --light-hover-color: rgb(242, 242, 242);
+  --hover-color: rgb(242, 242, 242);
   /* used for dividing sections in lightmode UI*/
-  --light-section-border: rgb(229, 229, 229);
+  --section-border-color: rgb(229, 229, 229);
+
+  /* header set to text color in each mode */
+  --header-color: rgb(15, 15, 15);
 }
 
 /* banner classes used for dev notes (currently) */

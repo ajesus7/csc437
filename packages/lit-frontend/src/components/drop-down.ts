@@ -63,8 +63,7 @@ export class DropDownElement extends LitElement {
 
       display: inline-block;
       position: relative;
-      color: var(--white-color);
-      background: var(--white-color);
+      color: var(--text-color);
       margin: 0.8em 6.25em 0em 0em;
     }
 
@@ -103,28 +102,29 @@ export class DropDownElement extends LitElement {
       white-space: nowrap;
       margin-left: 0em;
       padding-left: 0em;
-      border-radius: 10px;
+      border-radius: var(--border-radius-minus-one);
+      box-shadow: var(--box-shadow);
     }
 
     li {
       padding: 1em 0.5em 1em 1em;
       border-bottom: 0.1em solid rgb(83, 83, 83);
-      background: rgb(40, 40, 40);
+      background: var(--menu-color);
     }
 
     li:hover {
-      background: rgb(62, 62, 62);
+      background: var(--hover-color);
     }
 
     .border-top-only {
-      border-top-left-radius: 9px;
-      border-top-right-radius: 9px;
+      border-top-left-radius: var(--default-border-radius);
+      border-top-right-radius: var(--default-border-radius);
     }
 
     /* also needs no bottom border */
     .border-bottom-only {
-      border-bottom-left-radius: 9px;
-      border-bottom-right-radius: 9px;
+      border-bottom-left-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
       border-bottom: 0;
     }
 
