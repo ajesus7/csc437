@@ -42,6 +42,7 @@ export class MatchTheVibeHeaderElement extends LitElement {
       background: var(--white-color);
       padding: 15px 15px 15px 0px;
       height: 4.3em;
+      width: 100%;
     }
   `;
 

@@ -43,7 +43,6 @@ export class HomePageElement extends App.View {
     .feed-page {
       display: flex;
       justify-content: center;
-      width: 100%;
     }
   `;
 }

@@ -72,15 +72,22 @@ export class ProfilePageElement extends App.View {
   }
 
   render() {
-    return html` <user-profile .using=${this.profile}> </user-profile> `;
+    return html`
+      <section class="profile-page">
+        <user-profile .using=${this.profile}> </user-profile>
+      </section>
+    `;
   }
 
   static styles = [
-    // unsafeCSS(resetCSS),
-    // unsafeCSS(pageCSS),
     css`
       :host {
         display: contents;
+      }
+
+      .profile-page {
+        display: flex;
+        justify-content: center;
       }
     `,
   ];
