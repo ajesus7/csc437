@@ -8,7 +8,7 @@ export class ColorModeSwitchElement extends LitElement {
 
   render() {
     return html`<label>
-      <slot>light mode</slot>
+      <slot>Light Mode</slot>
       <span class="slider">
         <input type="checkbox" @change=${this._handleChange} />
       </span>
