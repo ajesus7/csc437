@@ -20,33 +20,37 @@ export class DropDownElement extends LitElement {
 
   render() {
     return html`
-      <input
-        type="checkbox"
-        id="is-shown"
-        @change=${this._handleChange}
-        .checked=${this.open}
-      />
-      <label for="is-shown">
-        <slot>
-          <img
-            src="/images/${this.profileImage}.png"
-            alt="${this.profileDescription}"
-            class="dropdown-pfp"
-          />
+      <section class="drop-down">
+        <input
+          type="checkbox"
+          id="is-shown"
+          @change=${this._handleChange}
+          .checked=${this.open}
+        />
+        <label for="is-shown">
+          <slot>
+            <img
+              src="/images/${this.profileImage}.png"
+              alt="${this.profileDescription}"
+              class="dropdown-pfp"
+            />
+          </slot>
+        </label>
+        <slot name="menu">
+          <ul>
+            <li class="link border-top-only">
+              <a href="app/profile/${this.profileUserID}" class="link"
+                >Your Profile</a
+              >
+            </li>
+            <li>Settings</li>
+            <li>
+              <color-mode-switch></color-mode-switch>
+            </li>
+            <li class="border-bottom-only">Sign out</li>
+          </ul>
         </slot>
-      </label>
-      <slot name="menu">
-        <ul>
-          <li class="link">
-            <a href="app/profile/${this.profileUserID}" class="link">your profile</a>
-          </li>
-          <li>settings (not functional)</li>
-          <li>
-            <color-mode-switch></color-mode-switch>
-          </li>
-          <li>sign out (not functional)</li>
-        </ul>
-      </slot>
+      </section>
     `;
   }
 
@@ -59,10 +63,14 @@ export class DropDownElement extends LitElement {
 
       display: inline-block;
       position: relative;
-      color: var(--white-color);
-      background: var(--white-color);
-      text-decoration: underline;
+      color: var(--text-color);
       margin: 0.8em 6.25em 0em 0em;
+    }
+
+    .drop-down {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
     }
 
     #is-shown {
@@ -75,7 +83,6 @@ export class DropDownElement extends LitElement {
 
     slot[name="menu"] {
       display: none;
-      position: absolute;
       top: 100%;
     }
 
@@ -85,26 +92,40 @@ export class DropDownElement extends LitElement {
 
     /* CSS for slotted elements and default slot content */
 
-    /*does alter the ul that holds the li elements */
+    /* this is container of the drop down when expanded */
     ::slotted(ul[slot="menu"]),
     slot[name="menu"] > ul {
       margin: 0;
+      font-size: 0.8em;
+      width: 15em;
       list-style: none;
       white-space: nowrap;
-      background: var(--darker-color);
       margin-left: 0em;
       padding-left: 0em;
-      margin-top: 0.78em;
-      border: 0.1em solid var(--white-color);
+      border-radius: var(--border-radius-minus-one);
+      box-shadow: var(--box-shadow);
     }
 
     li {
-      padding: 1em 0.5em 1em 0.5em;
-      border-bottom: 0.1em solid var(--white-color);
+      padding: 1em 0.5em 1em 1em;
+      border-bottom: 0.1em solid rgb(83, 83, 83);
+      background: var(--menu-color);
     }
 
     li:hover {
       background: var(--hover-color);
+    }
+
+    .border-top-only {
+      border-top-left-radius: var(--default-border-radius);
+      border-top-right-radius: var(--default-border-radius);
+    }
+
+    /* also needs no bottom border */
+    .border-bottom-only {
+      border-bottom-left-radius: var(--default-border-radius);
+      border-bottom-right-radius: var(--default-border-radius);
+      border-bottom: 0;
     }
 
     .link {
@@ -117,10 +138,8 @@ export class DropDownElement extends LitElement {
       height: 3em;
       width: 3em;
       position: relative;
-      bottom: 1em;
       border: 0.1em solid var(--background-color);
       border-radius: 50px;
-      margin-bottom: 2 em;
     }
   `;
 

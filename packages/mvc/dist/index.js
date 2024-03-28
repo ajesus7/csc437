@@ -82,6 +82,22 @@ app.get("/posts", (req, res) => {
     res.status(404).send("Posts not found");
   });
 });
+app.get("/comments/:postid", (req, res) => __async(exports, null, function* () {
+  const postId = req.params.postid;
+  console.log("post id where comment was added, ", postId);
+  try {
+    const postWithComments = yield import_post.PostModel.findById(postId).populate(
+      "comments"
+    );
+    if (!postWithComments || !postWithComments.comments || postWithComments.comments.length === 0) {
+      return res.status(404).send("No comments found for this post");
+    }
+    res.json(postWithComments.comments);
+  } catch (err) {
+    console.error("Error fetching comments for post:", postId, err);
+    res.status(500).send("Error fetching comments");
+  }
+}));
 app.post("/posts", (req, res) => __async(exports, null, function* () {
   try {
     const newPostData = req.body;

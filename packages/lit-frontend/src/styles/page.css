@@ -13,11 +13,16 @@ body {
   color: var(--white-color);
   font-weight: var(--light-weight);
   font-size: 1.2em;
+  width: 100%;
 }
 
 main {
-  width: 55%;
-  border: 0.9px solid var(--white-color);
+  width: 100%;
+  background: yellow;
+}
+
+.main {
+  background: blue;
 }
 
 h1 {

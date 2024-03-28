@@ -51,7 +51,7 @@ export class ToggleSwitchElement extends LitElement {
 
     .slider {
       display: inline-block;
-      border: 1px solid var(--white-color);
+      border: 1px solid var(--section-border-color);
       border-radius: 0.75em;
       background-color: var(--background-color);
       height: 1.5em;
@@ -67,7 +67,7 @@ export class ToggleSwitchElement extends LitElement {
     input {
       appearance: none;
       cursor: pointer;
-      background-color: var(--white-color);
+      background-color: var(--text-color);
       border-radius: 50%;
       width: 1.25em;
       height: 1.25em;

@@ -59,16 +59,16 @@ export class TrackCardElement extends LitElement {
       display: flex;
       align-items: center;
       padding: 10px;
-      background-color: #ffffff;
-      border: 1px solid #eee;
-      border-radius: 8px;
+      background-color: var(--background-color);
+      border: 1.5px solid var(--section-border-color);
+      border-radius: var(--default-border-radius);
       margin-bottom: 10px;
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
 
     .single-track:hover {
-      background-color: #f0f0f0;
+      background-color: var(--hover-color);
     }
 
     .track-image {
@@ -87,12 +87,12 @@ export class TrackCardElement extends LitElement {
 
     .track-name {
       font-weight: bold;
-      color: var(--darker-color);
+      color: var(--text-color);
     }
 
     .artist-name {
-      font-size: 0.875em;
-      color: #666;
+      font-size: var(--smaller-size);
+      color: var(--subtext-color);
     }
   `;
 }

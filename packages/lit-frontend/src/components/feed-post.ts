@@ -11,7 +11,7 @@ import { Buffer } from "buffer";
 // * then generate a post object for each post. Should handle overflow of posts well.
 
 import Post from "../models/post";
-import { TrackObject } from "../../../ts-models";
+import { TrackObject, IComment } from "../../../ts-models";
 
 //import components
 import "./track-card";
@@ -21,6 +21,9 @@ import "./comment-card";
 export class FeedPostElement extends LitElement {
   @property({ type: Object })
   post?: Post;
+
+  @state()
+  getPostComments?: IComment[] = [];
 
   @state()
   expanded: boolean = false;
@@ -102,6 +105,7 @@ export class FeedPostElement extends LitElement {
         this._clearSelectedTracks();
         this.submissionSuccess = true;
         target.reset(); // Reset the form if the response is successful
+        this._handleCommentAdded(); // calls fn that fetches comments of specific post
       } else {
         throw new Error("Failed to post comment");
       }
@@ -165,12 +169,45 @@ export class FeedPostElement extends LitElement {
 
   constructor() {
     super();
-
     // ! deals with adding tracks to the selected tracks section when a click event bubbles up
     this.addEventListener("track-selected", (event: Event) => {
       const customEvent = event as CustomEvent;
       this._selectTrack(customEvent.detail.track);
     });
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback(); // Always call super first in connectedCallback
+
+    //if not already initialized, set initial post comments state to getPostComments, this will be updated later when a comment is submitted
+    if (!this.getPostComments || this.getPostComments.length === 0) {
+      this.getPostComments = this.post?.comments || [];
+    }
+  }
+
+  // * when called, re renders the specific post to show new comment
+  async _handleCommentAdded() {
+    console.log("Comment Created, Now Refreshing Component");
+
+    if (!this.post?._id) {
+      console.error("Post ID is undefined.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/comments/${this.post._id}`,
+        { method: "GET" }
+      );
+      if (!response.ok) throw new Error("Failed to fetch comments");
+
+      const comments = await response.json();
+
+      // Ensure this is treated as a new array for reactivity
+      this.getPostComments = [...comments];
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
   }
 
   async authenticate() {
@@ -253,7 +290,7 @@ export class FeedPostElement extends LitElement {
         <p class="message">${this.post?.postMessage}</p>
         <section class="post-comments">
           <h3 class="comments-header">Comments</h3>
-          ${this.post?.comments.map(
+          ${this.getPostComments?.map(
             (comment) => html`<comment-card .comment=${comment}></comment-card>`
           )}
         </section>
@@ -276,7 +313,7 @@ export class FeedPostElement extends LitElement {
                     </button>
                   </form>
                 </section>
-                
+
                 <section class="search-and-selected">
                   <section class="query-results">
                     ${this.topTracks.length > 0
@@ -346,12 +383,12 @@ export class FeedPostElement extends LitElement {
   static styles = css`
     .feed-single-post,
     .feed-single-post-expanded {
-      background-color: #2c2c2e;
-      color: #ffffff;
+      background-color: var(--background-color);
+      color: var(--text-color);
       padding: 20px;
       margin-bottom: 1em;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      border-radius: var(--default-border-radius);
+      box-shadow: var(--box-shadow);
     }
 
     .message {
@@ -377,25 +414,25 @@ export class FeedPostElement extends LitElement {
     }
 
     .time-posted {
-      font-size: 0.8em;
-      color: #a9a9a9;
+      font-size: var(--smaller-size);
+      color: var(--subtext-color);
       margin-left: 1em; /* Ensures the time is to the right of the name */
       flex-grow: 1;
     }
 
     .expand-unexpand {
-      background: var(--accent-color);
+      background: var(--button-color);
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       padding: 8px 16px;
-      font-size: 0.875em;
+      font-size: var(--smaller-size);
       white-space: nowrap; /* Prevents wrapping on small screens */
     }
 
     .expand-unexpand:hover {
-      background: #0056b3;
+      background: var(--button-hover-color);
     }
 
     .message {
@@ -405,33 +442,18 @@ export class FeedPostElement extends LitElement {
     /* Additional Styles for Expanded Content */
     .query-results,
     .selected-tracks {
-      background-color: #3a3a3c;
+      background-color: var(--menu-color);
       padding: 10px;
       margin-top: 10px;
-      border-radius: 8px;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      border-radius: var(--default-border-radius);
+      box-shadow: var(--box-shadow);
       overflow: auto; /* Allow scrolling if content exceeds container size */
     }
 
     .query-results h3,
     .selected-tracks h3 {
-      color: #ddd;
+      color: var(--text-color);
       font-size: 1.2em;
-    }
-
-    .track-card {
-      display: flex;
-      align-items: center;
-      background-color: #2c2c2e;
-      color: #fff;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 6px;
-      transition: background-color 0.2s ease;
-    }
-
-    .track-card:hover {
-      background-color: #424244;
     }
 
     .track-image {
@@ -457,8 +479,8 @@ export class FeedPostElement extends LitElement {
     }
 
     .track-artist {
-      font-size: 0.875em;
-      color: #bbbbbb;
+      font-size: var(--smaller-size);
+      color: var(--subtext-color);
     }
 
     /* Search Form */
@@ -469,14 +491,14 @@ export class FeedPostElement extends LitElement {
       padding: 8px;
       margin-right: 10px; /* Space between input and button */
       border: 1px solid #555;
-      background-color: #2c2c2e;
-      color: #fff;
+      background-color: var(--menu-color);
+      color: var(--text-color);
       border-radius: 4px;
     }
 
     .search-form button {
       padding: 8px 16px;
-      background-color: #007bff;
+      background-color: var(--button-color);
       color: white;
       border: none;
       border-radius: 4px;
@@ -484,7 +506,7 @@ export class FeedPostElement extends LitElement {
     }
 
     .search-form button:hover {
-      background-color: #0056b3;
+      background-color: var(--button-hover-color);
     }
 
     /* Clear Buttons */
@@ -496,7 +518,7 @@ export class FeedPostElement extends LitElement {
       color: #ccc;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 0.875em;
+      font-size: var(--smaller-size);
     }
 
     .clear-results:hover,

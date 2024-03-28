@@ -58,6 +58,31 @@ app.get("/posts", (req, res) => {
     });
 });
 
+app.get("/comments/:postid", async (req, res) => {
+  const postId = req.params.postid;
+  console.log("post id where comment was added, ", postId);
+  try {
+    // Assuming you have a method in your posts service or directly using Mongoose to fetch comments
+    const postWithComments = await PostModel.findById(postId).populate(
+      "comments"
+    );
+    // Assuming 'comments' is a field in your PostModel that references comment documents
+
+    if (
+      !postWithComments ||
+      !postWithComments.comments ||
+      postWithComments.comments.length === 0
+    ) {
+      return res.status(404).send("No comments found for this post");
+    }
+
+    res.json(postWithComments.comments); // Send back the comments
+  } catch (err) {
+    console.error("Error fetching comments for post:", postId, err);
+    res.status(500).send("Error fetching comments");
+  }
+});
+
 // * Creates New Post
 app.post("/posts", async (req: Request, res: Response) => {
   try {
@@ -65,7 +90,7 @@ app.post("/posts", async (req: Request, res: Response) => {
     const newPostData: IPost = req.body;
 
     //create a document based on the mongoose model imported
-    const newPost = await PostModel.create(newPostData); 
+    const newPost = await PostModel.create(newPostData);
     res.status(201).send(newPost); // Send the created post back
   } catch (err) {
     console.error("Error creating new post: ", err);

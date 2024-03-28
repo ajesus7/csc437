@@ -28,10 +28,10 @@ export class DefaultCardElement extends LitElement {
 
   static styles = css`
     .user-friend {
-      border: 0.9px solid var(--white-color);
+      border: 1.5px solid var(--section-border-color);
       width: 120px;
       height: 120px;
-      border-radius: var(--box-border-radius);
+      border-radius: var(--default-border-radius);
       font-weight: var(--bold-weight);
     }
 

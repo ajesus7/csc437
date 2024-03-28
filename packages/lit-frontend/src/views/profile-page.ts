@@ -54,11 +54,6 @@ export class ProfilePageElement extends App.View {
     );
   }
 
-  // disconnectedCallback() {
-  //   this.removeEventListener("profile-update", this._handleProfileUpdate);
-  //   super.disconnectedCallback();
-  // }
-
   _handleProfileUpdate(ev: CustomEvent) {
     console.log("Profile updated", ev.detail.profile);
     // Ensure you have the userid available
@@ -77,15 +72,22 @@ export class ProfilePageElement extends App.View {
   }
 
   render() {
-    return html` <user-profile .using=${this.profile}> </user-profile> `;
+    return html`
+      <section class="profile-page">
+        <user-profile .using=${this.profile}> </user-profile>
+      </section>
+    `;
   }
 
   static styles = [
-    // unsafeCSS(resetCSS),
-    // unsafeCSS(pageCSS),
     css`
       :host {
         display: contents;
+      }
+
+      .profile-page {
+        display: flex;
+        justify-content: center;
       }
     `,
   ];

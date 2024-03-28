@@ -106,7 +106,7 @@ export class SortableListElement extends LitElement {
       height: 2em;
       width: 36.5em;
     }
-    
+
     .subsection-header-line h2 {
       margin-right: 0.35em;
       font-weight: var(--medium-weight);
@@ -120,7 +120,6 @@ export class SortableListElement extends LitElement {
       margin-bottom: 10px;
     }
 
-
     .name-and-icon {
       display: flex;
       flex-direction: row;
@@ -133,10 +132,10 @@ export class SortableListElement extends LitElement {
     }
 
     .user-friend {
-      border: 0.9px solid var(--white-color);
+      border: 0.9px solid var(--section-border-color);
       width: 120px;
       height: 120px;
-      border-radius: var(--box-border-radius);
+      border-radius: var(--default-border-radius);
       font-weight: var(--bold-weight);
     }
 

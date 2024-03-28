@@ -30,7 +30,12 @@ export interface ProfileSaved extends MsgType<"ProfileSaved"> {
   profile: Profile;
 }
 
-export type Message = UserLoggedIn | ProfileSelected | ProfileSaved;
+// TODO do I need to pass in the userid here?
+export interface PostCreated extends MsgType<"PostCreated"> {
+  userid: string;
+}
+
+export type Message = UserLoggedIn | ProfileSelected | ProfileSaved | PostCreated;
 
 export const createDispatch = () => new Dispatch<Model, Message>();
 
