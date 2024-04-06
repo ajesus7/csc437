@@ -3,7 +3,8 @@
   /* * note these colors aren't necessarily used as they are updated by the dark/lightmode class declaration, but they are needed to be defined here? */
   /* Colors for a lightmode UI*/
   --background-color: rgb(255, 255, 255);
-  --menu-color: rgb(217, 217, 217);
+  --menu-color: rgb(238, 238, 238);
+  --sub-menu-color: rgb(227, 224, 224);
   --text-color: rgb(15, 15, 15);
   --hover-color: rgb(242, 242, 242);
   --section-border-color: rgb(229, 229, 229);

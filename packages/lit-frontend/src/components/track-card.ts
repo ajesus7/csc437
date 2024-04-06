@@ -58,7 +58,7 @@ export class TrackCardElement extends LitElement {
     .single-track {
       display: flex;
       align-items: center;
-      padding: 10px;
+      padding: 5px;
       margin-bottom: 5px;
       cursor: pointer;
       transition: background-color 0.2s ease;
@@ -69,8 +69,8 @@ export class TrackCardElement extends LitElement {
     }
 
     .track-image {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       object-fit: cover;
       margin-right: 15px;
@@ -83,12 +83,13 @@ export class TrackCardElement extends LitElement {
     }
 
     .track-name {
-      font-weight: bold;
+      font-weight: 400;
+      font-size: 0.8em;
       color: var(--text-color);
     }
 
     .artist-name {
-      font-size: var(--smaller-size);
+      font-size: 0.6em;
       color: var(--subtext-color);
     }
   `;
