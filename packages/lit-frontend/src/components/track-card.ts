@@ -59,10 +59,7 @@ export class TrackCardElement extends LitElement {
       display: flex;
       align-items: center;
       padding: 10px;
-      background-color: var(--background-color);
-      border: 1.5px solid var(--section-border-color);
-      border-radius: var(--default-border-radius);
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
@@ -72,8 +69,8 @@ export class TrackCardElement extends LitElement {
     }
 
     .track-image {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       object-fit: cover;
       margin-right: 15px;

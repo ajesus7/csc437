@@ -296,64 +296,76 @@ export class FeedPostElement extends LitElement {
         </section>
         ${this.expanded
           ? html`
-              <section class="expanded-content">
-                <h3 class="expanded-header">
-                  Leave a Comment and Recommend Some Songs!
-                </h3>
+              <section class="expanded-window">
+                <section>
+                  <h3 class="expanded-header">Leave a Comment</h3>
+                </section>
                 <section class="search-form">
-                  <form @submit=${this._handleSubmit}>
+                  <form class="search-bar-form" @submit=${this._handleSubmit}>
                     <input
                       type="text"
                       id="inputted-artist-name"
                       name="inputted-artist-name"
-                      placeholder="Enter an artist, song, or album!"
+                      placeholder="Search for a song, artist, album... anything!"
                     />
                     <button class="recommend-songs" type="submit">
-                      Search for Songs
+                      Search
                     </button>
                   </form>
                 </section>
-
                 <section class="search-and-selected">
                   <section class="query-results">
+                    <h3 class="search-results">Search Results</h3>
                     ${this.topTracks.length > 0
-                      ? this.topTracks
-                          .slice(0, 5)
-                          .map(
-                            (track) =>
-                              html`<track-card .track=${track}></track-card>`
-                          )
-                      : html`<h3>
-                          The tracks you search for will show up here
-                        </h3>`}
+                      ? html`<div class="track-box-search-results">
+                            ${this.topTracks
+                              .slice(0, 5)
+                              .map(
+                                (track) =>
+                                  html`<track-card
+                                    .track=${track}
+                                  ></track-card>`
+                              )}
+                          </div>
+                          <div class="clear-results-section">
+                            <button
+                              class="clear-results"
+                              @click=${this._clearTopTracks}
+                            >
+                              Clear Results
+                            </button>
+                          </div>`
+                      : html`<div class="track-box-search-results"></div>
+                          <div class="clear-results-section">
+                            <button
+                              class="clear-results"
+                              @click=${this._clearTopTracks}
+                            >
+                              Clear Results
+                            </button>
+                          </div>`}
                   </section>
                   <section class="selected-tracks">
-                    <h3>Selected Tracks</h3>
-                    ${this.selectedTracks.map(
-                      (track) => html`<track-card .track=${track}></track-card>`
-                    )}
+                    <h3>Selected Songs</h3>
+                    <div class="track-box-selected-tracks">
+                      ${this.selectedTracks.map(
+                        (track) =>
+                          html`<track-card .track=${track}></track-card>`
+                      )}
+                    </div>
+                    <div class="clear-selected-tracks-section">
+                      <button
+                        class="clear-selected-tracks"
+                        @click=${this._clearSelectedTracks}
+                      >
+                        Clear Selected Tracks
+                      </button>
+                    </div>
                   </section>
                 </section>
+              </section>
 
-                <section class="clear-buttons">
-                  <div class="clear-results-section">
-                    <button
-                      class="clear-results"
-                      @click=${this._clearTopTracks}
-                    >
-                      Clear Results
-                    </button>
-                  </div>
-                  <div class="clear-selected-tracks-section">
-                    <button
-                      class="clear-selected-tracks"
-                      @click=${this._clearSelectedTracks}
-                    >
-                      Clear Selected Tracks
-                    </button>
-                  </div>
-                </section>
-
+              <section class="expanded-content">
                 <section class="recommend-form">
                   ${this.submissionSuccess === true
                     ? html`<p>Submission successful!</p>`
@@ -361,15 +373,18 @@ export class FeedPostElement extends LitElement {
                   ${this.submissionSuccess === false
                     ? html`<p>Submission failed. Please try again.</p>`
                     : ``}
-                  <form @submit=${this._recommendTracks}>
+                  <form
+                    class="comment-message-form"
+                    @submit=${this._recommendTracks}
+                  >
                     <input
                       type="text"
                       id="input-comment"
                       name="input-comment"
-                      placeholder="Leave a message!"
+                      placeholder="Leave a message..."
                     />
                     <button class="recommend-songs" type="submit">
-                      Recommend Tracks!
+                      Submit
                     </button>
                   </form>
                 </section>
@@ -439,21 +454,29 @@ export class FeedPostElement extends LitElement {
       font-size: 1em;
       margin-bottom: 1em;
     }
-    /* Additional Styles for Expanded Content */
-    .query-results,
-    .selected-tracks {
-      background-color: var(--menu-color);
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: var(--default-border-radius);
-      box-shadow: var(--box-shadow);
-      overflow: auto; /* Allow scrolling if content exceeds container size */
+
+    .selected-tracks,
+    .query-results {
+      width: 50%;
     }
 
+    .track-box-selected-tracks,
+    .track-box-search-results {
+      background: var(--menu-color);
+      border-radius: 12px;
+      padding: 10px;
+      width: 92%;
+      height: 22.5em;
+      margin-top: 10px;
+      overflow: auto; /* Allow scrolling if content exceeds container size */
+    }
     .query-results h3,
     .selected-tracks h3 {
       color: var(--text-color);
-      font-size: 1.2em;
+      font-size: 1.15em;
+      font-weight: 300;
+      margin: 0;
+      margin-top: 6px;
     }
 
     .track-image {
@@ -488,47 +511,81 @@ export class FeedPostElement extends LitElement {
       width: calc(
         100% - 130px
       ); /* Adjust based on button width to fit on one line */
-      padding: 8px;
+      padding: 10px 0px 10px 14px;
       margin-right: 10px; /* Space between input and button */
-      border: 1px solid #555;
-      background-color: var(--menu-color);
+      border: 1px solid var(--section-border-color);
+      background-color: var(blue);
+      font-weight: 300;
       color: var(--text-color);
-      border-radius: 4px;
+      border-radius: 50px;
     }
 
-    .search-form button {
-      padding: 8px 16px;
+    .search-and-selected {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .expanded-header {
+      font-weight: 500;
+    }
+    .search-bar-form {
+      display: flex;
+      flex-direction: row;
+    }
+
+    #input-comment {
+      border: none;
+      border-bottom: 2px solid var(--section-border-color);
+      width: 90%;
+      height: 2em;
+    }
+
+    .comment-message-form {
+      display: flex;
+      flex-direction: row;
+      width: 98%;
+    }
+
+    .search-form {
+      margin-bottom: 15px;
+    }
+
+    .search-form button,
+    button.recommend-songs {
+      padding: 2px 20px 2px 20px;
+      margin-left: 10px;
       background-color: var(--button-color);
       color: white;
       border: none;
+      border: 2px solid black;
       border-radius: 4px;
       cursor: pointer;
+    }
+
+    button.recommend-songs {
+      padding: 6px 20px;
     }
 
     .search-form button:hover {
       background-color: var(--button-hover-color);
     }
 
-    /* Clear Buttons */
-    .clear-results,
-    .clear-selected-tracks {
-      padding: 8px 16px;
-      background-color: #444;
-      border: none;
-      color: #ccc;
-      border-radius: 4px;
+    .clear-results-section button,
+    .clear-selected-tracks-section button {
+      text-decoration: underline;
       cursor: pointer;
-      font-size: var(--smaller-size);
+      background: var(--background-color);
+      border: none;
+      color: var(--subtext-color);
     }
 
     .clear-results:hover,
     .clear-selected-tracks:hover {
-      background-color: #555;
+      color: var(--text-color);
     }
 
     /* Styling for the entire expanded content section */
     .expanded-content {
-      border-top: 1px solid #555; /* Adds a subtle separation line */
       padding-top: 20px; /* Space above the content */
     }
   `;

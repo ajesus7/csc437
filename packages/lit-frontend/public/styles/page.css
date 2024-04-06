@@ -147,7 +147,7 @@ but I couldnt get flex working for aligning the text within the cards */
   /* used for entire site background in darkmode UI*/
   --background-color: rgb(255, 255, 255);
   /* for now menu background is the same as the entire site background - subject to change */
-  --menu-color: rgb(255, 255, 255);
+  --menu-color: rgb(217, 217, 217);
   /* used for text in lightmode UI - note: same as the darkmode background*/
   --text-color: rgb(15, 15, 15);
   /* used for hovering over an element in lightmode UI*/
