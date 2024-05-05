@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import credentials from "./services/credentials";
 
 function generateAccessToken(username: string) {
+  console.log("made it to generate access token");
   console.log("Generating token for", username);
   return new Promise((resolve, reject) => {
     // Ensure TOKEN_SECRET is defined
@@ -36,6 +37,9 @@ export function registerUser(req, res) {
     console.log("Error; username then password: ", username, pwd);
     res.status(400).send("Bad request: Invalid input data.");
   } else {
+    console.log(
+      "Within registerUser function in auth.ts, about to call credentials"
+    );
     credentials
       .create(username, pwd)
       .then((creds) => generateAccessToken(creds.username))
