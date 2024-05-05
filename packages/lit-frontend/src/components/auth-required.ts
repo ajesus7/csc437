@@ -142,7 +142,7 @@ export class AuthRequiredElement extends LitElement {
 
     request
       .base()
-      .post("/signup")
+      .post("/createuser")
       .then((res) => {
         if (res.status === 200) {
           return res.json();
