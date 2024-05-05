@@ -12,7 +12,7 @@ import { PostModel } from "./mongo/post";
 import { IPost } from "../../ts-models";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 let dist: string | undefined;
 let frontend: string | undefined;

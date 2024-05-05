@@ -447,7 +447,7 @@ export class FeedPostElement extends LitElement {
     .feed-single-post-expanded {
       background-color: var(--background-color);
       padding: 10px;
-      width: 45em;
+      width: 38em;
       margin-bottom: 15px;
       color: var(--text-color);
     }
@@ -459,7 +459,7 @@ export class FeedPostElement extends LitElement {
 
     .line-decoration {
       width: 2px;
-      height: 3em;
+      height: 4em;
       border-left: 2px solid var(--sub-menu-color);
       position: relative;
       left: 1.5em;
@@ -525,7 +525,7 @@ export class FeedPostElement extends LitElement {
       font-size: 0.8em;
       font-weight: 300;
       margin: 0;
-      margin-bottom: 0.5em;
+      margin-bottom: 1em;
       padding: 0;
       white-space: nowrap; /* Prevents wrapping on small screens */
     }
@@ -623,10 +623,12 @@ export class FeedPostElement extends LitElement {
 
     #input-comment {
       border: none;
-      background: none;
-      border-bottom: 2px solid var(--section-border-color);
+      background: var(--background-color);
+      border: 1px solid var(--section-border-color);
       width: 92%;
       height: 2em;
+      padding: 7px;
+      border-radius: 4px;
     }
 
     .comment-message-form {

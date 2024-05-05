@@ -36,7 +36,7 @@ var import_dotenv = __toESM(require("dotenv"));
 import_mongoose.default.set("debug", true);
 import_dotenv.default.config();
 function getMongoURI(dbname) {
-  let connection_string = `mongodb://localhost:27017/${dbname}`;
+  let connection_string = `mongodb://52.90.255.28:27017/${dbname}`;
   const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER } = process.env;
   if (MONGO_USER && MONGO_PWD && MONGO_CLUSTER) {
     console.log(
