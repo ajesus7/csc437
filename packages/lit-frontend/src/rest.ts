@@ -78,6 +78,7 @@ export class JSONRequest {
 
   base(newBase: string = "") {
     this._base = newBase;
+    console.log("BASE CHANGED TO: ", this._base, " and this is: ", this);
     return this;
   }
 
