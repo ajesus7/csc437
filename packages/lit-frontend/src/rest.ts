@@ -78,7 +78,6 @@ export class JSONRequest {
 
   base(newBase: string = "") {
     this._base = newBase;
-    console.log("BASE CHANGED TO: ", this._base, " and this is: ", this);
     return this;
   }
 
@@ -90,9 +89,6 @@ export class JSONRequest {
   }
 
   post(endpoint: string) {
-    const url = this._url(endpoint); // Log the constructed URL
-    console.log("POST URL FROM REQUEST:", url);
-
     return fetch(this._url(endpoint), {
       method: "POST",
       headers: this._headers(),
