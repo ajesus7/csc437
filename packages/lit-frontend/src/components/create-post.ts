@@ -71,7 +71,7 @@ export class CreatePostElement extends LitElement {
 
     //attempt to create a POST request with the post data
     try {
-      const url = `http://localhost:3000/posts`;
+      const url = `http://52.90.255.28:8000/posts`;
 
       //make the post request
       const response = await fetch(url, {

@@ -111,8 +111,7 @@ export class FeedPostElement extends LitElement {
     let message = formData.get("input-comment") as string;
 
     const trackIds = this.selectedTracks.map((track) => track.id);
-    const url = `http://localhost:3000/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
-
+    const url = `http://52.90.255.28:8000/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
     // todo USERID NEEDS TO BE CHANGED TO BE DYNAMIC based on given profile
     const newComment = {
       userName: "aidan",
@@ -227,7 +226,7 @@ export class FeedPostElement extends LitElement {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/comments/${this.post._id}`,
+        `"http://52.90.255.28:8000/comments/${this.post._id}`,
         { method: "GET" }
       );
       if (!response.ok) throw new Error("Failed to fetch comments");
