@@ -141,7 +141,7 @@ export class AuthRequiredElement extends LitElement {
     const request = new FormDataRequest(data);
 
     request
-      .base("")
+      .base()
       .post("/signup")
       .then((res) => {
         if (res.status === 200) {
@@ -151,7 +151,11 @@ export class AuthRequiredElement extends LitElement {
         }
       })
       .then((json) => {
-        console.log("Registration:", json);
+        console.log("Registration response:", json);
+      })
+      .catch((error) => {
+        console.error("Error during registration:", error);
+        // Optionally, update UI to display an error message to the user
       });
   }
 
