@@ -113,7 +113,7 @@ export class AuthRequiredElement extends LitElement {
     const request = new FormDataRequest(data);
 
     request
-      .base()
+      .base("http://52.90.255.28:8000")
       .post("/login")
       .then((res) => {
         if (res.status === 200) {
@@ -141,7 +141,7 @@ export class AuthRequiredElement extends LitElement {
     const request = new FormDataRequest(data);
 
     request
-      .base()
+      .base("http://52.90.255.28:8000")
       .post("/signup")
       .then((res) => {
         if (res.status === 200) {
