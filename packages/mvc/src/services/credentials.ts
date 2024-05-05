@@ -31,6 +31,7 @@ export function checkExists(username: string) {
 }
 
 export function create(username: string, password: string) {
+  console.log("Within Credentials Create function!");
   return new Promise<Credential>((resolve, reject) => {
     if (!username || !password) {
       reject("must provide username and password");
