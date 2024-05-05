@@ -71,7 +71,7 @@ export class AuthenticatedUser extends APIUser {
 export class JSONRequest {
   json: Object | undefined;
   user: AuthenticatedUser | undefined;
-  _base = `${SERVER_ROOT}${API_PATH}`;
+  _base = "";
 
   constructor(body: Object | undefined) {
     this.json = body;
