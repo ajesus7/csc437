@@ -25,8 +25,15 @@ function generateAccessToken(username: string) {
 
 export function registerUser(req, res) {
   const { username, pwd } = req.body; // from form
+  console.log(
+    "WITHIN REGISTER BUT OUTSIDE ERROR: username: ",
+    username,
+    " password: ",
+    pwd
+  );
 
   if (!username || !pwd) {
+    console.log("Error; username then password: ", username, pwd);
     res.status(400).send("Bad request: Invalid input data.");
   } else {
     credentials
