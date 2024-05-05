@@ -50,7 +50,7 @@ var import_api = __toESM(require("./routes/api"));
 var import_posts = __toESM(require("./services/posts"));
 var import_post = require("./mongo/post");
 const app = (0, import_express.default)();
-const port = process.env.PORT || 3e3;
+const port = process.env.PORT || 8e3;
 let dist;
 let frontend;
 try {
