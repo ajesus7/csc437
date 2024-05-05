@@ -90,6 +90,9 @@ export class JSONRequest {
   }
 
   post(endpoint: string) {
+    const url = this._url(endpoint); // Log the constructed URL
+    console.log("POST URL FROM REQUEST:", url);
+
     return fetch(this._url(endpoint), {
       method: "POST",
       headers: this._headers(),
