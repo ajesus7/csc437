@@ -4,7 +4,6 @@ export function serverPath(path: string) {
   return `${API_ROOT}${path}`;
 }
 
-const SERVER_ROOT = "http://52.90.255.28:8000";
 const API_PATH = "/api";
 const TOKEN_KEY = "JWT_AUTH_TOKEN";
 
@@ -71,7 +70,7 @@ export class AuthenticatedUser extends APIUser {
 export class JSONRequest {
   json: Object | undefined;
   user: AuthenticatedUser | undefined;
-  _base = "";
+  _base = API_PATH;
 
   constructor(body: Object | undefined) {
     this.json = body;
@@ -124,7 +123,7 @@ export class JSONRequest {
   }
 
   _url(path: string) {
-    return `${SERVER_ROOT}${this._base}${path}`;
+    return `${API_ROOT}${this._base}${path}`;
   }
 }
 
