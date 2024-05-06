@@ -1,4 +1,4 @@
-const API_ROOT = "http://52.90.255.28";
+const API_ROOT = "http://52.90.255.28/api";
 
 export function serverPath(path: string) {
   return `${API_ROOT}${path}`;
