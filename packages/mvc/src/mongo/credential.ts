@@ -16,6 +16,6 @@ const credentialSchema = new Schema<Credential>(
   { collection: "user_credentials" }
 );
 
-const credentialModel = model<Credential>("Credential ", credentialSchema);
+const credentialModel = model<Credential>("Credential", credentialSchema);
 
 export default credentialModel;

@@ -41,6 +41,7 @@ export function create(username: string, password: string) {
     credentialModel
       .find({ username })
       .then((found: Credential[]) => {
+        console.log("After credentialModel find");
         if (found.length) reject("username exists");
       })
       .then(() =>
@@ -60,7 +61,11 @@ export function create(username: string, password: string) {
               if (created) resolve(created);
             });
           })
-      );
+      )
+      .catch((error) => {
+        console.error("Error in create:", error);
+        reject(error);
+      });
   });
 }
 
