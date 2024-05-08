@@ -4,7 +4,7 @@ export function serverPath(path: string) {
   return `${API_ROOT}${path}`;
 }
 
-const API_PATH = "/api";
+const API_PATH = "";
 const TOKEN_KEY = "JWT_AUTH_TOKEN";
 
 export class APIUser {

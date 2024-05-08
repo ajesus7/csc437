@@ -139,7 +139,7 @@ export class AuthRequiredElement extends LitElement {
     const form = event.target as HTMLFormElement;
     const data = new FormData(form);
     const request = new FormDataRequest(data);
-
+    console.log("handling registration, about to make signup request");
     request
       .base()
       .post("/signup")
