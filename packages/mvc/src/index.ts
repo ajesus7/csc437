@@ -10,6 +10,7 @@ import SpotifyService from "./services/spotifySearch";
 
 import { PostModel } from "./mongo/post";
 import { IPost } from "../../ts-models";
+import mongoose from "mongoose";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -137,6 +138,16 @@ app.get("*", (req, res) => {
         res.status(500).send("Server error");
       }
     });
+  }
+});
+
+// ! TEST IF BACKEND IS WORKING
+app.get("/api/test-db", async (req, res) => {
+  try {
+    const result = await mongoose.connection.db.admin().serverStatus();
+    res.send({ dbStatus: "Connected", version: result.version });
+  } catch (error) {
+    res.status(500).send({ dbStatus: "Disconnected", error: error.message });
   }
 });
 

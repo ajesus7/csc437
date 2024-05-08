@@ -36,21 +36,18 @@ var import_dotenv = __toESM(require("dotenv"));
 import_mongoose.default.set("debug", true);
 import_dotenv.default.config();
 function getMongoURI(dbname) {
-  let connection_string = `mongodb://52.90.255.28:27017/${dbname}`;
   const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER } = process.env;
   if (MONGO_USER && MONGO_PWD && MONGO_CLUSTER) {
     console.log(
       "Connecting to MongoDB at",
       `mongodb+srv://${MONGO_USER}:<password>@${MONGO_CLUSTER}/${dbname}`
     );
-    connection_string = `mongodb+srv://${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}/${dbname}?retryWrites=true&w=majority`;
-  } else {
-    console.log("Connecting to MongoDB at ", connection_string);
+    return `mongodb+srv://${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}/${dbname}?retryWrites=true&w=majority&appName=Vibing`;
   }
-  return connection_string;
+  throw new Error("Database configuration is incomplete in .env");
 }
 function connect(dbname) {
-  import_mongoose.default.connect(getMongoURI(dbname)).catch((error) => console.log(error));
+  import_mongoose.default.connect(getMongoURI(dbname)).then(() => console.log(`Successfully connected to database: ${dbname}`)).catch((error) => console.error("Database connection failed:", error));
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

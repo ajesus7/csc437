@@ -36,5 +36,5 @@ const credentialSchema = new import_mongoose.Schema(
   },
   { collection: "user_credentials" }
 );
-const credentialModel = (0, import_mongoose.model)("Credential ", credentialSchema);
+const credentialModel = (0, import_mongoose.model)("Credential", credentialSchema);
 var credential_default = credentialModel;
