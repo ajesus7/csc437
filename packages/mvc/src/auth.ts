@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
 import credentials from "./services/credentials";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 function generateAccessToken(username: string) {
   console.log("made it to generate access token");
@@ -67,11 +70,11 @@ export function authenticateUser(req, res, next) {
   const authHeader = req.headers["authorization"];
   //Getting the 2nd part of the auth header (the token)
   const token = authHeader && authHeader.split(" ")[1];
-
+  const { TOKEN_SECRET } = process.env;
   if (!token) {
     res.status(401).end();
   } else {
-    jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
+    jwt.verify(token, TOKEN_SECRET, (error, decoded) => {
       if (decoded) {
         console.log("Decoded token", decoded);
         next();

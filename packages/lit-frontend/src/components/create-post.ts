@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
-
+import dotenv from "dotenv";
 // import { Profile } from "../models/profile";
 // import { authContext } from "./auth-required";
 // import { consume } from "@lit/context";
@@ -15,7 +15,7 @@ import { customElement, state } from "lit/decorators.js";
 // ! and do not re render the page.
 
 import { IPost } from "../../../ts-models";
-
+dotenv.config();
 //import components
 
 @customElement("create-post")
@@ -67,11 +67,12 @@ export class CreatePostElement extends LitElement {
       comments: [],
     };
 
+    const { SERVER_URL } = process.env;
     console.log("new post: ", newPost);
 
     //attempt to create a POST request with the post data
     try {
-      const url = `http://52.90.255.28:8000/posts`;
+      const url = `${SERVER_URL}/posts`;
 
       //make the post request
       const response = await fetch(url, {

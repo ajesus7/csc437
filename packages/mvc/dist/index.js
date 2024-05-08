@@ -48,12 +48,14 @@ var import_mongoConnect = require("./mongoConnect");
 var import_auth = require("./auth");
 var import_api = __toESM(require("./routes/api"));
 var import_posts = __toESM(require("./services/posts"));
+var import_dotenv = __toESM(require("dotenv"));
 var import_post = require("./mongo/post");
 var import_mongoose = __toESM(require("mongoose"));
 const app = (0, import_express.default)();
-const port = process.env.PORT || 8e3;
 let dist;
 let frontend;
+import_dotenv.default.config();
+const { SERVER_URL } = process.env;
 try {
   frontend = require.resolve("lit-frontend");
   dist = path.resolve(frontend, "..", "..");
@@ -146,6 +148,6 @@ app.get("/api/test-db", (req, res) => __async(exports, null, function* () {
     res.status(500).send({ dbStatus: "Disconnected", error: error.message });
   }
 }));
-app.listen(port, () => {
-  console.log(`Server listening on http://52.90.255.28:${port}`);
+app.listen(() => {
+  console.log(`Server listening on ${SERVER_URL}`);
 });
