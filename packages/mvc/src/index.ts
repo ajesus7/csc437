@@ -7,16 +7,19 @@ import { loginUser, registerUser } from "./auth";
 import apiRouter from "./routes/api";
 import posts from "./services/posts";
 import SpotifyService from "./services/spotifySearch";
+import dotenv from "dotenv";
 
 import { PostModel } from "./mongo/post";
 import { IPost } from "../../ts-models";
 import mongoose from "mongoose";
 
 const app = express();
-const port = process.env.PORT || 8000;
 
 let dist: string | undefined;
 let frontend: string | undefined;
+dotenv.config();
+
+const { SERVER_URL } = process.env;
 
 try {
   frontend = require.resolve("lit-frontend");
@@ -151,6 +154,6 @@ app.get("/api/test-db", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on http://52.90.255.28:${port}`);
+app.listen(() => {
+  console.log(`Server listening on ${SERVER_URL}`);
 });

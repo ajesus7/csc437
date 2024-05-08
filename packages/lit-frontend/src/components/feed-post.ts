@@ -1,5 +1,6 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import dotenv from "dotenv";
 
 // import { Profile } from "../models/profile";
 // import { authContext } from "./auth-required";
@@ -16,6 +17,8 @@ import { TrackObject, IComment } from "../../../ts-models";
 //import components
 import "./track-card";
 import "./comment-card";
+
+dotenv.config();
 
 @customElement("feed-post")
 export class FeedPostElement extends LitElement {
@@ -106,12 +109,13 @@ export class FeedPostElement extends LitElement {
     this.submissionSuccess = null; // Reset the submission state on each attempt
     const target = ev.target as HTMLFormElement;
     const formData = new FormData(target);
+    const { SERVER_URL } = process.env;
 
     // Retrieve the value of the input field by its name
     let message = formData.get("input-comment") as string;
 
     const trackIds = this.selectedTracks.map((track) => track.id);
-    const url = `http://52.90.255.28/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
+    const url = `${SERVER_URL}/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
     // todo USERID NEEDS TO BE CHANGED TO BE DYNAMIC based on given profile
     const newComment = {
       userName: "aidan",
@@ -218,6 +222,7 @@ export class FeedPostElement extends LitElement {
   // * when called, re renders the specific post to show new comment
   async _handleCommentAdded() {
     console.log("Comment Created, Now Refreshing Component");
+    const { SERVER_URL } = process.env;
 
     if (!this.post?._id) {
       console.error("Post ID is undefined.");
@@ -225,10 +230,9 @@ export class FeedPostElement extends LitElement {
     }
 
     try {
-      const response = await fetch(
-        `"http://52.90.255.28/comments/${this.post._id}`,
-        { method: "GET" }
-      );
+      const response = await fetch(`${SERVER_URL}/comments/${this.post._id}`, {
+        method: "GET",
+      });
       if (!response.ok) throw new Error("Failed to fetch comments");
 
       const comments = await response.json();

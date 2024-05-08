@@ -35,6 +35,8 @@ __export(auth_exports, {
 module.exports = __toCommonJS(auth_exports);
 var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
 var import_credentials = __toESM(require("./services/credentials"));
+var import_dotenv = __toESM(require("dotenv"));
+import_dotenv.default.config();
 function generateAccessToken(username) {
   console.log("made it to generate access token");
   console.log("Generating token for", username);
@@ -88,10 +90,11 @@ function loginUser(req, res) {
 function authenticateUser(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
+  const { TOKEN_SECRET } = process.env;
   if (!token) {
     res.status(401).end();
   } else {
-    import_jsonwebtoken.default.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
+    import_jsonwebtoken.default.verify(token, TOKEN_SECRET, (error, decoded) => {
       if (decoded) {
         console.log("Decoded token", decoded);
         next();

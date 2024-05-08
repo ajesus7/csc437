@@ -1,11 +1,14 @@
 import { css, html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import dotenv from "dotenv";
 
 // components
 import "./feed-post-list";
 import "./create-post";
 
 import Post from "../models/post";
+
+dotenv.config();
 
 @customElement("main-feed")
 export class MainFeedElement extends LitElement {
@@ -28,8 +31,10 @@ export class MainFeedElement extends LitElement {
 
   async _fetchData() {
     console.log("fetching posts!");
+    const { SERVER_URL } = process.env;
+
     try {
-      const response = await fetch("http://52.90.255.28/posts");
+      const response = await fetch(`${SERVER_URL}/posts`);
       if (response.ok) {
         // Check if response is ok (status in the range 200-299)
         const json = await response.json();

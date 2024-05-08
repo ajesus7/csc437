@@ -1,4 +1,7 @@
-const API_ROOT = "http://52.90.255.28";
+import dotenv from "dotenv";
+dotenv.config();
+const { SERVER_URL } = process.env;
+const API_ROOT = `${SERVER_URL}`;
 
 export function serverPath(path: string) {
   return `${API_ROOT}${path}`;
