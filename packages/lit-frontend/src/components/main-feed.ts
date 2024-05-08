@@ -29,7 +29,7 @@ export class MainFeedElement extends LitElement {
   async _fetchData() {
     console.log("fetching posts!");
     try {
-      const response = await fetch("http://52.90.255.28:8000/posts");
+      const response = await fetch("http://52.90.255.28/posts");
       if (response.ok) {
         // Check if response is ok (status in the range 200-299)
         const json = await response.json();
