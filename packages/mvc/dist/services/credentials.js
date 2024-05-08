@@ -63,25 +63,36 @@ function checkExists(username) {
   });
 }
 function create(username, password) {
+  console.log("Within Credentials Create function!");
   return new Promise((resolve, reject) => {
     if (!username || !password) {
+      console.log("rejected, something wrong with username or pwd");
       reject("must provide username and password");
     }
+    console.log("about to do credentialModel find");
     import_credential.default.find({ username }).then((found) => {
+      console.log("After credentialModel find");
       if (found.length)
         reject("username exists");
     }).then(
       () => import_bcryptjs.default.genSalt(10).then((salt) => import_bcryptjs.default.hash(password, salt)).then((hashedPassword) => {
+        console.log(
+          "creating the new credentials and trying to save them to db"
+        );
         const creds = new import_credential.default({
           username,
           hashedPassword
         });
         creds.save().then((created) => {
+          console.log("credentials save reached, about to resolve");
           if (created)
             resolve(created);
         });
       })
-    );
+    ).catch((error) => {
+      console.error("Error in create:", error);
+      reject(error);
+    });
   });
 }
 var credentials_default = { checkExists, create, verify };

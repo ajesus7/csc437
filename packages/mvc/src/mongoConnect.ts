@@ -5,22 +5,22 @@ import dotenv from "dotenv";
 mongoose.set("debug", true);
 dotenv.config();
 
-function getMongoURI(dbname: string) {
-  let connection_string = `mongodb://52.90.255.28:27017/${dbname}`;
+function getMongoURI(dbname: string): string {
   const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER } = process.env;
-
   if (MONGO_USER && MONGO_PWD && MONGO_CLUSTER) {
     console.log(
       "Connecting to MongoDB at",
       `mongodb+srv://${MONGO_USER}:<password>@${MONGO_CLUSTER}/${dbname}`
     );
-    connection_string = `mongodb+srv://${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}/${dbname}?retryWrites=true&w=majority`;
-  } else {
-    console.log("Connecting to MongoDB at ", connection_string);
+    return `mongodb+srv://${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}/${dbname}?retryWrites=true&w=majority&appName=Vibing`;
   }
-  return connection_string;
+  // Fallback connection string or throw an error
+  throw new Error("Database configuration is incomplete in .env");
 }
 
 export function connect(dbname: string) {
-  mongoose.connect(getMongoURI(dbname)).catch((error) => console.log(error));
+  mongoose
+    .connect(getMongoURI(dbname))
+    .then(() => console.log(`Successfully connected to database: ${dbname}`))
+    .catch((error) => console.error("Database connection failed:", error));
 }

@@ -36,6 +36,7 @@ module.exports = __toCommonJS(auth_exports);
 var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
 var import_credentials = __toESM(require("./services/credentials"));
 function generateAccessToken(username) {
+  console.log("made it to generate access token");
   console.log("Generating token for", username);
   return new Promise((resolve, reject) => {
     const secret = process.env.TOKEN_SECRET;
@@ -58,9 +59,19 @@ function generateAccessToken(username) {
 }
 function registerUser(req, res) {
   const { username, pwd } = req.body;
+  console.log(
+    "WITHIN REGISTER BUT OUTSIDE ERROR: username: ",
+    username,
+    " password: ",
+    pwd
+  );
   if (!username || !pwd) {
+    console.log("Error; username then password: ", username, pwd);
     res.status(400).send("Bad request: Invalid input data.");
   } else {
+    console.log(
+      "Within registerUser function in auth.ts, about to call credentials"
+    );
     import_credentials.default.create(username, pwd).then((creds) => generateAccessToken(creds.username)).then((token) => {
       res.status(201).send({ token });
     });
