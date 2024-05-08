@@ -1,6 +1,5 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import dotenv from "dotenv";
 
 // import { Profile } from "../models/profile";
 // import { authContext } from "./auth-required";
@@ -17,8 +16,6 @@ import { TrackObject, IComment } from "../../../ts-models";
 //import components
 import "./track-card";
 import "./comment-card";
-
-dotenv.config();
 
 @customElement("feed-post")
 export class FeedPostElement extends LitElement {
@@ -109,7 +106,7 @@ export class FeedPostElement extends LitElement {
     this.submissionSuccess = null; // Reset the submission state on each attempt
     const target = ev.target as HTMLFormElement;
     const formData = new FormData(target);
-    const { SERVER_URL } = process.env;
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
     // Retrieve the value of the input field by its name
     let message = formData.get("input-comment") as string;
@@ -222,8 +219,8 @@ export class FeedPostElement extends LitElement {
   // * when called, re renders the specific post to show new comment
   async _handleCommentAdded() {
     console.log("Comment Created, Now Refreshing Component");
-    const { SERVER_URL } = process.env;
-
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+    console.log("SERVER URL FROM COMMENT ADDED: ", SERVER_URL);
     if (!this.post?._id) {
       console.error("Post ID is undefined.");
       return;
