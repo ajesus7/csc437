@@ -148,6 +148,7 @@ app.get("/api/test-db", (req, res) => __async(exports, null, function* () {
     res.status(500).send({ dbStatus: "Disconnected", error: error.message });
   }
 }));
-app.listen(() => {
+const { PORT } = process.env || 3e3;
+app.listen(PORT, () => {
   console.log(`Server listening on ${SERVER_URL}`);
 });

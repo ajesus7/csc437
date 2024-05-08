@@ -1,13 +1,12 @@
-import dotenv from "dotenv";
-dotenv.config();
-const { SERVER_URL } = process.env;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
 const API_ROOT = `${SERVER_URL}`;
 
 export function serverPath(path: string) {
   return `${API_ROOT}${path}`;
 }
 
-const API_PATH = "";
+const API_PATH = "/api";
 const TOKEN_KEY = "JWT_AUTH_TOKEN";
 
 export class APIUser {

@@ -154,6 +154,7 @@ app.get("/api/test-db", async (req, res) => {
   }
 });
 
-app.listen(() => {
+const { PORT } = process.env || 3000;
+app.listen(PORT, () => {
   console.log(`Server listening on ${SERVER_URL}`);
 });
