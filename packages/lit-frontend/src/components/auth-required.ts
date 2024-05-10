@@ -14,8 +14,13 @@ export class AuthRequiredElement extends LitElement {
   registerStatus: number = 0;
   @state() activeForm: "login" | "register" = "register"; // State to control which form to display
 
+  // used to toggle between the Sign Up and Login Forms
   @state()
   showLoginForm: boolean = false;
+
+  // informs user of error signing up
+  @state()
+  showSignUpErrorMessage: boolean = false;
 
   @provide({ context: authContext })
   @state()
@@ -83,6 +88,11 @@ export class AuthRequiredElement extends LitElement {
               </div>
 
               <button type="submit" class="submitButton">Sign up</button>
+              ${this.showSignUpErrorMessage
+                ? html`<p class="errorMessage">
+                    There was an error with signing you up, please try again.
+                  </p>`
+                : html``}
               <p class="loginSignupLink">
                 Already have an account?
                 <span @click=${this.toggleLoginForm} class="signInLink"
@@ -194,6 +204,14 @@ export class AuthRequiredElement extends LitElement {
       display: flex;
       flex-direction: column;
     }
+
+    .errorMessage {
+      color: red;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      margin-top: 6px;
+    }
   `;
 
   _handleLogin(event: SubmitEvent) {
@@ -242,13 +260,23 @@ export class AuthRequiredElement extends LitElement {
       })
       .then((json) => {
         console.log("Registration response:", json);
+        this.communicateResultToUser("success");
       })
       .catch((error) => {
         console.error("Error during registration:", error);
-        // Optionally, update UI to display an error message to the user
+        this.communicateResultToUser("error");
       });
   }
 
+  communicateResultToUser(signUpOutcome: string) {
+    console.log("The result of the sign up is: ", signUpOutcome);
+    if (signUpOutcome === "error") {
+      this.showSignUpErrorMessage = !this.showSignUpErrorMessage;
+    }
+    if (signUpOutcome === "success") {
+      this.showSignUpErrorMessage = false;
+    }
+  }
   _toggleDialog(open: boolean) {
     const dialog = this.shadowRoot?.querySelector(
       "dialog"
