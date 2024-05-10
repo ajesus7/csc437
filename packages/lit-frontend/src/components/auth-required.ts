@@ -12,6 +12,10 @@ export class AuthRequiredElement extends LitElement {
 
   @state()
   registerStatus: number = 0;
+  @state() activeForm: "login" | "register" = "register"; // State to control which form to display
+
+  @state()
+  showLoginForm: boolean = false;
 
   @provide({ context: authContext })
   @state()
@@ -23,86 +27,172 @@ export class AuthRequiredElement extends LitElement {
     return this.user.authenticated;
   }
 
+  toggleLoginForm() {
+    this.showLoginForm = !this.showLoginForm;
+    this.requestUpdate(); // causes UI to update?
+  }
+
   firstUpdated() {
     this._toggleDialog(!this.isAuthenticated());
   }
 
   render() {
-    //console.log("Rendering auth-required", this.user);
+    return html`
+      <section class="formsContainer">
+        ${this.showLoginForm
+          ? html` <form
+              @submit=${this._handleLogin}
+              class="loginForm ${this.activeForm === "login" ? "active" : ""}"
+            >
+              <h2>Login</h2>
+              <p class="formInformation">
+                Welcome back. Are you ready to find some new music?
+              </p>
+              <div class="formLabelAndInput">
+                <label>Username</label>
+                <input name="username" type="text" required />
+              </div>
+              <div class="formLabelAndInput">
+                <label>Password</label>
+                <input type="password" name="password" required />
+              </div>
+              <button type="submit" class="submitButton">Sign in</button>
+              <p class="loginSignupLink">
+                Don&apos;t have an account yet?
+                <span @click=${this.toggleLoginForm} class="signInLink"
+                  >Sign Up Here</span
+                >
+              </p>
+            </form>`
+          : html`<form @submit=${this._handleRegister} class="registrationForm">
+              <h2>Sign Up</h2>
+              <p class="formInformation">
+                Join your friends and see who can match the vibe the best!
+              </p>
+              <div class="formLabelAndInput">
+                <label>Name</label>
+                <input name="name" type="text" required />
+              </div>
+              <div class="formLabelAndInput">
+                <label>Email</label>
+                <input name="email" type="email" required />
+              </div>
+              <div class="formLabelAndInput">
+                <label>Password</label>
+                <input type="password" name="password" required />
+              </div>
 
-    const dialog = html`
-      <dialog>
-        <form
-          @submit=${this._handleLogin}
-          @change=${() => (this.loginStatus = 0)}
-        >
-          <h2>Existing User</h2>
-          <label>
-            <span>Username</span>
-            <input name="username" />
-          </label>
-          <label>
-            <span>Password</span>
-            <input type="password" name="pwd" />
-          </label>
-          <button type="submit">Sign in</button>
-          <p>${this.loginStatus ? `Login failed: ${this.loginStatus}` : ""}</p>
-        </form>
-        <form
-          @submit=${this._handleRegister}
-          @change=${(this.registerStatus = 0)}
-        >
-          <h2>New User</h2>
-          <label>
-            <span>Username</span>
-            <input name="username" />
-          </label>
-          <label>
-            <span>Password</span>
-            <input type="password" name="pwd" />
-          </label>
-          <button type="submit">Register</button>
-          <p>
-            ${this.registerStatus
-              ? `Signup failed: ${this.registerStatus}`
-              : ""}
-          </p>
-          <p></p>
-        </form>
-      </dialog>
+              <button type="submit" class="submitButton">Sign up</button>
+              <p class="loginSignupLink">
+                Already have an account?
+                <span @click=${this.toggleLoginForm} class="signInLink"
+                  >Sign In</span
+                >
+              </p>
+            </form>`}
+      </section>
     `;
-
-    return html`${this.isAuthenticated() ? "" : dialog} <slot></slot>`;
   }
 
   static styles = css`
     :host {
-      display: contents;
+      display: block;
+      font-family: "Arial", sans-serif;
+      max-width: 400px;
+      margin: auto;
     }
-    dialog {
-      display: flex;
-      gap: 4rem;
+
+    .formsContainer {
+      border-radius: 8px;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border: 2px solid black;
     }
+
     form {
-      display: grid;
-      grid-template-columns: [start] 1fr 2fr [end];
-      align-items: baseline;
+      display: flex;
+      flex-direction: column;
     }
-    form > label {
-      display: contents;
-    }
-    form > h2 {
-      grid-column: start / end;
+
+    h2 {
+      color: #333;
       text-align: center;
+      font-size: 24px;
+      margin: 0;
+      padding: 0;
+      width: auto;
+      text-align: left;
     }
-    input,
-    button {
-      font: inherit;
-      line-height: inherit;
-      margin: 0.25em;
+
+    label {
+      color: black;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 3px;
     }
-    button {
-      grid-column: 2;
+
+    .formInformation {
+      color: #665;
+      font-size: 16px;
+      margin-bottom: 10px;
+      position: relative;
+      top: -6px;
+    }
+
+    .formLabelAndInput {
+      display: flex;
+      flex-direction: column;
+    }
+    input {
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      height: 1em;
+    }
+
+    .submitButton {
+      background-color: #4caf50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .submitButton:hover {
+      background-color: #45a049;
+    }
+
+    .signInLink {
+      color: #4caf50;
+    }
+    .signInLink:hover {
+      color: #4caf50;
+      cursor: pointer;
+    }
+
+    .loginSignupLink {
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    a {
+      color: #4caf50;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .registrationForm {
+      display: flex;
+      flex-direction: column;
     }
   `;
 
