@@ -38,28 +38,35 @@ var import_bcryptjs = __toESM(require("bcryptjs"));
 var import_credential = __toESM(require("../mongo/credential"));
 function verify(username, password) {
   return new Promise((resolve, reject) => {
-    import_credential.default.find({ username }).then((found) => {
-      if (found && found.length === 1)
-        return found[0];
-      else
-        reject("Invalid username or password");
-    }).then((credsOnFile) => {
-      if (credsOnFile)
-        import_bcryptjs.default.compare(password, credsOnFile.hashedPassword, (_, result) => {
-          console.log("Verified", result, credsOnFile.username);
-          if (result)
+    import_credential.default.findOne({ username }).then((credsOnFile) => {
+      if (!credsOnFile) {
+        return reject("Invalid username or password");
+      }
+      import_bcryptjs.default.compare(
+        password,
+        credsOnFile.hashedPassword,
+        (error, result) => {
+          if (error) {
+            reject("Error comparing passwords");
+          } else if (result) {
             resolve(credsOnFile.username);
-          else
+          } else {
             reject("Invalid username or password");
-        });
-      else
-        reject("Invalid username or password");
+          }
+        }
+      );
+    }).catch((error) => {
+      console.error("Error in verify:", error);
+      reject("Database error during verification.");
     });
   });
 }
 function checkExists(username) {
   return new Promise((resolve, reject) => {
-    import_credential.default.find({ username }).then((found) => resolve(found && found.length > 0));
+    import_credential.default.findOne({ username }).then((user) => resolve(Boolean(user))).catch((error) => {
+      console.error("Error checking user existence:", error);
+      reject("Database error while checking existence.");
+    });
   });
 }
 function create(username, password) {

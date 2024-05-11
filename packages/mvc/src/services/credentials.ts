@@ -5,19 +5,28 @@ import { Credential } from "../../../ts-models";
 export function verify(username: string, password: string): Promise<String> {
   return new Promise<String>((resolve, reject) => {
     credentialModel
-      .find({ username })
-      .then((found) => {
-        if (found && found.length === 1) return found[0];
-        else reject("Invalid username or password");
-      })
+      .findOne({ username }) // Using findOne simplifies handling
       .then((credsOnFile) => {
-        if (credsOnFile)
-          bcrypt.compare(password, credsOnFile.hashedPassword, (_, result) => {
-            console.log("Verified", result, credsOnFile.username);
-            if (result) resolve(credsOnFile.username);
-            else reject("Invalid username or password");
-          });
-        else reject("Invalid username or password");
+        if (!credsOnFile) {
+          return reject("Invalid username or password");
+        }
+        bcrypt.compare(
+          password,
+          credsOnFile.hashedPassword,
+          (error, result) => {
+            if (error) {
+              reject("Error comparing passwords");
+            } else if (result) {
+              resolve(credsOnFile.username);
+            } else {
+              reject("Invalid username or password");
+            }
+          }
+        );
+      })
+      .catch((error) => {
+        console.error("Error in verify:", error);
+        reject("Database error during verification.");
       });
   });
 }
@@ -25,11 +34,14 @@ export function verify(username: string, password: string): Promise<String> {
 export function checkExists(username: string) {
   return new Promise<boolean>((resolve, reject) => {
     credentialModel
-      .find({ username })
-      .then((found) => resolve(found && found.length > 0));
+      .findOne({ username })
+      .then((user) => resolve(Boolean(user)))
+      .catch((error) => {
+        console.error("Error checking user existence:", error);
+        reject("Database error while checking existence.");
+      });
   });
 }
-
 export function create(username: string, password: string) {
   console.log("Within Credentials Create function!");
   return new Promise<Credential>((resolve, reject) => {

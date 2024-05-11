@@ -28,32 +28,48 @@ function generateAccessToken(username: string) {
 }
 
 export function registerUser(req, res) {
-  const { username, pwd } = req.body; // from form
-  console.log(
-    "WITHIN REGISTER BUT OUTSIDE ERROR: username: ",
-    username,
-    " password: ",
-    pwd
-  );
+  const { username, pwd } = req.body;
 
   if (!username || !pwd) {
-    console.log("Error; username then password: ", username, pwd);
-    res.status(400).send("Bad request: Invalid input data.");
-  } else {
     console.log(
-      "Within registerUser function in auth.ts, about to call credentials"
+      "Error, no username or password found; username then password: ",
+      username,
+      pwd
     );
-    credentials
-      .create(username, pwd)
-      .then((creds) => generateAccessToken(creds.username))
-      .then((token) => {
-        res.status(201).send({ token: token });
-      });
+    res.status(400).send("Bad request: Invalid input data.");
+    return;
   }
+
+  credentials
+    .checkExists(username)
+    .then((userExists) => {
+      if (userExists) {
+        res.status(409).send("Conflict: User already exists.");
+        throw new Error("User already exists"); // Prevent further execution in the chain
+      }
+      return credentials.create(username, pwd);
+    })
+    .then((creds) => generateAccessToken(creds.username))
+    .then((token) => {
+      res.status(201).send({ token });
+    })
+    .catch((error) => {
+      if (error.message !== "User already exists") {
+        console.error("Error during registration:", error);
+        res.status(500).send("Internal server error.");
+      }
+    });
 }
 
 export function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
+
+  console.log(
+    "within the loginUser function in the backend, username: ",
+    username,
+    " pwd: ",
+    pwd
+  );
 
   if (!username || !pwd) {
     res.status(400).send("Bad request: Invalid input data.");
