@@ -156,6 +156,28 @@ export class AuthRequiredElement extends LitElement {
     }
   }
 
+  // * Adds event listener to handle user logout
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener(
+      "userSignOutTriggeredWithinDropDown",
+      this._handleSignOutEvent as EventListener
+    );
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener(
+      "userSignOutTriggeredWithinDropDown",
+      this._handleSignOutEvent as EventListener
+    );
+  }
+
+  private _handleSignOutEvent = (event: Event): void => {
+    console.log("Sign out event received", event);
+    this._signOut();
+  };
+
   render() {
     // * The login form is hidden by default, but can be toggled by the user
     // * if they already have an account (and do not need to sign in).
