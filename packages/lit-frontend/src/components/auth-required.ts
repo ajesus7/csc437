@@ -12,19 +12,6 @@ export class AuthRequiredElement extends LitElement {
 
   @state()
   registerStatus: number = 0;
-  @state() activeForm: "login" | "register" = "register"; // State to control which form to display
-
-  // used to toggle between the Sign Up and Login Forms
-  @state()
-  showLoginForm: boolean = false;
-
-  // informs user of error signing up
-  @state()
-  showSignUpErrorMessage: boolean = false;
-
-  // informs user of successful sign up
-  @state()
-  showSignUpSuccessMessage: boolean = false;
 
   @provide({ context: authContext })
   @state()
@@ -32,10 +19,25 @@ export class AuthRequiredElement extends LitElement {
     this._signOut()
   );
 
+  // used to toggle between the Sign Up and Login Forms
+  @state()
+  showLoginForm: boolean = false;
+
+  // state true informs user of error signing up
+  @state()
+  showSignUpErrorMessage: boolean = false;
+
+  // state true informs user of successful sign up
+  @state()
+  showSignUpSuccessMessage: boolean = false;
+
+  // needed to check if user authenticated yet
   isAuthenticated() {
     return this.user.authenticated;
   }
 
+  // * DOC: when called, it will flip the state of the login form. Sign Up form is shown by default, but the user can
+  // * toggle the login form if they already have an account.
   toggleLoginForm() {
     this.showLoginForm = !this.showLoginForm;
     // reset error messages as they should not be visible if the user navigates back (form data not persisted)
@@ -44,18 +46,124 @@ export class AuthRequiredElement extends LitElement {
     this.requestUpdate(); // causes UI to update?
   }
 
+  // * only toggles the authentication dialog if user is not signed in (on first render)
   firstUpdated() {
     this._toggleDialog(!this.isAuthenticated());
   }
 
+  // * Creates the actual login request, it is separated from _handleLoginSubmit
+  // * This is called on a successful sign up so that the user can be automatically logged in (without having to resubmit their credentials on the login page)
+  // * creates a new form, appends data to form and then creates the login request with the form data
+  // ! I'm assume I need to make the login request with a FormDataRequest Object, and that is the purpose of this function, to be able to take in the login info as plaintext,
+  // ! and simulate the form submit event to make login request.
+  _loginUser(username: string, password: string) {
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("pwd", password);
+    const request = new FormDataRequest(formData);
+    request
+      .base()
+      .post("/login")
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          this.loginStatus = res.status;
+          throw new Error(`Login failed with status: ${res.status}`);
+        }
+      })
+      .then((json) => {
+        console.log("Log In Request Successful!");
+        this.user = AuthenticatedUser.authenticate(json.token, () =>
+          this._signOut()
+        );
+        this._toggleDialog(false);
+        this.requestUpdate();
+      })
+      .catch((error) => console.error("Login Error:", error));
+  }
+
+  // * Triggered when the login form is submitted by the user. The data from the form (username, pwd) is fed into the above _loginUser function to create
+  // * the actual login request to the backend. Grabs the data from the form using the "name" attributes from the form inputs.
+  _handleLoginSubmit(event: SubmitEvent) {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    // Retrieve values directly from FormData
+    const username = formData.get("username") as string;
+    const password = formData.get("pwd") as string;
+
+    // Check if the username and password are not null and are strings
+    if (typeof username === "string" && typeof password === "string") {
+      this._loginUser(username, password);
+    } else {
+      console.error(
+        "Username or password field is missing or not correctly entered."
+      );
+    }
+  }
+
+  // * when the signup form is submitted by the user, this function will grab the inputs (username, pwd), construct a form request with the info,
+  // * and make a registration request to the backend that will create user credentials if the proper conditions are met. Depending on the registration result,
+  // * the communicateResultToUser function will be called to display success/error messages on the frontend to the user.
+  _handleRegister(event: SubmitEvent) {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    const data = new FormData(form);
+    const request = new FormDataRequest(data);
+
+    // Access form data values
+    const username = data.get("username");
+    const password = data.get("pwd");
+
+    request
+      .base()
+      .post("/signup")
+      .then((res) => {
+        if (res.status === 201) {
+          return res.json();
+        } else {
+          throw new Error(`Failed to register. Status: ${res.status}`);
+        }
+      })
+      .then((json) => {
+        console.log("Registration Successful!", json);
+        this.communicateResultToUser("success");
+        if (typeof username === "string" && typeof password === "string") {
+          this._loginUser(username, password); // make login call for user
+        } else {
+          throw new Error("Username or password missing from form data.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error during registration:", error);
+        this.communicateResultToUser("error");
+      });
+  }
+
+  // * A successful registration will remove any error messages and show the user a success message notifying them that they will be redirected shortly, or to login if not.
+  // * A failed registration will display an error message to the user, prompting them to try again.
+  communicateResultToUser(signUpOutcome: string) {
+    if (signUpOutcome === "error") {
+      this.showSignUpErrorMessage = !this.showSignUpErrorMessage;
+    }
+    if (signUpOutcome === "success") {
+      this.showSignUpErrorMessage = false;
+      this.showSignUpSuccessMessage = true;
+    }
+  }
+
   render() {
-    return html`
-      <section class="formsContainer">
+    // * The login form is hidden by default, but can be toggled by the user
+    // * if they already have an account (and do not need to sign in).
+    // * The signup form is shown by default, but is hidden by toggling login form.
+    const dialog = html`
+      <dialog class="formsContainer">
         ${this.showLoginForm
-          ? html` <form
-              @submit=${this._handleLoginSubmit}
-              class="loginForm ${this.activeForm === "login" ? "active" : ""}"
-            >
+          ? html` <form @submit=${this._handleLoginSubmit} class="loginForm">
               <h2>Login</h2>
               <p class="formInformation">
                 Welcome back. Are you ready to find some new music?
@@ -66,7 +174,7 @@ export class AuthRequiredElement extends LitElement {
               </div>
               <div class="formLabelAndInput">
                 <label>Password</label>
-                <input type="password" name="password" required />
+                <input type="password" name="pwd" required />
               </div>
               <button type="submit" class="submitButton">Sign in</button>
               <p class="loginSignupLink">
@@ -112,15 +220,21 @@ export class AuthRequiredElement extends LitElement {
                 >
               </p>
             </form>`}
-      </section>
+      </dialog>
     `;
+
+    // * This untoggles the dialog if the user is authenticated... Nothing appears on the frontend if this is not here.
+    return html`${this.isAuthenticated() ? "" : dialog} <slot></slot>`;
   }
 
   static styles = css`
     :host {
       display: block;
-      max-width: 400px;
       margin: auto;
+    }
+
+    section {
+      display: block;
     }
 
     .formsContainer {
@@ -233,121 +347,7 @@ export class AuthRequiredElement extends LitElement {
     }
   `;
 
-  // * This function creates the actual login request, it is separated from _handleLoginSubmit
-  // * so that this can be called on successful sign up to automatically login a user without needed to retrigger the event
-  // * (by passing in the username and password)
-  _loginUser(username: string, password: string) {
-    console.log("login user called!");
-    console.log("username: ", username, " password: ", password);
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("pwd", password);
-    const request = new FormDataRequest(formData);
-    console.log("request within loginUser: ", request);
-    request
-      .base()
-      .post("/login")
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          this.loginStatus = res.status;
-          throw new Error(`Login failed with status: ${res.status}`);
-        }
-      })
-      .then((json) => {
-        console.log("Authentication:", json.token);
-        console.log("Log In Request Successful!:", json.token);
-        this.user = AuthenticatedUser.authenticate(json.token, () =>
-          this._signOut()
-        );
-        this._toggleDialog(false);
-        this.requestUpdate();
-      })
-      .catch((error) => console.error("Login Error:", error));
-  }
-
-  // * triggered when the login is submitted, but calls loginUser helper function to actually submit the request
-  _handleLoginSubmit(event: SubmitEvent) {
-    event.preventDefault();
-    console.log("handle login submit called!");
-    const form = event.target as HTMLFormElement;
-    const usernameElement = form.querySelector('[name="username"]');
-    const passwordElement = form.querySelector('[name="pwd"]');
-    console.log("username: ", usernameElement, " password: ", passwordElement);
-    if (
-      usernameElement instanceof HTMLInputElement &&
-      passwordElement instanceof HTMLInputElement
-    ) {
-      const username = usernameElement.value;
-      const password = passwordElement.value;
-      console.log(
-        "in HLS, right before calling loginUser: username: ",
-        username,
-        " password: ",
-        password
-      );
-      this._loginUser(username, password);
-    } else {
-      console.error(
-        "Username or password field is missing or not an input element."
-      );
-    }
-  }
-
-  _handleRegister(event: SubmitEvent) {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const data = new FormData(form);
-    const request = new FormDataRequest(data);
-
-    // Access form data values
-    const username = data.get("username");
-    const password = data.get("pwd");
-    console.log(
-      "handling registration, about to make signup request. user: ",
-      username,
-      " pwd: ",
-      password
-    );
-    console.log("request: ", request);
-    request
-      .base()
-      .post("/signup")
-      .then((res) => {
-        if (res.status === 201) {
-          return res.json();
-        } else {
-          // Throw an error when the response status is not 200
-          throw new Error(`Failed to register. Status: ${res.status}`);
-        }
-      })
-      .then((json) => {
-        console.log("Registration Successful, response:", json);
-        this.communicateResultToUser("success");
-        console.log("Logging in user from sign up success!");
-        if (typeof username === "string" && typeof password === "string") {
-          this._loginUser(username, password); // login the user
-        } else {
-          throw new Error("Username or password missing from form data.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error during registration:", error);
-        this.communicateResultToUser("error");
-      });
-  }
-
-  communicateResultToUser(signUpOutcome: string) {
-    console.log("The result of the sign up is: ", signUpOutcome);
-    if (signUpOutcome === "error") {
-      this.showSignUpErrorMessage = !this.showSignUpErrorMessage;
-    }
-    if (signUpOutcome === "success") {
-      this.showSignUpErrorMessage = false;
-      this.showSignUpSuccessMessage = true;
-    }
-  }
+  // * Selects the dialog within the DOM and displays it according to the user's authentication status.
   _toggleDialog(open: boolean) {
     const dialog = this.shadowRoot?.querySelector(
       "dialog"
@@ -363,6 +363,7 @@ export class AuthRequiredElement extends LitElement {
     }
   }
 
+  // * will signout the user, causing the dialog to reappear and another sign in/signup to be required before accessing the site.
   _signOut() {
     this.user = APIUser.deauthenticate(this.user);
     this._toggleDialog(!this.isAuthenticated());
