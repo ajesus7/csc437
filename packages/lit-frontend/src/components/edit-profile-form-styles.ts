@@ -8,7 +8,7 @@ export default css`
     padding: 20px;
     box-shadow: var(--box-shadow);
     margin: 20px auto;
-    width: 90%;
+    width: 30em;
     max-width: 500px; /* Adjust the form width as needed */
   }
 
