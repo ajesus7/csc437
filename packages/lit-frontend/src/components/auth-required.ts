@@ -2,7 +2,7 @@ import { css, html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { createContext, provide } from "@lit/context";
 import { APIUser, AuthenticatedUser, FormDataRequest } from "../rest";
-
+import { Router } from "@vaadin/router";
 export let authContext = createContext<APIUser>("auth");
 
 @customElement("auth-required")
@@ -78,6 +78,7 @@ export class AuthRequiredElement extends LitElement {
           this._signOut()
         );
         this._toggleDialog(false);
+        Router.go("/app/home"); // Navigate to the home page on successful login
         this.requestUpdate();
       })
       .catch((error) => console.error("Login Error:", error));
