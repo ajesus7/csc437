@@ -31,6 +31,8 @@ export class HomePageElement extends App.View {
   get profile() {
     return this.getFromModel("profile");
   }
+
+  
   render() {
     return html`
       <section class="feed-page">

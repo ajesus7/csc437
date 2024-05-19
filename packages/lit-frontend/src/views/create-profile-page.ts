@@ -35,10 +35,56 @@ export class CreateProfilePage extends App.View {
     return this.getFromModel("profile");
   }
 
+  // ! attributeChangedCallback, connectedCallback, _handleProfileUpdate, all are needed to make profile data populate
+  // ! I'm not sure if there is fluff code here because I copied it from the profile page, but these methods are needed in some capacity
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (name === "userid" && oldValue !== newValue && newValue) {
+      console.log("Profile Page:", newValue);
+      this.dispatchMessage({
+        type: "ProfileSelected",
+        userid: newValue,
+      });
+    }
+    super.attributeChangedCallback(name, oldValue, newValue);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener("profile-update", (ev: Event) =>
+      this._handleProfileUpdate(ev as CustomEvent)
+    );
+  }
+
+  _handleProfileUpdate(ev: CustomEvent) {
+    console.log("Profile updated", ev.detail.profile);
+    // Ensure you have the userid available
+    const userid = this.userid;
+
+    // Check if userid is available
+    if (userid) {
+      this.dispatchMessage({
+        type: "ProfileSaved",
+        userid: userid, // Use the userid here
+        profile: ev.detail.profile,
+      });
+    } else {
+      console.error("UserID is undefined.");
+    }
+  }
+
   render() {
     return html`
       <section class="page-content">
-        <edit-profile-form .profile=${this.profile}></edit-profile-form>
+        <div class="descriptionAndForm">
+          <div class="description">
+            <h2 class="formHeader">Set up your profile.</h2>
+            <p class="formParagraph">
+              You're almost ready to start matching the vibe, just take a few
+              seconds to fill in some more details about yourself!
+            </p>
+          </div>
+          <edit-profile-form .profile=${this.profile}></edit-profile-form>
+        </div>
       </section>
     `;
   }

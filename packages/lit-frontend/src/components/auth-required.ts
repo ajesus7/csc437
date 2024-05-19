@@ -23,6 +23,10 @@ export class AuthRequiredElement extends LitElement {
   @state()
   showLoginForm: boolean = false;
 
+  // used to toggle between the Sign Up and Login Forms
+  @state()
+  whereToRedirect: string = "/createProfile";
+
   // state true informs user of error signing up
   @state()
   showSignUpErrorMessage: boolean = false;
@@ -78,7 +82,14 @@ export class AuthRequiredElement extends LitElement {
           this._signOut()
         );
         this._toggleDialog(false);
-        Router.go("/app/home"); // Navigate to the home page on successful login
+
+        console.log("WTR within login ", this.whereToRedirect);
+        Router.go(
+          this.whereToRedirect === "app/home"
+            ? "app/home"
+            : `/createProfile/${username}`
+        );
+
         this.requestUpdate();
       })
       .catch((error) => console.error("Login Error:", error));
@@ -96,6 +107,8 @@ export class AuthRequiredElement extends LitElement {
     const username = formData.get("username") as string;
     const password = formData.get("pwd") as string;
 
+    // * update redirect route so user gets taken to home page
+    this.whereToRedirect = "app/home";
     // Check if the username and password are not null and are strings
     if (typeof username === "string" && typeof password === "string") {
       this._loginUser(username, password);
@@ -109,40 +122,90 @@ export class AuthRequiredElement extends LitElement {
   // * when the signup form is submitted by the user, this function will grab the inputs (username, pwd), construct a form request with the info,
   // * and make a registration request to the backend that will create user credentials if the proper conditions are met. Depending on the registration result,
   // * the communicateResultToUser function will be called to display success/error messages on the frontend to the user.
-  _handleRegister(event: SubmitEvent) {
+  async _handleRegister(event: SubmitEvent) {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement;
     const data = new FormData(form);
-    const request = new FormDataRequest(data);
 
     // Access form data values
-    const username = data.get("username");
-    const password = data.get("pwd");
+    const username = data.get("username") as string;
+    const password = data.get("pwd") as string;
 
-    request
-      .base()
-      .post("/signup")
-      .then((res) => {
-        if (res.status === 201) {
-          return res.json();
-        } else {
-          throw new Error(`Failed to register. Status: ${res.status}`);
-        }
-      })
-      .then((json) => {
-        console.log("Registration Successful!", json);
+    if (!username || !password) {
+      this.communicateResultToUser("error");
+      throw new Error("Username or password missing from form data.");
+    }
+
+    try {
+      const request = new FormDataRequest(data);
+      const res = await request.base().post("/signup");
+
+      if (res.status === 201) {
+        await this.createNewUserProfileAfterRegisterSuccess(username);
+
+        this.whereToRedirect = `/createProfile/${username}`;
+        console.log("whereToRedirect within Register: ", this.whereToRedirect);
+
         this.communicateResultToUser("success");
-        if (typeof username === "string" && typeof password === "string") {
-          this._loginUser(username, password); // make login call for user
-        } else {
-          throw new Error("Username or password missing from form data.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error during registration:", error);
-        this.communicateResultToUser("error");
+        this._loginUser(username, password); // Make login call for user
+      } else {
+        throw new Error(`Failed to register. Status: ${res.status}`);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      this.communicateResultToUser("error");
+    }
+  }
+
+  /**
+   * Takes in the client's username, makes a POST request to the database to create a new profile document for their account.
+   * All other inputs will be blank to start (as the client will fill these out within the createProfile page).
+   *
+   * Returns the profile object created so that the _id/other attributes can be accessed within the scope of this component (and added to the model).
+   * @param username - The username the user inputted when registering their account (to be added to their profile as their 'userid')
+   */
+  async createNewUserProfileAfterRegisterSuccess(
+    username: string
+  ): Promise<any> {
+    // * First part of endpoint (localhost or matchthevibe.com...)
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+    // * Used to fill the attributes that the user cannot set yet (musicTaste, timezone, name etc.)
+    const emptyString = "A";
+
+    try {
+      const response = await fetch(`${SERVER_URL}/profileCreation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userid: username,
+          name: emptyString,
+          timezone: emptyString,
+          musicTaste: emptyString,
+          spotify: false,
+          profileImage: emptyString,
+          profileDescription: emptyString,
+          bio: emptyString,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create profile: ${response.statusText}`);
+      }
+
+      const profile = await response.json();
+      console.log("Profile created:", profile);
+
+      // Return the created profile object
+      return profile;
+    } catch (error) {
+      console.error("Error creating profile:", error);
+      // Return null if there was an error
+      return null;
+    }
   }
 
   // * A successful registration will remove any error messages and show the user a success message notifying them that they will be redirected shortly, or to login if not.

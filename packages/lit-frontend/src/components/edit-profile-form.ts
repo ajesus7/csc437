@@ -15,7 +15,7 @@ export class EditProfileElement extends LitElement {
     super();
     this.profile = profile;
   }
-  
+
   _handleSubmit(e: Event) {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
