@@ -77,13 +77,16 @@ export class CreateProfilePage extends App.View {
       <section class="page-content">
         <div class="descriptionAndForm">
           <div class="description">
-            <h2 class="formHeader">Set up your profile.</h2>
+            <h2 class="formHeader">Please set up your profile.</h2>
             <p class="formParagraph">
               You're almost ready to start matching the vibe, just take a few
               seconds to fill in some more details about yourself!
             </p>
           </div>
-          <edit-profile-form .profile=${this.profile}></edit-profile-form>
+          <edit-profile-form
+            .profile=${this.profile}
+            .redirectAfterSubmit="${true}"
+          ></edit-profile-form>
         </div>
       </section>
     `;

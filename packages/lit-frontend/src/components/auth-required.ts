@@ -171,9 +171,6 @@ export class AuthRequiredElement extends LitElement {
     // * First part of endpoint (localhost or matchthevibe.com...)
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-    // * Used to fill the attributes that the user cannot set yet (musicTaste, timezone, name etc.)
-    const emptyString = "A";
-
     try {
       const response = await fetch(`${SERVER_URL}/profileCreation`, {
         method: "POST",
@@ -182,13 +179,6 @@ export class AuthRequiredElement extends LitElement {
         },
         body: JSON.stringify({
           userid: username,
-          name: emptyString,
-          timezone: emptyString,
-          musicTaste: emptyString,
-          spotify: false,
-          profileImage: emptyString,
-          profileDescription: emptyString,
-          bio: emptyString,
         }),
       });
 

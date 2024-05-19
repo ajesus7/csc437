@@ -18,6 +18,9 @@ export class DropDownElement extends LitElement {
   @property()
   profileDescription?: "";
 
+  @property()
+  profileImageLink: string = "";
+
   // * when clicked, log the user out. They will need to reauthenticate.
   _signOutUser() {
     console.log("Log Out Clicked.");
