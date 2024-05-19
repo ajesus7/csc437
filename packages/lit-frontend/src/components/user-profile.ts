@@ -1,6 +1,7 @@
-import { css, html, LitElement } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Profile } from "../models/profile";
+import styles from "./user-profile-styles";
 
 import "../components/sortable-list";
 import "../components/general-list";
@@ -9,11 +10,12 @@ import "../components/drop-down";
 import "../components/color-mode-switch";
 import "../components/default-card";
 import "../components/toggle-switch";
-
-// import { serverPath } from "../rest";
+import "../components/edit-profile-form";
 
 @customElement("user-profile")
 export class UserProfileElement extends LitElement {
+  static styles = styles;
+
   @property()
   path: string = "";
 
@@ -30,58 +32,66 @@ export class UserProfileElement extends LitElement {
     return this.using || ({} as Profile);
   }
 
-  _changeEditMode() {
-    console.log("Edit mode changed");
-    this.editMode = !this.editMode;
-    if (this.profileEditText === "Edit Profile.") {
-      this.profileEditText = "Close Edit Menu.";
-    } else {
-      this.profileEditText = "Edit Profile.";
+  // * Connected Callbacks used to receive the usingUpdate that is sent from the edit Profile function
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener(
+      "update-using",
+      this._handleUsingUpdate as EventListener
+    );
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener(
+      "update-using",
+      this._handleUsingUpdate as EventListener
+    );
+  }
+
+  // TODO : probably shouldn't also update editmode in here, but would this require sending another update?
+  _handleUsingUpdate(event: CustomEvent) {
+    if (event.detail && event.detail.profile) {
+      this.using = event.detail.profile;
+      this._changeEditMode();
+      this.requestUpdate();
     }
   }
 
-  _handleNameChange(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.profile.name = input.value;
-    this.requestUpdate();
-  }
-
-  _handleBioChange(e: Event) {
-    const input = e.target as HTMLTextAreaElement;
-    this.profile.bio = input.value;
-    this.requestUpdate();
-  }
-
-  _handleMusicTasteChange(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.profile.musicTaste = input.value;
-    this.requestUpdate();
-  }
-
-  _handleTimezoneChange(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.profile.timezone = input.value;
-    this.requestUpdate();
-  }
-
-  _handleSpotifyChange(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.profile.spotify = input.value === "true"; // Converts the string back to a boolean
-    this.requestUpdate();
+  // * Displays the edit profile form and updates the toggle buttons message
+  _changeEditMode() {
+    this.editMode = !this.editMode;
+    this.profileEditText = this.editMode ? "Close Edit Menu." : "Edit Profile.";
   }
 
   _handleSubmit(e: Event) {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    // Update the profile object attributes based on the form data
+    const updatedProfile = {
+      ...this.profile,
+      name: formData.get("name") as string,
+      bio: formData.get("bio") as string,
+      musicTaste: formData.get("musicTaste") as string,
+      timezone: formData.get("timezone") as string,
+      profileImage: formData.get("profileImage") as string,
+      spotify: formData.get("spotify") === "true", // Converts the string back to a boolean
+    };
+
+    this.using = updatedProfile;
+    this.requestUpdate();
+
     // Dispatch a custom event with the updated profile data
-    console.log("Form submitted with:", this.profile);
+    console.log("Form submitted with:", updatedProfile);
     const updateEvent = new CustomEvent("profile-update", {
-      detail: { profile: this.profile },
-      bubbles: true, // Allows the event to bubble up through the DOM
-      composed: true, // Allows the event to cross the shadow DOM boundary
+      detail: { profile: updatedProfile },
+      bubbles: true,
+      composed: true,
     });
-    console.log("dispatching event: ", updateEvent);
     this.dispatchEvent(updateEvent);
-    this.editMode = !this.editMode;
+    this._changeEditMode();
   }
 
   render() {
@@ -89,77 +99,7 @@ export class UserProfileElement extends LitElement {
 
     return html`
       ${this.editMode
-        ? html`
-            <section class="edit-mode-section">
-              <form @submit=${this._handleSubmit}>
-                <div class="form-group">
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    .value=${name}
-                    @input=${this._handleNameChange}
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="bio">Bio</label>
-                  <input
-                    type="text"
-                    id="bio"
-                    name="bio"
-                    .value=${bio}
-                    @input=${this._handleBioChange}
-                  />
-              </div>
-                <div class="form-group">
-                  <label for="musicTaste">Music Taste</label>
-                  <input
-                    type="text"
-                    id="musicTaste"
-                    name="musicTaste"
-                    .value=${this.profile.musicTaste}
-                    @input=${this._handleMusicTasteChange}
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="timezone">Timezone</label>
-                  <input
-                    type="text"
-                    id="timezone"
-                    name="timezone"
-                    .value=${this.profile.timezone}
-                    @input=${this._handleTimezoneChange}
-                  />
-                </div>
-                  <fieldset class="form-group">
-                      <legend>Spotify</legend>
-                      <label>
-                        <input
-                          type="radio"
-                          name="spotify"
-                          value="true"
-                          ?checked=${this.profile.spotify === true}
-                          @change=${this._handleSpotifyChange}
-                        /> Yes
-                      </label>
-                      <label>
-                        <input
-                          type="radio"
-                          name="spotify"
-                          value="false"
-                          ?checked=${this.profile.spotify === false}
-                          @change=${this._handleSpotifyChange}
-                        /> No
-                      </label>
-                    </fieldset>
-                </fieldset>
-                <div class="form-group">
-                  <button type="submit">Save</button>
-                </div>
-              </form>
-            </section>
-          `
+        ? html`<edit-profile-form .profile=${this.profile}></edit-profile-form>`
         : ""}
 
       <section class="user-profile-header">
@@ -223,179 +163,4 @@ export class UserProfileElement extends LitElement {
       </section>
     `;
   }
-
-  static styles = css`
-    .user-profile-header {
-      padding: 25px 15px 15px 100px;
-    }
-
-    .user-profile-user-content {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-top: 25px;
-      height: 8em;
-    }
-
-    .edit-mode-section {
-      margin-left: 100px;
-      border: 1px solid white;
-      margin-top: 2.5em;
-      width: 38em;
-    }
-
-    .user-profile-header-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: 50px;
-      height: 75%;
-    }
-
-    .edit-profile-toggle {
-      color: var(--accent-color);
-      text-decoration: underline;
-    }
-
-    .user-description {
-      font-weight: var(--light-weight);
-      font-size: 1.5rem;
-      margin: 0;
-    }
-
-    h1 {
-      color: var(--text-color);
-      font-size: 4rem;
-      margin: 0;
-    }
-
-    .favorites-all-lists {
-      display: flex;
-      flex-direction: row;
-      gap: 25px;
-      margin-left: 5em;
-      width: 100%;
-    }
-
-    .favorites-section {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 2em;
-    }
-
-    .subsection-header-line {
-      height: 1.5em;
-      width: 36.5em;
-      margin-left: 5em;
-      margin-top: 1.25em;
-      margin-bottom: 2em;
-    }
-
-    .name-and-icon {
-      display: flex;
-      height: 1em;
-      flex-direction: row;
-      align-items: center;
-      margin-bottom: 0.5em;
-    }
-
-    .profile-section-description {
-      margin: 0em;
-      font-size: 0.8em;
-    }
-
-    .subsection-header-line h2 {
-      margin-right: 0.35em;
-      font-weight: var(--medium-weight);
-    }
-
-    svg.icon {
-      display: inline;
-      height: 1.4em;
-      width: 1.4em;
-      vertical-align: top;
-      fill: currentColor;
-      margin: 4px 0px 0px 13px;
-    }
-
-    /* edit form styling */
-    .edit-mode-section {
-      background-color: var(--menu-color);
-      border-radius: var(--default-border-radius);
-      padding: 20px;
-      box-shadow: var(--box-shadow);
-      margin: 20px auto;
-      width: 90%;
-      max-width: 500px; /* Adjust the form width as needed */
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: var(--text-color);
-    }
-
-    input[type="text"],
-    input[type="radio"],
-    textarea {
-      width: calc(100% - 20px);
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      border: 1px solid #ced4da;
-    }
-
-    input[type="radio"] {
-      width: auto;
-      margin-right: 5px;
-    }
-
-    textarea {
-      resize: vertical; /* Allows vertical resizing, might be useful for the bio */
-      padding: 8px; /* Adjust padding as necessary */
-      vertical-align: top; /* Align text to the top */
-      height: 100px; /* Initial height; adjust as necessary */
-    }
-
-    button[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      background-color: var(--button-color);
-      color: var(--text-color);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button[type="submit"]:hover {
-      background-color: var(--button-hover-color);
-    }
-
-    fieldset {
-      border: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    legend {
-      margin-bottom: 10px;
-      font-weight: bold;
-      color: var(--text-color);
-    }
-
-    .radio-group {
-      display: flex;
-      align-items: center;
-    }
-
-    .radio-group label {
-      margin-right: 20px; /* Space between radio buttons */
-    }
-  `;
 }

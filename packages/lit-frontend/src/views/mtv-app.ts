@@ -16,6 +16,7 @@ import "./profile-page";
 import "./home-page";
 import "./song-page";
 import "./not-found-page";
+import "./create-profile-page";
 
 let routes = [
   {
@@ -29,6 +30,10 @@ let routes = [
   {
     path: "/app/home",
     component: "home-page",
+  },
+  {
+    path: "/createProfile/:userid",
+    component: "create-profile-page",
   },
   {
     path: "(.*)",

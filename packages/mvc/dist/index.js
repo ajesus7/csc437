@@ -49,6 +49,7 @@ var import_auth = require("./auth");
 var import_api = __toESM(require("./routes/api"));
 var import_posts = __toESM(require("./services/posts"));
 var import_dotenv = __toESM(require("dotenv"));
+var import_profile = require("./mongo/profile");
 var import_post = require("./mongo/post");
 var import_mongoose = __toESM(require("mongoose"));
 const app = (0, import_express.default)();
@@ -128,6 +129,26 @@ app.put("/posts/:postid", (req, res) => {
     res.status(500).send(err);
   });
 });
+app.post("/profileCreation", (req, res) => __async(exports, null, function* () {
+  console.log("within backend, /profilecreation");
+  try {
+    const profileData = req.body;
+    console.log("profile data; ", profileData);
+    console.log("PROFILE DATA POST WITHIN BACKEND: ", profileData);
+    const existingProfile = yield import_profile.ProfileModel.findOne({
+      userid: profileData.userid
+    });
+    if (existingProfile) {
+      console.log("profile exists already");
+      return res.status(409).send("Profile already exists with this username");
+    }
+    const newProfile = yield import_profile.ProfileModel.create(profileData);
+    res.status(201).send(newProfile);
+  } catch (err) {
+    console.error("Error creating new profile: ", err);
+    res.status(500).send(err);
+  }
+}));
 app.get("*", (req, res) => {
   if (/\.[^\/]+$/.test(req.path)) {
     res.status(404).send("Not found");

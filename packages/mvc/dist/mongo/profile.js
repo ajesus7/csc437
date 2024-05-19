@@ -18,22 +18,37 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var profile_exports = {};
 __export(profile_exports, {
-  default: () => profile_default
+  ProfileModel: () => profileModel,
+  profileSchema: () => profileSchema
 });
 module.exports = __toCommonJS(profile_exports);
 var import_mongoose = require("mongoose");
 const profileSchema = new import_mongoose.Schema(
   {
     userid: { type: String, required: true, trim: true },
-    name: { type: String, required: true, trim: true },
-    timezone: { type: String, required: true, trim: true },
-    musicTaste: { type: String, required: false, trim: true },
-    profileImage: { type: String, required: false, trim: true },
-    bio: { type: String, required: true, trim: true },
-    profileDescription: { type: String, required: false, trim: true },
-    spotify: { type: Boolean, required: true }
+    name: { type: String, required: false, trim: true, default: "" },
+    timezone: { type: String, required: false, trim: true, default: "" },
+    musicTaste: { type: String, required: false, trim: true, default: "" },
+    profileImage: {
+      type: String,
+      required: false,
+      trim: true,
+      default: "defaultProfileImage"
+    },
+    bio: { type: String, required: false, trim: true, default: "" },
+    profileDescription: {
+      type: String,
+      required: false,
+      trim: true,
+      default: ""
+    },
+    spotify: { type: Boolean, required: false, default: false }
   },
   { collection: "user_profiles" }
 );
 const profileModel = (0, import_mongoose.model)("Profile", profileSchema);
-var profile_default = profileModel;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  ProfileModel,
+  profileSchema
+});

@@ -18,6 +18,21 @@ export class DropDownElement extends LitElement {
   @property()
   profileDescription?: "";
 
+  @property()
+  profileImageLink: string = "";
+
+  // * when clicked, log the user out. They will need to reauthenticate.
+  _signOutUser() {
+    console.log("Log Out Clicked.");
+
+    // Dispatches custom event that bubbles up to Auth-Required Component
+    const event = new CustomEvent("userSignOutTriggeredWithinDropDown", {
+      bubbles: true, // bubbles up through the DOM
+      composed: true, // Allow the event to cross the shadow DOM boundary
+    });
+    this.dispatchEvent(event);
+  }
+
   render() {
     return html`
       <section class="drop-down">
@@ -47,7 +62,9 @@ export class DropDownElement extends LitElement {
             <li>
               <color-mode-switch></color-mode-switch>
             </li>
-            <li class="border-bottom-only">Sign out</li>
+            <li class="border-bottom-only signOut" @click=${this._signOutUser}>
+              Sign out
+            </li>
           </ul>
         </slot>
       </section>
@@ -84,6 +101,11 @@ export class DropDownElement extends LitElement {
     slot[name="menu"] {
       display: none;
       top: 100%;
+    }
+
+    .signOut:hover {
+      text-decoration: underline;
+      cursor: pointer;
     }
 
     #is-shown:checked ~ slot[name="menu"] {

@@ -8,9 +8,11 @@ import apiRouter from "./routes/api";
 import posts from "./services/posts";
 import SpotifyService from "./services/spotifySearch";
 import dotenv from "dotenv";
-
+import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
 import { IPost } from "../../ts-models";
+import { Profile } from "../../ts-models/src/profile";
+
 import mongoose from "mongoose";
 
 const app = express();
@@ -125,6 +127,33 @@ app.put("/posts/:postid", (req, res) => {
       console.error("Error adding comment:", err);
       res.status(500).send(err);
     });
+});
+
+// * Creating A User Profile
+app.post("/profileCreation", async (req: Request, res: Response) => {
+  console.log("within backend, /profilecreation");
+  try {
+    const profileData: Profile = req.body;
+    console.log("profile data; ", profileData);
+    console.log("PROFILE DATA POST WITHIN BACKEND: ", profileData);
+    // Check if the profile already exists
+    const existingProfile = await ProfileModel.findOne({
+      userid: profileData.userid,
+    });
+
+    // ! current checks and registration flow most likely wont allow this to happen
+    if (existingProfile) {
+      console.log("profile exists already");
+      return res.status(409).send("Profile already exists with this username");
+    }
+
+    // Create a new profile document
+    const newProfile = await ProfileModel.create(profileData);
+    res.status(201).send(newProfile); // Send the created profile back
+  } catch (err) {
+    console.error("Error creating new profile: ", err);
+    res.status(500).send(err);
+  }
 });
 
 // SPA fallback: Serve 'index.html' for non-file requests (e.g., navigation routes)
