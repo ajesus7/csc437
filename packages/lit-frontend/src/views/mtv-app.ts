@@ -17,6 +17,7 @@ import "./home-page";
 import "./song-page";
 import "./not-found-page";
 import "./create-profile-page";
+import "./chat-room-page";
 
 let routes = [
   {
@@ -34,6 +35,10 @@ let routes = [
   {
     path: "/createProfile/:userid",
     component: "create-profile-page",
+  },
+  {
+    path: "/chatRoom",
+    component: "chat-room-page",
   },
   {
     path: "(.*)",

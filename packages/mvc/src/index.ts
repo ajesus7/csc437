@@ -12,14 +12,36 @@ import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
 import { IPost } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
-
 import mongoose from "mongoose";
 
+// Initialize dotenv to load environment variables
+dotenv.config();
+
+// Create an Express application
 const app = express();
 
+// Create an HTTP server to integrate with Socket.io
+const httpServer = require("http").createServer(app);
+
+// Initialize Socket.io with the HTTP server
+const { Server } = require("socket.io");
+const io = new Server(httpServer, {
+  cors: { origin: "*" },
+});
+
+// Handle WebSocket connections
+io.on("connection", (socket) => {
+  console.log("a user connected");
+
+  socket.on("message", (message) => {
+    console.log(message);
+    io.emit("message", `${socket.id.substr(0, 2)} said ${message}`);
+  });
+});
+
+// Serve static files and use middleware
 let dist: string | undefined;
 let frontend: string | undefined;
-dotenv.config();
 
 const { SERVER_URL } = process.env;
 
@@ -184,6 +206,6 @@ app.get("/api/test-db", async (req, res) => {
 });
 
 const { PORT } = process.env || 3000;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server listening on ${SERVER_URL}`);
 });

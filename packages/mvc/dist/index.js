@@ -52,10 +52,22 @@ var import_dotenv = __toESM(require("dotenv"));
 var import_profile = require("./mongo/profile");
 var import_post = require("./mongo/post");
 var import_mongoose = __toESM(require("mongoose"));
+import_dotenv.default.config();
 const app = (0, import_express.default)();
+const httpServer = require("http").createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(httpServer, {
+  cors: { origin: "*" }
+});
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("message", (message) => {
+    console.log(message);
+    io.emit("message", `${socket.id.substr(0, 2)} said ${message}`);
+  });
+});
 let dist;
 let frontend;
-import_dotenv.default.config();
 const { SERVER_URL } = process.env;
 try {
   frontend = require.resolve("lit-frontend");
@@ -170,6 +182,6 @@ app.get("/api/test-db", (req, res) => __async(exports, null, function* () {
   }
 }));
 const { PORT } = process.env || 3e3;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server listening on ${SERVER_URL}`);
 });
