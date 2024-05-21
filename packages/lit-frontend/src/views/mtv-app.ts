@@ -37,7 +37,7 @@ let routes = [
     component: "create-profile-page",
   },
   {
-    path: "/chatRoom",
+    path: "/chatRoom/:userid",
     component: "chat-room-page",
   },
   {

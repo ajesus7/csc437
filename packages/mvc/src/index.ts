@@ -7,12 +7,14 @@ import { loginUser, registerUser } from "./auth";
 import apiRouter from "./routes/api";
 import posts from "./services/posts";
 import SpotifyService from "./services/spotifySearch";
+import profileService from "./services/profiles";
 import dotenv from "dotenv";
 import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
 import { IPost } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
 import mongoose from "mongoose";
+import { Server as SocketIOServer, Socket } from "socket.io";
 
 // Initialize dotenv to load environment variables
 dotenv.config();
@@ -25,17 +27,44 @@ const httpServer = require("http").createServer(app);
 
 // Initialize Socket.io with the HTTP server
 const { Server } = require("socket.io");
-const io = new Server(httpServer, {
+const io: SocketIOServer = new Server(httpServer, {
   cors: { origin: "*" },
 });
 
-// Handle WebSocket connections
-io.on("connection", (socket) => {
+// Track connected users
+const users: Map<string, UserDetails> = new Map();
+
+export interface UserDetails {
+  name: string;
+  profilePic: string;
+}
+
+io.on("connection", (socket: Socket) => {
   console.log("a user connected");
 
-  socket.on("message", (message) => {
-    console.log(message);
-    io.emit("message", `${socket.id.substr(0, 2)} said ${message}`);
+  // Handle receiving user details on connection
+  socket.on("userDetails", (userDetails: UserDetails) => {
+    users.set(socket.id, userDetails);
+    io.emit("users", Array.from(users.values())); // Emit the updated user list
+  });
+
+  // Handle incoming messages
+  socket.on("message", (message: { text: string; sender: string }) => {
+    const userDetails = users.get(socket.id);
+    if (userDetails) {
+      console.log(`${userDetails.name} said: ${message.text}`);
+      io.emit("message", `${userDetails.name} said: ${message.text}`);
+    } else {
+      console.log(`Unknown user said: ${message.text}`);
+      io.emit("message", `Unknown user said: ${message.text}`);
+    }
+  });
+
+  // Handle user disconnection
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    users.delete(socket.id);
+    io.emit("users", Array.from(users.values())); // Emit the updated user list
   });
 });
 
@@ -175,6 +204,22 @@ app.post("/profileCreation", async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error creating new profile: ", err);
     res.status(500).send(err);
+  }
+});
+
+app.get("/profile/:userid", async (req: Request, res: Response) => {
+  try {
+    const { userid } = req.params;
+    console.log(`Fetching profile for userid: ${userid}`); // Debug log
+    const profile = await profileService.get(userid);
+    console.log(`Profile fetched: ${JSON.stringify(profile)}`); // Debug log
+    res.status(200).json(profile);
+  } catch (err) {
+    console.error(
+      `Error fetching profile for userid: ${req.params.userid}`,
+      err
+    );
+    res.status(404).json({ error: err });
   }
 });
 

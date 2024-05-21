@@ -25,9 +25,13 @@ var import_profile = require("../mongo/profile");
 function index() {
   return import_profile.ProfileModel.find();
 }
-function get(userid) {
-  return import_profile.ProfileModel.find({ userid }).then((list) => list[0]).catch((err) => {
-    throw `${userid} Not Found`;
+function get(_id) {
+  return import_profile.ProfileModel.findOne({ _id }).exec().then((profile) => {
+    if (!profile)
+      throw `${_id} Not Found`;
+    return profile;
+  }).catch((err) => {
+    throw `${_id} Not Found`;
   });
 }
 function create(profile) {

@@ -6,11 +6,16 @@ function index(): Promise<Profile[]> {
   return ProfileModel.find();
 }
 
-function get(userid: String): Promise<Profile> {
-  return ProfileModel.find({ userid })
-    .then((list) => list[0])
+// * updated to return the profile object, also changed 'userid' to '_id', within this method
+function get(_id: string): Promise<Profile> {
+  return ProfileModel.findOne({ _id })
+    .exec()
+    .then((profile) => {
+      if (!profile) throw `${_id} Not Found`;
+      return profile;
+    })
     .catch((err) => {
-      throw `${userid} Not Found`;
+      throw `${_id} Not Found`;
     });
 }
 
