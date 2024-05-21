@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express";
 import * as path from "path";
-import fs from "node:fs/promises";
 import cors from "cors";
 import { connect } from "./mongoConnect";
 import { loginUser, registerUser } from "./auth";
 import apiRouter from "./routes/api";
 import posts from "./services/posts";
-import SpotifyService from "./services/spotifySearch";
 import profileService from "./services/profiles";
 import dotenv from "dotenv";
 import { ProfileModel } from "./mongo/profile";

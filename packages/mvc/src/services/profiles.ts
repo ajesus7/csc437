@@ -7,15 +7,26 @@ function index(): Promise<Profile[]> {
 }
 
 // * updated to return the profile object, also changed 'userid' to '_id', within this method
-function get(_id: string): Promise<Profile> {
-  return ProfileModel.findOne({ _id })
-    .exec()
-    .then((profile) => {
-      if (!profile) throw `${_id} Not Found`;
-      return profile;
-    })
+// function get(_id: string): Promise<Profile> {
+//   return ProfileModel.findOne({ _id })
+//     .exec()
+//     .then((profile) => {
+//       if (!profile) throw `${_id} Not Found`;
+//       return profile;
+//     })
+//     .catch((err) => {
+//       throw `${_id} Not Found`;
+//     });
+// }
+
+//TODO : FIX
+// * This is what the get method used to be, before I changed it to work with getting a profile by userid
+// * The profile feature works with this one, but not the above one, but the above one works for the chatRoom get profile request
+function get(userid: String): Promise<Profile> {
+  return ProfileModel.find({ userid })
+    .then((list) => list[0])
     .catch((err) => {
-      throw `${_id} Not Found`;
+      throw `${userid} Not Found`;
     });
 }
 

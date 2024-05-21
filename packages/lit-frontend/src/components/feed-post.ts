@@ -1,24 +1,31 @@
-import { css, html, LitElement } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-
-// import { Profile } from "../models/profile";
-// import { authContext } from "./auth-required";
-// import { consume } from "@lit/context";
-// import { APIUser, APIRequest } from "../rest";
-import { Buffer } from "buffer";
-
-// * Functionality: Should take in the list of feed posts,
-// * then generate a post object for each post. Should handle overflow of posts well.
+import {
+  selectTrack,
+  recommendTracks,
+  handleSubmit,
+  authenticate,
+  clearTopTracks,
+  clearSelectedTracks,
+  fetchTopTracks,
+  searchSpotify,
+} from "./spotifyQueryHelper";
 
 import Post from "../models/post";
 import { TrackObject, IComment } from "../../../ts-models";
+import styles from "./feed-post-styles.ts";
 
 //import components
 import "./track-card";
 import "./comment-card";
 
+// * Functionality: Should take in the list of feed posts,
+// * then generate a post object for each post. Should handle overflow of posts well.
+
 @customElement("feed-post")
 export class FeedPostElement extends LitElement {
+  static styles = styles;
+
   @property({ type: Object })
   post?: Post;
 
@@ -48,24 +55,6 @@ export class FeedPostElement extends LitElement {
 
   @state()
   expandedClass: String = "feed-single-post";
-
-  _selectTrack(track: TrackObject) {
-    // Check if the track is already in the selectedTracks array
-    const existingIndex = this.selectedTracks.findIndex(
-      (selectedTrack) => selectedTrack.id === track.id
-    );
-
-    if (existingIndex > -1) {
-      // If the track is already selected, remove it from the array
-      this.selectedTracks = [
-        ...this.selectedTracks.slice(0, existingIndex),
-        ...this.selectedTracks.slice(existingIndex + 1),
-      ];
-    } else {
-      // If the track is not already selected, add it to the array
-      this.selectedTracks = [...this.selectedTracks, track];
-    }
-  }
 
   _calculateTimeFromDate(): string {
     // Ensure post?.postTime exists and is of type string | Date | undefined
@@ -98,103 +87,12 @@ export class FeedPostElement extends LitElement {
     }
   }
 
-  // * make a PUT request to the post that the button was clicked on,
-  // * create a comment with the inputted information (songs, userid, time, message)
-  // * add the comment to the list of comments of that post in the database
-  async _recommendTracks(ev: Event) {
-    ev.preventDefault();
-    this.submissionSuccess = null; // Reset the submission state on each attempt
-    const target = ev.target as HTMLFormElement;
-    const formData = new FormData(target);
-    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-
-    // Retrieve the value of the input field by its name
-    let message = formData.get("input-comment") as string;
-
-    const trackIds = this.selectedTracks.map((track) => track.id);
-    const url = `${SERVER_URL}/posts/${this.post?._id}`; // Replace '1234567890' with the actual ObjectId
-    // todo USERID NEEDS TO BE CHANGED TO BE DYNAMIC based on given profile
-    const newComment = {
-      userName: "aidan",
-      commentTime: new Date(), // Current time as the comment time
-      commentMessage: message,
-      SongIDs: trackIds,
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newComment), // Ensure your server expects this format
-      });
-
-      if (response.ok) {
-        console.log("Comment successfully added");
-        this._clearTopTracks();
-        this._clearSelectedTracks();
-        this.submissionSuccess = true;
-        target.reset(); // Reset the form if the response is successful
-        this._handleCommentAdded(); // calls fn that fetches comments of specific post
-      } else {
-        throw new Error("Failed to post comment");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      this.submissionSuccess = false;
-    }
-  }
-
   _expand() {
     this.expanded = !this.expanded;
     if (this.expandedClass === "feed-single-post") {
       this.expandedClass = "feed-single-post-expanded";
     } else {
       this.expandedClass = "feed-single-post";
-    }
-  }
-
-  _handleSubmit(ev: Event) {
-    ev.preventDefault(); // Prevent the browser from submitting the form itself
-    const target = ev.target as HTMLFormElement;
-    const formData = new FormData(target);
-
-    // Retrieve the value of the input field by its name
-    this.requestedSearchQuery = formData.get("inputted-artist-name") as string;
-
-    this.searchSpotify();
-  }
-
-  _clearTopTracks() {
-    this.topTracks = []; // This empties the array, removing all tracks
-  }
-  _clearSelectedTracks() {
-    this.selectedTracks = []; // This empties the array, removing all tracks
-  }
-
-  async fetchTopTracks(artistId: string) {
-    const response = await fetch(
-      `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`, // Ensure to add a market parameter as it's required by the Spotify API.
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json(); // Use await to wait for the promise to resolve
-      if (data && data.tracks) {
-        // Check if 'data' and 'data.tracks' are present
-        this.topTracks = data.tracks; // Assuming 'data.tracks' is the array you're interested in
-      } else {
-        console.log("No tracks found or data is malformed");
-      }
-    } else {
-      throw new Error(`Error: ${response.statusText}`);
     }
   }
 
@@ -241,65 +139,36 @@ export class FeedPostElement extends LitElement {
     }
   }
 
-  async authenticate() {
-    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-    const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+  async _authenticate() {
+    await authenticate(this);
+  }
 
-    const response = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization:
-          "Basic " +
-          Buffer.from(`${clientId}:${clientSecret}`).toString("base64"),
-      },
-      body: "grant_type=client_credentials",
-    });
-    if (response.ok) {
-      const data = await response.json();
-      this.accessToken = data.access_token;
-    } else {
-      console.error("Spotify authentication failed");
-    }
+  _selectTrack(track: TrackObject) {
+    selectTrack(this, track);
+  }
+
+  async _recommendTracks(ev: Event) {
+    await recommendTracks(ev, this);
+  }
+
+  _handleSubmit(ev: Event) {
+    handleSubmit(ev, this);
+  }
+
+  _clearTopTracks() {
+    clearTopTracks(this);
+  }
+
+  _clearSelectedTracks() {
+    clearSelectedTracks(this);
+  }
+
+  async fetchTopTracks(artistId: string) {
+    await fetchTopTracks(this, artistId);
   }
 
   async searchSpotify(): Promise<void> {
-    // Ensure there's a query to search for
-    if (!this.requestedSearchQuery.trim()) return;
-
-    // Construct the search URL for tracks only
-    const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-      this.requestedSearchQuery
-    )}&type=track&limit=10`;
-
-    try {
-      // Authenticate and get the access token
-      await this.authenticate();
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      // Update the component state with the found tracks
-      if (data.tracks.items.length > 0) {
-        this.topTracks = data.tracks.items;
-      } else {
-        this.topTracks = [];
-        alert("No tracks found. Please try another search.");
-      }
-    } catch (error) {
-      console.error("Error searching for tracks:", error);
-    }
+    await searchSpotify(this);
   }
 
   // <section class="post-comments">
@@ -441,242 +310,4 @@ export class FeedPostElement extends LitElement {
       </section>
     `;
   }
-
-  static styles = css`
-    .feed-single-post,
-    .feed-single-post-expanded {
-      background-color: var(--background-color);
-      padding: 10px;
-      width: 38em;
-      margin-bottom: 15px;
-      color: var(--text-color);
-    }
-
-    .profile-name-time {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .line-decoration {
-      width: 2px;
-      height: 4em;
-      border-left: 2px solid var(--sub-menu-color);
-      position: relative;
-      left: 1.5em;
-      bottom: 0.5em;
-      z-index: 0;
-    }
-
-    .message {
-      margin: 0;
-      padding: 0;
-      margin-bottom: 0.6em;
-      font-size: 1.2em;
-    }
-
-    .individual-post-profile-image img {
-      width: 60px;
-      height: 60px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .individual-post-profile-image {
-      margin-right: 1em;
-      position: relative;
-      top: 15px;
-    }
-
-    .name-and-time-and-expand {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 0;
-    }
-
-    .name-and-time {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-      margin: 0;
-      margin-bottom: 0.15em;
-    }
-
-    .feed-name {
-      font-weight: 600;
-      margin: 0;
-      margin-right: 0.8em; /* Adjust as needed */
-      padding: 0;
-    }
-
-    .time-posted {
-      font-size: 0.8em;
-      color: var(--subtext-color);
-      flex-grow: 1;
-      font-weight: 300;
-    }
-
-    .expand-unexpand {
-      text-decoration: underline;
-      background: none;
-      color: var(--subtext-color);
-      border: none;
-      cursor: pointer;
-      font-size: 0.8em;
-      font-weight: 300;
-      margin: 0;
-      margin-bottom: 1em;
-      padding: 0;
-      white-space: nowrap; /* Prevents wrapping on small screens */
-    }
-
-    .expand-unexpand:hover {
-      color: var(--text-color);
-    }
-
-    .selected-tracks,
-    .query-results {
-      width: 50%;
-    }
-
-    .track-box-selected-tracks,
-    .track-box-search-results {
-      background: var(--sub-menu-color);
-      border-radius: 12px;
-      padding: 10px;
-      width: 92%;
-      height: 16.95em; /* overflows if smaller */
-      margin-top: 10px;
-      overflow: auto; /* Allow scrolling if content exceeds container size */
-    }
-    .query-results h3,
-    .selected-tracks h3 {
-      color: var(--text-color);
-      font-size: 1.1em;
-      font-weight: 300;
-      margin: 0;
-      margin-top: 6px;
-    }
-
-    .track-image {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 15px;
-    }
-
-    .track-details {
-      flex-grow: 1;
-    }
-
-    .track-name,
-    .track-artist {
-      margin: 0;
-      padding: 0;
-    }
-
-    .track-name {
-      font-weight: bold;
-    }
-
-    .track-artist {
-      font-size: var(--smaller-size);
-      color: var(--subtext-color);
-    }
-
-    /* Search Form */
-    .search-form input[type="text"] {
-      width: calc(
-        100% - 130px
-      ); /* Adjust based on button width to fit on one line */
-      padding: 10px 0px 10px 14px;
-      margin-right: 5px; /* Space between input and button */
-      border: 1px solid var(--section-border-color);
-      background-color: var(blue);
-      font-weight: 300;
-      color: var(--text-color);
-      border-radius: 50px;
-    }
-
-    .search-and-selected {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .expanded-window {
-      background: var(--menu-color);
-      border-left: 2px solid var(--sub-menu-color);
-      margin-left: 1.51em;
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      padding: 0.3em 2em 1em 2em;
-    }
-
-    .expanded-header {
-      font-weight: 500;
-    }
-    .search-bar-form {
-      display: flex;
-      flex-direction: row;
-    }
-
-    #input-comment {
-      border: none;
-      background: var(--background-color);
-      border: 1px solid var(--section-border-color);
-      width: 92%;
-      height: 2em;
-      padding: 7px;
-      border-radius: 4px;
-    }
-
-    .comment-message-form {
-      display: flex;
-      flex-direction: row;
-      width: 99%;
-    }
-
-    .search-form {
-      margin-bottom: 15px;
-    }
-
-    .search-form button,
-    button.recommend-songs {
-      padding: 2px 20px 2px 20px;
-      margin-left: 10px;
-      background-color: var(--button-color);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button.recommend-songs {
-      padding: 6px 20px;
-      margin-left: 1em;
-    }
-
-    .search-form button:hover {
-      background-color: var(--button-hover-color);
-    }
-
-    .clear-results-section button,
-    .clear-selected-tracks-section button {
-      text-decoration: underline;
-      cursor: pointer;
-      border: none;
-      color: var(--subtext-color);
-    }
-
-    .clear-results:hover,
-    .clear-selected-tracks:hover {
-      color: var(--text-color);
-    }
-
-    /* Styling for the entire expanded content section */
-    .expanded-content {
-      padding-top: 20px; /* Space above the content */
-    }
-  `;
 }
