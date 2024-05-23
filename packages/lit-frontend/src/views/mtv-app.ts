@@ -6,10 +6,10 @@ import * as App from "../app";
 import update from "../update";
 
 //components
-import "../components/user-profile";
-import "../components/vaadin-router";
-import "../components/auth-required";
-import "../components/match-the-vibe-header";
+import "../components/user-profile/user-profile";
+import "../components/vaadin-router/vaadin-router";
+import "../components/auth-required/auth-required";
+import "../components/match-the-vibe-header/match-the-vibe-header";
 
 //views
 import "./profile-page";

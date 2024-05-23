@@ -2,9 +2,9 @@ import { customElement, property } from "lit/decorators.js";
 import { html } from "lit";
 import * as App from "../app";
 
-import "../components/main-feed";
-import "../components/feed-post-list";
-import "../components/edit-profile-form";
+import "../components/main-feed/main-feed.ts";
+import "../components/feed-post-list/feed-post-list.ts";
+import "../components/edit-profile-form/edit-profile-form.ts";
 import styles from "./create-profile-page-styles.ts";
 
 type ProfileLocation = Location & {

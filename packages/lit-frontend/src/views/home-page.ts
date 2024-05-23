@@ -2,8 +2,8 @@ import { customElement, property } from "lit/decorators.js";
 import { html, css } from "lit";
 import * as App from "../app";
 
-import "../components/main-feed";
-import "../components/feed-post-list";
+import "../components/main-feed/main-feed";
+import "../components/feed-post-list/feed-post-list";
 
 type ProfileLocation = Location & {
   params: { userid: string; edit: string };
@@ -32,7 +32,6 @@ export class HomePageElement extends App.View {
     return this.getFromModel("profile");
   }
 
-  
   render() {
     return html`
       <section class="feed-page">
