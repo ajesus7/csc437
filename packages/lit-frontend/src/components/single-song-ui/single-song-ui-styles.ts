@@ -47,4 +47,16 @@ export default css`
   .expanded-content {
     padding-top: 20px; /* Space above the content */
   }
+
+  .singleSongMessage {
+    color: var(--subtext-color);
+    font-size: 0.8em;
+    margin: 0.25em 0 0.6em 0;
+    padding: 0;
+  }
+
+  /* FIX: id to override other header styling, was too lazy to fix cascade issue*/
+  #selectedSongHeader {
+    margin-top: 1em;
+  }
 `;

@@ -1478,7 +1478,7 @@
     padding: 7px;
     border-radius: 4px;
   }
-`;function ua(r,e){const t=r.selectedTracks.findIndex(s=>s.id===e.id);t>-1?r.selectedTracks=[...r.selectedTracks.slice(0,t),...r.selectedTracks.slice(t+1)]:r.selectedTracks=[...r.selectedTracks,e]}function ai(r){r.topTracks=[]}function ci(r){r.selectedTracks=[]}async function da(r,e){const t=await fetch(`https://api.spotify.com/v1/artists/${e}/top-tracks?market=US`,{method:"GET",headers:{Authorization:`Bearer ${r.accessToken}`,"Content-Type":"application/json"}});if(t.ok){const s=await t.json();s&&s.tracks?r.topTracks=s.tracks:console.log("No tracks found or data is malformed")}else throw new Error(`Error: ${t.statusText}`)}async function li(r){const s=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded",Authorization:"Basic "+xr.Buffer.from("7fd3e17624134115b09da726f05a671c:09d164c52b1e43d9bcef963d9f2a8aac").toString("base64")},body:"grant_type=client_credentials"});if(s.ok){const i=await s.json();r.accessToken=i.access_token}else console.error("Spotify authentication failed")}async function hi(r){if(!r.requestedSearchQuery.trim())return;const e=`https://api.spotify.com/v1/search?q=${encodeURIComponent(r.requestedSearchQuery)}&type=track&limit=10`;try{await li(r);const t=await fetch(e,{method:"GET",headers:{Authorization:`Bearer ${r.accessToken}`,"Content-Type":"application/json"}});if(!t.ok)throw new Error(`Error: ${t.statusText}`);const s=await t.json();s.tracks.items.length>0?r.topTracks=s.tracks.items:(r.topTracks=[],alert("No tracks found. Please try another search."))}catch(t){console.error("Error searching for tracks:",t)}}async function pa(r,e){r.preventDefault();const t=r.target,s=new FormData(t);e.requestedSearchQuery=s.get("inputted-artist-name"),await hi(e)}async function fa(r,e){var m;r.preventDefault(),e.submissionSuccess=null;const t=r.target,s=new FormData(t),i="http://localhost:3000";let a=s.get("input-comment");const c=e.selectedTracks.map(y=>y.id),h=`${i}/posts/${(m=e.post)==null?void 0:m._id}`,d={userName:"aidan",commentTime:new Date,commentMessage:a,SongIDs:c};try{if((await fetch(h,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})).ok)console.log("Comment successfully added"),ai(e),ci(e),e.submissionSuccess=!0,t.reset(),e.dispatchEvent(new CustomEvent("handle-comment-selected",{bubbles:!0,composed:!0}));else throw new Error("Failed to post comment")}catch(y){console.error("Error:",y),e.submissionSuccess=!1}}const ma=P`
+`;function ua(r,e,t){const s=r.selectedTracks.findIndex(i=>i.id===e.id);t?s>-1?r.selectedTracks=[...r.selectedTracks.slice(0,s),...r.selectedTracks.slice(s+1)]:r.selectedTracks=[...r.selectedTracks,e]:s>-1?r.selectedTracks=[]:r.selectedTracks=[e]}function ai(r){r.topTracks=[]}function ci(r){r.selectedTracks=[]}async function da(r,e){const t=await fetch(`https://api.spotify.com/v1/artists/${e}/top-tracks?market=US`,{method:"GET",headers:{Authorization:`Bearer ${r.accessToken}`,"Content-Type":"application/json"}});if(t.ok){const s=await t.json();s&&s.tracks?r.topTracks=s.tracks:console.log("No tracks found or data is malformed")}else throw new Error(`Error: ${t.statusText}`)}async function li(r){const s=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded",Authorization:"Basic "+xr.Buffer.from("7fd3e17624134115b09da726f05a671c:09d164c52b1e43d9bcef963d9f2a8aac").toString("base64")},body:"grant_type=client_credentials"});if(s.ok){const i=await s.json();r.accessToken=i.access_token}else console.error("Spotify authentication failed")}async function hi(r){if(!r.requestedSearchQuery.trim())return;const e=`https://api.spotify.com/v1/search?q=${encodeURIComponent(r.requestedSearchQuery)}&type=track&limit=10`;try{await li(r);const t=await fetch(e,{method:"GET",headers:{Authorization:`Bearer ${r.accessToken}`,"Content-Type":"application/json"}});if(!t.ok)throw new Error(`Error: ${t.statusText}`);const s=await t.json();s.tracks.items.length>0?r.topTracks=s.tracks.items:(r.topTracks=[],alert("No tracks found. Please try another search."))}catch(t){console.error("Error searching for tracks:",t)}}async function pa(r,e){r.preventDefault();const t=r.target,s=new FormData(t);e.requestedSearchQuery=s.get("inputted-artist-name"),await hi(e)}async function fa(r,e){var m;r.preventDefault(),e.submissionSuccess=null;const t=r.target,s=new FormData(t),i="http://localhost:3000";let a=s.get("input-comment");const c=e.selectedTracks.map(y=>y.id),h=`${i}/posts/${(m=e.post)==null?void 0:m._id}`,d={userName:"aidan",commentTime:new Date,commentMessage:a,SongIDs:c};try{if((await fetch(h,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})).ok)console.log("Comment successfully added"),ai(e),ci(e),e.submissionSuccess=!0,t.reset(),e.dispatchEvent(new CustomEvent("handle-comment-selected",{bubbles:!0,composed:!0}));else throw new Error("Failed to post comment")}catch(y){console.error("Error:",y),e.submissionSuccess=!1}}const ma=P`
   .search-and-selected {
     display: flex;
     flex-direction: row;
@@ -1606,6 +1606,18 @@
   .expanded-content {
     padding-top: 20px; /* Space above the content */
   }
+
+  .singleSongMessage {
+    color: var(--subtext-color);
+    font-size: 0.8em;
+    margin: 0.25em 0 0.6em 0;
+    padding: 0;
+  }
+
+  /* FIX: id to override other header styling, was too lazy to fix cascade issue*/
+  #selectedSongHeader {
+    margin-top: 1em;
+  }
 `;var wa=Object.defineProperty,_a=Object.getOwnPropertyDescriptor,Ar=(r,e,t,s)=>{for(var i=s>1?void 0:s?_a(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&wa(e,t,i),i};let st=class extends S{constructor(){super(...arguments),this.topTracks=[],this.selectedTracks=[]}_sendClearTracks(r){console.log("wanting to clear ",r," tracks"),this.dispatchEvent(new CustomEvent("clear-tracks",{detail:{topOrSelected:r},bubbles:!0,composed:!0}))}render(){return _`
       <section class="search-and-selected">
         <section class="query-results">
@@ -1631,7 +1643,11 @@
                 </div>`}
         </section>
         <section class="selected-tracks">
-          <h3>Selected Song</h3>
+          <h3 id="selectedSongHeader">Selected Song</h3>
+          <p class="singleSongMessage">
+            You may only choose to submit one song at a time. Selecting another
+            song will replace any current selection.
+          </p>
           <div class="track-box-selected-tracks">
             ${this.selectedTracks.map(r=>_`<track-card .track=${r}></track-card>`)}
           </div>
@@ -1645,7 +1661,7 @@
           </div>
         </section>
       </section>
-    `}};st.styles=[ba];Ar([A()],st.prototype,"topTracks",2);Ar([A()],st.prototype,"selectedTracks",2);st=Ar([T("single-song-ui")],st);var va=Object.defineProperty,xa=Object.getOwnPropertyDescriptor,Z=(r,e,t,s)=>{for(var i=s>1?void 0:s?xa(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&va(e,t,i),i};let M=class extends S{constructor(){super(),this.submissionSuccess=null,this.expandedText="unexpanded",this.requestedSearchQuery="",this.accessToken="",this.topTracks=[],this.selectedTracks=[],this.expandedClass="feed-single-post",this.multiPicker=!1,this.addEventListener("track-selected",r=>{const e=r;this._selectTrack(e.detail.track)}),this.addEventListener("clear-tracks",r=>{console.log("Within Clear Tracks Listener"),r.detail.topOrSelected==="top"?(console.log("Within Top, executing clear top tracks"),this._clearTopTracks()):(console.log("Within Selected, executing clear selected tracks"),this._clearSelectedTracks())})}async _authenticate(){await li(this)}async _submitCommentToDatabase(r){await fa(r,this)}_handleSubmit(r){pa(r,this)}_clearTopTracks(){ai(this)}_clearSelectedTracks(){ci(this)}_selectTrack(r){ua(this,r)}async fetchTopTracks(r){await da(this,r)}async searchSpotify(){await hi(this)}render(){return _`
+    `}};st.styles=[ba];Ar([A()],st.prototype,"topTracks",2);Ar([A()],st.prototype,"selectedTracks",2);st=Ar([T("single-song-ui")],st);var va=Object.defineProperty,xa=Object.getOwnPropertyDescriptor,Z=(r,e,t,s)=>{for(var i=s>1?void 0:s?xa(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&va(e,t,i),i};let M=class extends S{constructor(){super(),this.submissionSuccess=null,this.expandedText="unexpanded",this.requestedSearchQuery="",this.accessToken="",this.topTracks=[],this.selectedTracks=[],this.expandedClass="feed-single-post",this.multiPicker=!1,this.addEventListener("track-selected",r=>{const e=r;this._selectTrack(e.detail.track,this.multiPicker)}),this.addEventListener("clear-tracks",r=>{console.log("Within Clear Tracks Listener"),r.detail.topOrSelected==="top"?(console.log("Within Top, executing clear top tracks"),this._clearTopTracks()):(console.log("Within Selected, executing clear selected tracks"),this._clearSelectedTracks())})}async _authenticate(){await li(this)}async _submitCommentToDatabase(r){await fa(r,this)}_handleSubmit(r){pa(r,this)}_clearTopTracks(){ai(this)}_clearSelectedTracks(){ci(this)}_selectTrack(r,e){ua(this,r,e)}async fetchTopTracks(r){await da(this,r)}async searchSpotify(){await hi(this)}render(){return _`
       <section class="expanded-window">
         <section class="search-form">
           <form class="search-bar-form" @submit=${this._handleSubmit}>

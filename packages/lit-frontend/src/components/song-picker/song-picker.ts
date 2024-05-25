@@ -70,8 +70,9 @@ export class SongPickerElement extends LitElement {
     clearSelectedTracks(this);
   }
 
-  _selectTrack(track: TrackObject) {
-    selectTrack(this, track);
+  // * pass in the multiPicker state: if false (single song ui), only 1 song may be selected at a time
+  _selectTrack(track: TrackObject, multiPicker: boolean) {
+    selectTrack(this, track, multiPicker);
   }
 
   async fetchTopTracks(artistId: string) {
@@ -89,7 +90,7 @@ export class SongPickerElement extends LitElement {
     // ! deals with adding tracks to the selected tracks section when a click event bubbles up
     this.addEventListener("track-selected", (event: Event) => {
       const customEvent = event as CustomEvent;
-      this._selectTrack(customEvent.detail.track);
+      this._selectTrack(customEvent.detail.track, this.multiPicker);
     });
 
     // * clear the top tracks if event is passed with message, "top", otherwise clear selected tracks

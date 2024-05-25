@@ -1,19 +1,55 @@
 import { TrackObject } from "../../../../ts-models/src";
 import { Buffer } from "buffer";
 
-// Function to select a track
-export function selectTrack(context: any, track: TrackObject) {
+/**
+ * Handles the selection of a track for the song picker component.
+ *
+ * If `selectTrack` is called from a single song UI (indicated by `multiPicker` being false):
+ * - Only one track may be selected at a time.
+ * - If no tracks are selected, the track is added to the selected list.
+ * - If one track is already selected, the selected track is replaced with the new track.
+ *
+ * If `selectTrack` is called from a multi song UI (indicated by `multiPicker` being true):
+ * - Multiple tracks can be selected at once.
+ * - If the track is already in the selected list, it will be removed.
+ * - If the track is not in the selected list, it will be added.
+ *
+ * @param context : the (this) context of the component calling this method
+ * @param track  : the specific track object to be added or removed from the list
+ * @param multiPicker : boolean state that reflects if this method is being called from the single picker or multi picker component
+ */
+export function selectTrack(
+  context: any,
+  track: TrackObject,
+  multiPicker: boolean
+) {
+  // * this checks if the newly selected track is already in the list:
+  // * will return -1 if not, or an id if it is.
   const existingIndex = context.selectedTracks.findIndex(
     (selectedTrack: TrackObject) => selectedTrack.id === track.id
   );
 
-  if (existingIndex > -1) {
-    context.selectedTracks = [
-      ...context.selectedTracks.slice(0, existingIndex),
-      ...context.selectedTracks.slice(existingIndex + 1),
-    ];
+  if (multiPicker) {
+    // * call coming from multi song ui, multiple songs can be selected
+    if (existingIndex > -1) {
+      // If the track is already selected, remove it
+      context.selectedTracks = [
+        ...context.selectedTracks.slice(0, existingIndex),
+        ...context.selectedTracks.slice(existingIndex + 1),
+      ];
+    } else {
+      // If the track is not selected, add it
+      context.selectedTracks = [...context.selectedTracks, track];
+    }
   } else {
-    context.selectedTracks = [...context.selectedTracks, track];
+    // * call coming from single song ui, only one song can be selected
+    if (existingIndex > -1) {
+      // If the track is already selected, remove it
+      context.selectedTracks = [];
+    } else {
+      // If a different track is already selected, replace it
+      context.selectedTracks = [track];
+    }
   }
 }
 

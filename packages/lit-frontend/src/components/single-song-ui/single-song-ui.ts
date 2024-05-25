@@ -57,7 +57,11 @@ export class SingleSongUiElement extends LitElement {
                 </div>`}
         </section>
         <section class="selected-tracks">
-          <h3>Selected Song</h3>
+          <h3 id="selectedSongHeader">Selected Song</h3>
+          <p class="singleSongMessage">
+            You may only choose to submit one song at a time. Selecting another
+            song will replace any current selection.
+          </p>
           <div class="track-box-selected-tracks">
             ${this.selectedTracks.map(
               (track) => html`<track-card .track=${track}></track-card>`
