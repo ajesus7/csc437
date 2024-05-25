@@ -11,7 +11,7 @@ export default css`
     gap: 1em;
     margin: 2.5em auto;
     padding: 1em;
-    max-width: 1200px;
+    max-width: 1500px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -28,16 +28,13 @@ export default css`
   }
 
   .left-column {
-    max-width: 250px;
+    max-width: 225px;
   }
 
-  .middle-column {
+  .middle-column,
+  .right-column {
     flex: 2;
     padding: 1em 2em;
-  }
-
-  .right-column {
-    max-width: 300px;
   }
 
   .game-info,
