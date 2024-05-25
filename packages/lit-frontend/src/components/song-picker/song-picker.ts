@@ -14,7 +14,9 @@ import {
 } from "../helpers/spotifyQueryHelper.ts";
 import { TrackObject } from "../../../../ts-models/src/index.ts";
 
-// TODO : I think I imported all of the styles from feed-post-styles to song-picker-styles.ts, but if anything doesn't work this may be the cause of the issue
+import "../multi-song-ui/multi-song-ui.ts";
+import "../single-song-ui/single-song-ui.ts";
+
 @customElement("song-picker")
 export class SongPickerElement extends LitElement {
   @state()
@@ -38,6 +40,11 @@ export class SongPickerElement extends LitElement {
   @state()
   expandedClass: String = "feed-single-post";
   static styles = [styles];
+
+  // * passed in by parent, decides if one song can be selected or multiple can (feed post vs game)
+  @property()
+  @property({ type: Boolean })
+  multiPicker: boolean = false;
 
   async _authenticate() {
     await authenticate(this);
@@ -85,53 +92,9 @@ export class SongPickerElement extends LitElement {
             <button class="recommend-songs" type="submit">Search</button>
           </form>
         </section>
-        <section class="search-and-selected">
-          <section class="query-results">
-            <h3 class="search-results">Search Results</h3>
-            ${this.topTracks.length > 0
-              ? html`<div class="track-box-search-results">
-                    ${this.topTracks
-                      .slice(0, 5)
-                      .map(
-                        (track) =>
-                          html`<track-card .track=${track}></track-card>`
-                      )}
-                  </div>
-                  <div class="clear-results-section">
-                    <button
-                      class="clear-results"
-                      @click=${this._clearTopTracks}
-                    >
-                      Clear Results
-                    </button>
-                  </div>`
-              : html`<div class="track-box-search-results"></div>
-                  <div class="clear-results-section">
-                    <button
-                      class="clear-results"
-                      @click=${this._clearTopTracks}
-                    >
-                      Clear Results
-                    </button>
-                  </div>`}
-          </section>
-          <section class="selected-tracks">
-            <h3>Selected Songs</h3>
-            <div class="track-box-selected-tracks">
-              ${this.selectedTracks.map(
-                (track) => html`<track-card .track=${track}></track-card>`
-              )}
-            </div>
-            <div class="clear-selected-tracks-section">
-              <button
-                class="clear-selected-tracks"
-                @click=${this._clearSelectedTracks}
-              >
-                Clear Selected Tracks
-              </button>
-            </div>
-          </section>
-        </section>
+        ${this.multiPicker
+          ? html`<multi-song-ui></multi-song-ui>`
+          : html`<single-song-ui></single-song-ui>`}
         <section class="expanded-content">
           <section class="recommend-form">
             ${this.submissionSuccess === true

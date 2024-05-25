@@ -163,7 +163,11 @@ export class FeedPostElement extends LitElement {
           </section>
         </section>
 
-        ${this.expanded ? html` <song-picker></song-picker>` : ""}
+        ${
+          this.expanded
+            ? html` <song-picker .multiPicker=${false}></song-picker>`
+            : ""
+        }
       </section>
     `;
   }
