@@ -160,31 +160,50 @@ export class ChatRoomPage extends App.View {
    */
   render() {
     return html`
-      <section class="gameColumns">
-        <section class="leftColumn">
-          <div class="user-list">
-            ${this.users.map(
-              (user) => html`
-                <div class="user">
-                  <img
-                    src="/images/${user.profilePic}.png"
-                    alt="${user.name}"
-                  />
-                  <span class="username">${user.name}</span>
-                </div>
-              `
-            )}
+      <section class="game-columns">
+        <section class="left-column">
+          <section class="game-info">
+            <h3 class="game-sub-header">Round #</h3>
+            <p class="leave-game">Leave Game</p>
+          </section>
+          <section class="user-section">
+            <h3 class="game-sub-header">Player List</h3>
+            <div class="user-list">
+              ${this.users.map(
+                (user) => html`
+                  <div class="user">
+                    <img
+                      src="/images/${user.profilePic}.png"
+                      alt="${user.name}"
+                    />
+                    <span class="username">${user.name}</span>
+                  </div>
+                `
+              )}
+            </div>
+          </section>
+        </section>
+        <section class="middle-column">
+          <div class="song-picker-holder">
+            <h3 class="game-sub-header">Pick a Song.</h3>
+            <song-picker .multiPicker=${false}></song-picker>
           </div>
         </section>
-        <section class="middleColumn">
-          <song-picker .multiPicker=${false}></song-picker>
-        </section>
-        <section class="rightColumn">
-          <ul>
-            ${this.messages.map((message) => html`<li>${message}</li>`)}
-          </ul>
-          <input placeholder="message" />
-          <button @click="${this.sendMessage}">Send</button>
+        <section class="right-column">
+          <section class="playlist-section">
+            <h3 class="game-sub-header">Game Playlist</h3>
+            <ul class="playlist"></ul>
+          </section>
+          <section class="chat-section">
+            <h3 class="game-sub-header">Chat Room</h3>
+            <ul class="chat-log">
+              ${this.messages.map((message) => html`<li>${message}</li>`)}
+            </ul>
+            <div class="message-input">
+              <input placeholder="message" />
+              <button @click="${this.sendMessage}">Send</button>
+            </div>
+          </section>
         </section>
       </section>
     `;

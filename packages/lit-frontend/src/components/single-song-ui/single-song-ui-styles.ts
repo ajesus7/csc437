@@ -23,7 +23,7 @@ export default css`
     border-radius: 12px;
     padding: 10px;
     width: 92%;
-    height: 16.95em; /* overflows if smaller */
+    height: 9em; /* overflows if smaller */
     margin-top: 10px;
     overflow: auto; /* Allow scrolling if content exceeds container size */
   }
