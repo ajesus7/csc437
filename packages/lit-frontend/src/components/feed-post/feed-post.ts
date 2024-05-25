@@ -10,6 +10,8 @@ import "../track-card/track-card.ts";
 import "../comment-card/comment-card.ts";
 import "../song-picker/song-picker.ts";
 
+import { calculateTimeFromDate } from "../helpers/calculateTimeFromDate.ts";
+
 // * Functionality: Should take in the list of feed posts,
 // * then generate a post object for each post. Should handle overflow of posts well.
 
@@ -40,37 +42,6 @@ export class FeedPostElement extends LitElement {
 
   @state()
   expandedClass: String = "feed-single-post";
-
-  _calculateTimeFromDate(): string {
-    // Ensure post?.postTime exists and is of type string | Date | undefined
-    const postedTime: Date | undefined = this.post?.postTime
-      ? new Date(this.post.postTime)
-      : undefined;
-
-    if (!postedTime) {
-      // Handle the case where postedTime or this.post is undefined
-      console.error("Posted time is undefined");
-      return "Post time cannot be found."; // or another appropriate value indicating an error or undefined state
-    }
-
-    // Get the current time as a Date object
-    const currentTime: Date = new Date();
-
-    // Calculate the difference in milliseconds
-    const diff: number = currentTime.getTime() - postedTime.getTime();
-
-    // Convert milliseconds to hours
-    let hours: number = diff / (1000 * 60 * 60);
-    hours = Math.round(hours);
-
-    if (hours < 1) {
-      return `Less than an hour ago.`;
-    } else if (hours > 23) {
-      return `${hours % 24} days ago`;
-    } else {
-      return `${hours} hours ago`;
-    }
-  }
 
   _expand() {
     this.expanded = !this.expanded;
@@ -115,6 +86,21 @@ export class FeedPostElement extends LitElement {
     }
   }
 
+  // * time calculation refactored for better readability
+  _calculateTimeFromDate() {
+    calculateTimeFromDate(this);
+  }
+
+  // * comment needs to appear in post, so therefore state needs to be updated here,
+  // * so listen for the handle comment added event in the constructor
+  constructor() {
+    super();
+    // ! handle comment added event sent from song-picker
+    this.addEventListener("handle-comment-added", () => {
+      this._handleCommentAdded();
+    });
+  }
+
   // <section class="post-comments">
   //         <h3 class="comments-header">Comments</h3>
   //         ${this.getPostComments?.map(
@@ -155,7 +141,10 @@ export class FeedPostElement extends LitElement {
 
         ${
           this.expanded
-            ? html` <song-picker .multiPicker=${true}></song-picker>`
+            ? html` <song-picker
+                .post=${this.post}
+                .multiPicker=${true}
+              ></song-picker>`
             : ""
         }
       </section>

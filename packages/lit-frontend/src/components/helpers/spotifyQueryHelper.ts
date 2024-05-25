@@ -122,8 +122,8 @@ export async function handleSubmit(ev: Event, context: any) {
   await searchSpotify(context);
 }
 
-// Function to recommend tracks
-export async function recommendTracks(ev: Event, context: any) {
+// Function to submit comment to database
+export async function submitCommentToDatabase(ev: Event, context: any) {
   ev.preventDefault();
   context.submissionSuccess = null;
   const target = ev.target as HTMLFormElement;
@@ -155,7 +155,15 @@ export async function recommendTracks(ev: Event, context: any) {
       clearSelectedTracks(context);
       context.submissionSuccess = true;
       target.reset();
-      context._handleCommentAdded();
+
+      // * send handle comment added event up to the feed-post component, which will cause a re render of the post
+      // * to show the comment
+      context.dispatchEvent(
+        new CustomEvent("handle-comment-selected", {
+          bubbles: true, // This makes sure the event bubbles up through the DOM
+          composed: true, // This allows the event to cross the shadow DOM boundary
+        })
+      );
     } else {
       throw new Error("Failed to post comment");
     }

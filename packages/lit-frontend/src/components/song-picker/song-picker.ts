@@ -1,9 +1,10 @@
 import { html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import styles from "./song-picker-styles";
+import Post from "../../models/post.ts";
 
 import {
-  recommendTracks,
+  submitCommentToDatabase,
   handleSubmit,
   authenticate,
   fetchTopTracks,
@@ -37,6 +38,9 @@ export class SongPickerElement extends LitElement {
   @property()
   selectedTracks: TrackObject[] = [];
 
+  @property({ type: Object })
+  post?: Post;
+
   @state()
   expandedClass: String = "feed-single-post";
   static styles = [styles];
@@ -49,8 +53,9 @@ export class SongPickerElement extends LitElement {
     await authenticate(this);
   }
 
-  async _recommendTracks(ev: Event) {
-    await recommendTracks(ev, this);
+  // * this function holds the comment submit logic
+  async _submitCommentToDatabase(ev: Event) {
+    await submitCommentToDatabase(ev, this);
   }
 
   _handleSubmit(ev: Event) {
@@ -132,7 +137,10 @@ export class SongPickerElement extends LitElement {
             ${this.submissionSuccess === false
               ? html`<p>Submission failed. Please try again.</p>`
               : ``}
-            <form class="comment-message-form" @submit=${this._recommendTracks}>
+            <form
+              class="comment-message-form"
+              @submit=${this._submitCommentToDatabase}
+            >
               <input
                 type="text"
                 id="input-comment"
