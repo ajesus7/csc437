@@ -3,11 +3,6 @@ import { customElement, state } from "lit/decorators.js";
 import styles from "./multi-song-ui-styles";
 import { TrackObject } from "../../../../ts-models/src/index.ts";
 
-import {
-  clearTopTracks,
-  clearSelectedTracks,
-} from "../helpers/spotifyQueryHelper.ts";
-
 @customElement("multi-song-ui")
 export class MultiSongUiElement extends LitElement {
   static styles = [styles];
@@ -18,12 +13,16 @@ export class MultiSongUiElement extends LitElement {
   @state()
   selectedTracks: TrackObject[] = [];
 
-  _clearTopTracks() {
-    clearTopTracks(this);
-  }
-
-  _clearSelectedTracks() {
-    clearSelectedTracks(this);
+  // * sends event to song picker to clear the specified track list (top or selected)
+  _sendClearTracks(topOrSelected: string) {
+    console.log("wanting to clear ", topOrSelected, " tracks");
+    this.dispatchEvent(
+      new CustomEvent("clear-tracks", {
+        detail: { topOrSelected: topOrSelected },
+        bubbles: true, // This makes sure the event bubbles up through the DOM
+        composed: true, // This allows the event to cross the shadow DOM boundary
+      })
+    );
   }
 
   render() {
@@ -40,13 +39,19 @@ export class MultiSongUiElement extends LitElement {
                     )}
                 </div>
                 <div class="clear-results-section">
-                  <button class="clear-results" @click=${this._clearTopTracks}>
+                  <button
+                    class="clear-results"
+                    @click=${() => this._sendClearTracks("top")}
+                  >
                     Clear Results
                   </button>
                 </div>`
             : html`<div class="track-box-search-results"></div>
                 <div class="clear-results-section">
-                  <button class="clear-results" @click=${this._clearTopTracks}>
+                  <button
+                    class="clear-results"
+                    @click=${() => this._sendClearTracks("top")}
+                  >
                     Clear Results
                   </button>
                 </div>`}
@@ -61,7 +66,7 @@ export class MultiSongUiElement extends LitElement {
           <div class="clear-selected-tracks-section">
             <button
               class="clear-selected-tracks"
-              @click=${this._clearSelectedTracks}
+              @click=${() => this._sendClearTracks("selected")}
             >
               Clear Selected Tracks
             </button>

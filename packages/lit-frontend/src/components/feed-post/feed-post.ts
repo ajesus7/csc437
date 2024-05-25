@@ -81,16 +81,6 @@ export class FeedPostElement extends LitElement {
     }
   }
 
-  constructor() {
-    super();
-    // ! deals with adding tracks to the selected tracks section when a click event bubbles up
-    // TODO :
-    // this.addEventListener("track-selected", (event: Event) => {
-    //   const customEvent = event as CustomEvent;
-    //   this._selectTrack(customEvent.detail.track);
-    // });
-  }
-
   connectedCallback(): void {
     super.connectedCallback(); // Always call super first in connectedCallback
 
@@ -165,7 +155,7 @@ export class FeedPostElement extends LitElement {
 
         ${
           this.expanded
-            ? html` <song-picker .multiPicker=${false}></song-picker>`
+            ? html` <song-picker .multiPicker=${true}></song-picker>`
             : ""
         }
       </section>

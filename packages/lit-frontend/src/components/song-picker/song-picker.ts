@@ -3,14 +3,14 @@ import { customElement, property, state } from "lit/decorators.js";
 import styles from "./song-picker-styles";
 
 import {
-  selectTrack,
   recommendTracks,
   handleSubmit,
   authenticate,
-  clearTopTracks,
-  clearSelectedTracks,
   fetchTopTracks,
   searchSpotify,
+  selectTrack,
+  clearSelectedTracks,
+  clearTopTracks,
 } from "../helpers/spotifyQueryHelper.ts";
 import { TrackObject } from "../../../../ts-models/src/index.ts";
 
@@ -42,16 +42,11 @@ export class SongPickerElement extends LitElement {
   static styles = [styles];
 
   // * passed in by parent, decides if one song can be selected or multiple can (feed post vs game)
-  @property()
   @property({ type: Boolean })
   multiPicker: boolean = false;
 
   async _authenticate() {
     await authenticate(this);
-  }
-
-  _selectTrack(track: TrackObject) {
-    selectTrack(this, track);
   }
 
   async _recommendTracks(ev: Event) {
@@ -70,12 +65,40 @@ export class SongPickerElement extends LitElement {
     clearSelectedTracks(this);
   }
 
+  _selectTrack(track: TrackObject) {
+    selectTrack(this, track);
+  }
+
   async fetchTopTracks(artistId: string) {
     await fetchTopTracks(this, artistId);
   }
 
   async searchSpotify(): Promise<void> {
     await searchSpotify(this);
+  }
+
+  // * defined in song-picker so that when new top songs are requested, and state update passes
+  // * topTracks/selectedSongs back down to multi/single song picker, the selectedSongs are remembered
+  constructor() {
+    super();
+    // ! deals with adding tracks to the selected tracks section when a click event bubbles up
+    this.addEventListener("track-selected", (event: Event) => {
+      const customEvent = event as CustomEvent;
+      this._selectTrack(customEvent.detail.track);
+    });
+
+    // * clear the top tracks if event is passed with message, "top", otherwise clear selected tracks
+    this.addEventListener("clear-tracks", (event: Event) => {
+      console.log("Within Clear Tracks Listener");
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail.topOrSelected === "top") {
+        console.log("Within Top, executing clear top tracks");
+        this._clearTopTracks();
+      } else {
+        console.log("Within Selected, executing clear selected tracks");
+        this._clearSelectedTracks();
+      }
+    });
   }
 
   render() {
@@ -93,8 +116,14 @@ export class SongPickerElement extends LitElement {
           </form>
         </section>
         ${this.multiPicker
-          ? html`<multi-song-ui></multi-song-ui>`
-          : html`<single-song-ui></single-song-ui>`}
+          ? html`<multi-song-ui
+              .selectedTracks=${this.selectedTracks}
+              .topTracks=${this.topTracks}
+            ></multi-song-ui>`
+          : html`<single-song-ui
+              .selectedTracks=${this.selectedTracks}
+              .topTracks=${this.topTracks}
+            ></single-song-ui>`}
         <section class="expanded-content">
           <section class="recommend-form">
             ${this.submissionSuccess === true
