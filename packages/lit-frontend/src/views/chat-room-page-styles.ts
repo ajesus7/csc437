@@ -31,7 +31,11 @@ export default css`
     max-width: 225px;
   }
 
-  .middle-column,
+  .middle-column {
+    flex: 2;
+    padding: 1em 2em;
+  }
+
   .right-column {
     flex: 2;
     padding: 1em 2em;
@@ -108,6 +112,24 @@ export default css`
     padding: 0.5em;
     height: 150px;
     overflow-y: auto;
+  }
+
+  .chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  .chat-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5em;
+  }
+
+  .chat-sender {
+    font-weight: bold;
+    margin-right: 0.5em;
   }
 
   .message-input {

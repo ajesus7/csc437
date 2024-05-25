@@ -17,6 +17,12 @@ type ProfileLocation = Location & {
   searchParams: Map<string, string>;
 };
 
+interface ChatMessage {
+  text: string;
+  sender: string;
+  profilePic: string;
+}
+
 @customElement("chat-room-page")
 export class ChatRoomPage extends App.View {
   static styles = styles;
@@ -44,7 +50,7 @@ export class ChatRoomPage extends App.View {
 
   // * list of messages sent in chat room
   @state()
-  private messages: string[] = [];
+  private messages: ChatMessage[] = [];
 
   // * list of users connected to chatRoom
   @state()
@@ -106,7 +112,7 @@ export class ChatRoomPage extends App.View {
     }
 
     // * add message to list of messages on (message send)?
-    this.socket.on("message", (message: string) => {
+    this.socket.on("message", (message: ChatMessage) => {
       this.messages = [...this.messages, message];
     });
 
@@ -197,7 +203,19 @@ export class ChatRoomPage extends App.View {
           <section class="chat-section">
             <h3 class="game-sub-header">Chat Room</h3>
             <ul class="chat-log">
-              ${this.messages.map((message) => html`<li>${message}</li>`)}
+              ${this.messages.map(
+                (message) => html`
+                  <li class="chat-message">
+                    <img
+                      src="/images/${message.profilePic}.png"
+                      alt="${message.sender}"
+                      class="chat-profile-pic"
+                    />
+                    <span class="chat-sender">${message.sender}:</span>
+                    <span class="chat-text">${message.text}</span>
+                  </li>
+                `
+              )}
             </ul>
             <div class="message-input">
               <input placeholder="message" />

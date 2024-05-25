@@ -87,6 +87,7 @@ export default css`
     flex-direction: row;
     width: 99%;
   }
+
   .expanded-window {
     background: var(--menu-color);
     border-left: 2px solid var(--sub-menu-color);

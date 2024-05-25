@@ -74,10 +74,19 @@ io.on("connection", (socket) => {
     const userDetails = users.get(socket.id);
     if (userDetails) {
       console.log(`${userDetails.name} said: ${message.text}`);
-      io.emit("message", `${userDetails.name} said: ${message.text}`);
+      io.emit("message", {
+        text: message.text,
+        sender: userDetails.name,
+        profilePic: userDetails.profilePic
+      });
     } else {
       console.log(`Unknown user said: ${message.text}`);
-      io.emit("message", `Unknown user said: ${message.text}`);
+      io.emit("message", {
+        text: message.text,
+        sender: "Unknown user",
+        profilePic: "defaultProfileImage"
+        // Provide a default profile picture
+      });
     }
   });
   socket.on("disconnect", () => {

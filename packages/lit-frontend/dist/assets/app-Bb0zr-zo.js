@@ -1464,6 +1464,7 @@
     flex-direction: row;
     width: 99%;
   }
+
   .expanded-window {
     background: var(--menu-color);
     border-left: 2px solid var(--sub-menu-color);
@@ -1954,7 +1955,11 @@
     max-width: 225px;
   }
 
-  .middle-column,
+  .middle-column {
+    flex: 2;
+    padding: 1em 2em;
+  }
+
   .right-column {
     flex: 2;
     padding: 1em 2em;
@@ -2033,6 +2038,24 @@
     overflow-y: auto;
   }
 
+  .chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  .chat-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5em;
+  }
+
+  .chat-sender {
+    font-weight: bold;
+    margin-right: 0.5em;
+  }
+
   .message-input {
     display: flex;
     gap: 0.5em;
@@ -2095,7 +2118,17 @@
           <section class="chat-section">
             <h3 class="game-sub-header">Chat Room</h3>
             <ul class="chat-log">
-              ${this.messages.map(r=>_`<li>${r}</li>`)}
+              ${this.messages.map(r=>_`
+                  <li class="chat-message">
+                    <img
+                      src="/images/${r.profilePic}.png"
+                      alt="${r.sender}"
+                      class="chat-profile-pic"
+                    />
+                    <span class="chat-sender">${r.sender}:</span>
+                    <span class="chat-text">${r.text}</span>
+                  </li>
+                `)}
             </ul>
             <div class="message-input">
               <input placeholder="message" />
