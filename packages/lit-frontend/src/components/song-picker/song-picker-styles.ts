@@ -19,7 +19,7 @@ export default css`
   }
 
   .search-form button,
-  button.recommend-songs {
+  comment-message-form button {
     padding: 2px 20px 2px 20px;
     margin-left: 10px;
     background-color: var(--button-color);
@@ -35,7 +35,7 @@ export default css`
     display: flex;
     flex-direction: row;
   }
-  button.recommend-songs {
+  comment-message-form button {
     padding: 6px 20px;
     margin-left: 1em;
   }
@@ -104,5 +104,15 @@ export default css`
     height: 2em;
     padding: 7px;
     border-radius: 4px;
+  }
+
+  .game-song-button {
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 1em 0.7em;
+    cursor: pointer;
+    margin-top: 1em;
   }
 `;

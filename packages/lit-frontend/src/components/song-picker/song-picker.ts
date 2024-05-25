@@ -18,6 +18,10 @@ import { TrackObject } from "../../../../ts-models/src/index.ts";
 import "../multi-song-ui/multi-song-ui.ts";
 import "../single-song-ui/single-song-ui.ts";
 
+/**
+ * If multi picker is true, then render the comment submission button with a message input,
+ * If multi picker is false, then just render a song submit button (used for the game feature).
+ */
 @customElement("song-picker")
 export class SongPickerElement extends LitElement {
   @state()
@@ -83,6 +87,29 @@ export class SongPickerElement extends LitElement {
     await searchSpotify(this);
   }
 
+  // FIX : I'm unsure if this method should be here, but i'm not totally sure how to refactor it to the single
+  // FIX: song UI, as it only has to do with single song ui, not multi song ui.
+  _submitSongRecommendationToGameState(event: Event) {
+    event.preventDefault();
+    console.log("submit song recommendation clicked");
+
+    // * If a track is selected:
+    // * send an event with the track object to be handled by game state
+    if (this.selectedTracks.length == 1) {
+      console.log("the selected track, ", this.selectedTracks[0]);
+      this.dispatchEvent(
+        new CustomEvent("single-track-submitted", {
+          detail: { track: this.selectedTracks[0] },
+          bubbles: true, // This makes sure the event bubbles up through the DOM
+          composed: true, // This allows the event to cross the shadow DOM boundary
+        })
+      );
+    } else {
+      // TODO : error message telling user to select a track before submitting
+      console.log("no track selected, cannot submit form");
+    }
+  }
+
   // * defined in song-picker so that when new top songs are requested, and state update passes
   // * topTracks/selectedSongs back down to multi/single song picker, the selectedSongs are remembered
   constructor() {
@@ -130,28 +157,38 @@ export class SongPickerElement extends LitElement {
               .selectedTracks=${this.selectedTracks}
               .topTracks=${this.topTracks}
             ></single-song-ui>`}
-        <section class="expanded-content">
-          <section class="recommend-form">
-            ${this.submissionSuccess === true
-              ? html`<p>Submission successful!</p>`
-              : ``}
-            ${this.submissionSuccess === false
-              ? html`<p>Submission failed. Please try again.</p>`
-              : ``}
-            <form
-              class="comment-message-form"
-              @submit=${this._submitCommentToDatabase}
-            >
-              <input
-                type="text"
-                id="input-comment"
-                name="input-comment"
-                placeholder="Leave a message..."
-              />
-              <button class="recommend-songs" type="submit">Submit</button>
-            </form>
-          </section>
-        </section>
+        ${this.multiPicker
+          ? html`<section class="expanded-content">
+              <section class="recommend-form">
+                ${this.submissionSuccess === true
+                  ? html`<p>Submission successful!</p>`
+                  : ``}
+                ${this.submissionSuccess === false
+                  ? html`<p>Submission failed. Please try again.</p>`
+                  : ``}
+                <form
+                  class="comment-message-form"
+                  @submit=${this._submitCommentToDatabase}
+                >
+                  <input
+                    type="text"
+                    id="input-comment"
+                    name="input-comment"
+                    placeholder="Leave a message..."
+                  />
+                  <button class="recommend-songs" type="submit">Submit</button>
+                </form>
+              </section>
+            </section>`
+          : html`
+              <button
+                class="game-song-button"
+                type="submit"
+                @click=${this._submitSongRecommendationToGameState}
+              >
+                Submit Your Song Recommendation
+              </button>
+            `}
       </section>
     `;
   }

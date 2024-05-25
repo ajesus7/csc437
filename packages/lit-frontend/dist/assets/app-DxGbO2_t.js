@@ -1392,7 +1392,7 @@
   }
 
   .search-form button,
-  button.recommend-songs {
+  comment-message-form button {
     padding: 2px 20px 2px 20px;
     margin-left: 10px;
     background-color: var(--button-color);
@@ -1408,7 +1408,7 @@
     display: flex;
     flex-direction: row;
   }
-  button.recommend-songs {
+  comment-message-form button {
     padding: 6px 20px;
     margin-left: 1em;
   }
@@ -1477,6 +1477,16 @@
     height: 2em;
     padding: 7px;
     border-radius: 4px;
+  }
+
+  .game-song-button {
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 1em 0.7em;
+    cursor: pointer;
+    margin-top: 1em;
   }
 `;function ua(r,e,t){const s=r.selectedTracks.findIndex(i=>i.id===e.id);t?s>-1?r.selectedTracks=[...r.selectedTracks.slice(0,s),...r.selectedTracks.slice(s+1)]:r.selectedTracks=[...r.selectedTracks,e]:s>-1?r.selectedTracks=[]:r.selectedTracks=[e]}function ai(r){r.topTracks=[]}function ci(r){r.selectedTracks=[]}async function da(r,e){const t=await fetch(`https://api.spotify.com/v1/artists/${e}/top-tracks?market=US`,{method:"GET",headers:{Authorization:`Bearer ${r.accessToken}`,"Content-Type":"application/json"}});if(t.ok){const s=await t.json();s&&s.tracks?r.topTracks=s.tracks:console.log("No tracks found or data is malformed")}else throw new Error(`Error: ${t.statusText}`)}async function li(r){const s=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded",Authorization:"Basic "+xr.Buffer.from("7fd3e17624134115b09da726f05a671c:09d164c52b1e43d9bcef963d9f2a8aac").toString("base64")},body:"grant_type=client_credentials"});if(s.ok){const i=await s.json();r.accessToken=i.access_token}else console.error("Spotify authentication failed")}async function hi(r){if(!r.requestedSearchQuery.trim())return;const e=`https://api.spotify.com/v1/search?q=${encodeURIComponent(r.requestedSearchQuery)}&type=track&limit=10`;try{await li(r);const t=await fetch(e,{method:"GET",headers:{Authorization:`Bearer ${r.accessToken}`,"Content-Type":"application/json"}});if(!t.ok)throw new Error(`Error: ${t.statusText}`);const s=await t.json();s.tracks.items.length>0?r.topTracks=s.tracks.items:(r.topTracks=[],alert("No tracks found. Please try another search."))}catch(t){console.error("Error searching for tracks:",t)}}async function pa(r,e){r.preventDefault();const t=r.target,s=new FormData(t);e.requestedSearchQuery=s.get("inputted-artist-name"),await hi(e)}async function fa(r,e){var m;r.preventDefault(),e.submissionSuccess=null;const t=r.target,s=new FormData(t),i="http://localhost:3000";let a=s.get("input-comment");const c=e.selectedTracks.map(y=>y.id),h=`${i}/posts/${(m=e.post)==null?void 0:m._id}`,d={userName:"aidan",commentTime:new Date,commentMessage:a,SongIDs:c};try{if((await fetch(h,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})).ok)console.log("Comment successfully added"),ai(e),ci(e),e.submissionSuccess=!0,t.reset(),e.dispatchEvent(new CustomEvent("handle-comment-selected",{bubbles:!0,composed:!0}));else throw new Error("Failed to post comment")}catch(y){console.error("Error:",y),e.submissionSuccess=!1}}const ma=P`
   .search-and-selected {
@@ -1661,7 +1671,7 @@
           </div>
         </section>
       </section>
-    `}};st.styles=[ba];Ar([A()],st.prototype,"topTracks",2);Ar([A()],st.prototype,"selectedTracks",2);st=Ar([T("single-song-ui")],st);var va=Object.defineProperty,xa=Object.getOwnPropertyDescriptor,Z=(r,e,t,s)=>{for(var i=s>1?void 0:s?xa(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&va(e,t,i),i};let M=class extends S{constructor(){super(),this.submissionSuccess=null,this.expandedText="unexpanded",this.requestedSearchQuery="",this.accessToken="",this.topTracks=[],this.selectedTracks=[],this.expandedClass="feed-single-post",this.multiPicker=!1,this.addEventListener("track-selected",r=>{const e=r;this._selectTrack(e.detail.track,this.multiPicker)}),this.addEventListener("clear-tracks",r=>{console.log("Within Clear Tracks Listener"),r.detail.topOrSelected==="top"?(console.log("Within Top, executing clear top tracks"),this._clearTopTracks()):(console.log("Within Selected, executing clear selected tracks"),this._clearSelectedTracks())})}async _authenticate(){await li(this)}async _submitCommentToDatabase(r){await fa(r,this)}_handleSubmit(r){pa(r,this)}_clearTopTracks(){ai(this)}_clearSelectedTracks(){ci(this)}_selectTrack(r,e){ua(this,r,e)}async fetchTopTracks(r){await da(this,r)}async searchSpotify(){await hi(this)}render(){return _`
+    `}};st.styles=[ba];Ar([A()],st.prototype,"topTracks",2);Ar([A()],st.prototype,"selectedTracks",2);st=Ar([T("single-song-ui")],st);var va=Object.defineProperty,xa=Object.getOwnPropertyDescriptor,Z=(r,e,t,s)=>{for(var i=s>1?void 0:s?xa(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&va(e,t,i),i};let M=class extends S{constructor(){super(),this.submissionSuccess=null,this.expandedText="unexpanded",this.requestedSearchQuery="",this.accessToken="",this.topTracks=[],this.selectedTracks=[],this.expandedClass="feed-single-post",this.multiPicker=!1,this.addEventListener("track-selected",r=>{const e=r;this._selectTrack(e.detail.track,this.multiPicker)}),this.addEventListener("clear-tracks",r=>{console.log("Within Clear Tracks Listener"),r.detail.topOrSelected==="top"?(console.log("Within Top, executing clear top tracks"),this._clearTopTracks()):(console.log("Within Selected, executing clear selected tracks"),this._clearSelectedTracks())})}async _authenticate(){await li(this)}async _submitCommentToDatabase(r){await fa(r,this)}_handleSubmit(r){pa(r,this)}_clearTopTracks(){ai(this)}_clearSelectedTracks(){ci(this)}_selectTrack(r,e){ua(this,r,e)}async fetchTopTracks(r){await da(this,r)}async searchSpotify(){await hi(this)}_submitSongRecommendationToGameState(r){r.preventDefault(),console.log("submit song recommendation clicked"),this.selectedTracks.length==1?(console.log("the selected track, ",this.selectedTracks[0]),this.dispatchEvent(new CustomEvent("single-track-submitted",{detail:{track:this.selectedTracks[0]},bubbles:!0,composed:!0}))):console.log("no track selected, cannot submit form")}render(){return _`
       <section class="expanded-window">
         <section class="search-form">
           <form class="search-bar-form" @submit=${this._handleSubmit}>
@@ -1681,24 +1691,32 @@
               .selectedTracks=${this.selectedTracks}
               .topTracks=${this.topTracks}
             ></single-song-ui>`}
-        <section class="expanded-content">
-          <section class="recommend-form">
-            ${this.submissionSuccess===!0?_`<p>Submission successful!</p>`:""}
-            ${this.submissionSuccess===!1?_`<p>Submission failed. Please try again.</p>`:""}
-            <form
-              class="comment-message-form"
-              @submit=${this._submitCommentToDatabase}
-            >
-              <input
-                type="text"
-                id="input-comment"
-                name="input-comment"
-                placeholder="Leave a message..."
-              />
-              <button class="recommend-songs" type="submit">Submit</button>
-            </form>
-          </section>
-        </section>
+        ${this.multiPicker?_`<section class="expanded-content">
+              <section class="recommend-form">
+                ${this.submissionSuccess===!0?_`<p>Submission successful!</p>`:""}
+                ${this.submissionSuccess===!1?_`<p>Submission failed. Please try again.</p>`:""}
+                <form
+                  class="comment-message-form"
+                  @submit=${this._submitCommentToDatabase}
+                >
+                  <input
+                    type="text"
+                    id="input-comment"
+                    name="input-comment"
+                    placeholder="Leave a message..."
+                  />
+                  <button class="recommend-songs" type="submit">Submit</button>
+                </form>
+              </section>
+            </section>`:_`
+              <button
+                class="game-song-button"
+                type="submit"
+                @click=${this._submitSongRecommendationToGameState}
+              >
+                Submit Your Song Recommendation
+              </button>
+            `}
       </section>
     `}};M.styles=[ha];Z([A()],M.prototype,"submissionSuccess",2);Z([v()],M.prototype,"expandedText",2);Z([v({type:String})],M.prototype,"requestedSearchQuery",2);Z([v({type:String})],M.prototype,"accessToken",2);Z([v()],M.prototype,"topTracks",2);Z([v()],M.prototype,"selectedTracks",2);Z([v({type:Object})],M.prototype,"post",2);Z([A()],M.prototype,"expandedClass",2);Z([v({type:Boolean})],M.prototype,"multiPicker",2);M=Z([T("song-picker")],M);function Ea(r){var a;const e=(a=r.post)!=null&&a.postTime?new Date(r.post.postTime):void 0;if(!e)return console.error("Posted time is undefined"),"Post time cannot be found.";let i=(new Date().getTime()-e.getTime())/(1e3*60*60);return i=Math.round(i),i<1?"Less than an hour ago.":i>23?`${i%24} days ago`:`${i} hours ago`}var $a=Object.defineProperty,Aa=Object.getOwnPropertyDescriptor,se=(r,e,t,s)=>{for(var i=s>1?void 0:s?Aa(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&$a(e,t,i),i};let W=class extends S{constructor(){super(),this.getPostComments=[],this.expanded=!1,this.submissionSuccess=null,this.expandedText="unexpanded",this.requestedSearchQuery="",this.accessToken="",this.expandedClass="feed-single-post",this.addEventListener("handle-comment-added",()=>{this._handleCommentAdded()})}_expand(){this.expanded=!this.expanded,this.expandedClass==="feed-single-post"?this.expandedClass="feed-single-post-expanded":this.expandedClass="feed-single-post"}connectedCallback(){var r;super.connectedCallback(),(!this.getPostComments||this.getPostComments.length===0)&&(this.getPostComments=((r=this.post)==null?void 0:r.comments)||[])}async _handleCommentAdded(){var e;console.log("Comment Created, Now Refreshing Component");const r="http://localhost:3000";if(console.log("SERVER URL FROM COMMENT ADDED: ",r),!((e=this.post)!=null&&e._id)){console.error("Post ID is undefined.");return}try{const t=await fetch(`${r}/comments/${this.post._id}`,{method:"GET"});if(!t.ok)throw new Error("Failed to fetch comments");const s=await t.json();this.getPostComments=[...s]}catch(t){console.error("Error fetching comments:",t)}}_calculateTimeFromDate(){Ea(this)}render(){var e,t;const r=this._calculateTimeFromDate();return _`
       <section class="${this.expandedClass}">
