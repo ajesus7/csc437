@@ -45,6 +45,10 @@ export class SongPickerElement extends LitElement {
   @property({ type: Object })
   post?: Post;
 
+  // * used for adding a margin-left to only the multi song picker
+  @property({ type: Boolean })
+  hasMargin: boolean = false;
+
   @state()
   expandedClass: String = "feed-single-post";
   static styles = [styles];
@@ -136,7 +140,11 @@ export class SongPickerElement extends LitElement {
 
   render() {
     return html`
-      <section class="expanded-window">
+      <section
+        class="${this.hasMargin
+          ? "margin-left expanded-window"
+          : "expanded-window"}"
+      >
         <section class="search-form">
           <form class="search-bar-form" @submit=${this._handleSubmit}>
             <input

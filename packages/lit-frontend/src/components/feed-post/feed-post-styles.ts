@@ -122,4 +122,8 @@ export default css`
   .expanded-header {
     font-weight: 500;
   }
+
+  .margin-left {
+    margin-left: 1.51em;
+  }
 `;

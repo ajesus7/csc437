@@ -144,6 +144,7 @@ export class FeedPostElement extends LitElement {
             ? html` <song-picker
                 .post=${this.post}
                 .multiPicker=${false}
+                .hasMargin=${true}
               ></song-picker>`
             : ""
         }

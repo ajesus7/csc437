@@ -4,7 +4,7 @@ import * as App from "../app";
 import { io, Socket } from "socket.io-client";
 
 import styles from "./chat-room-page-styles.ts";
-
+import "../components/song-picker/song-picker.ts";
 type Profile = {
   name: string;
   profileImage: string;
@@ -160,23 +160,33 @@ export class ChatRoomPage extends App.View {
    */
   render() {
     return html`
-      <div>
-        <div class="user-list">
-          ${this.users.map(
-            (user) => html`
-              <div class="user">
-                <img src="/images/${user.profilePic}.png" alt="${user.name}" />
-                <span class="username">${user.name}</span>
-              </div>
-            `
-          )}
-        </div>
-        <ul>
-          ${this.messages.map((message) => html`<li>${message}</li>`)}
-        </ul>
-        <input placeholder="message" />
-        <button @click="${this.sendMessage}">Send</button>
-      </div>
+      <section class="gameColumns">
+        <section class="leftColumn">
+          <div class="user-list">
+            ${this.users.map(
+              (user) => html`
+                <div class="user">
+                  <img
+                    src="/images/${user.profilePic}.png"
+                    alt="${user.name}"
+                  />
+                  <span class="username">${user.name}</span>
+                </div>
+              `
+            )}
+          </div>
+        </section>
+        <section class="middleColumn">
+          <song-picker .multiPicker=${false}></song-picker>
+        </section>
+        <section class="rightColumn">
+          <ul>
+            ${this.messages.map((message) => html`<li>${message}</li>`)}
+          </ul>
+          <input placeholder="message" />
+          <button @click="${this.sendMessage}">Send</button>
+        </section>
+      </section>
     `;
   }
 }

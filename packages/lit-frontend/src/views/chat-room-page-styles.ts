@@ -30,4 +30,18 @@ export default css`
   .username {
     margin-top: 0.75em;
   }
+
+  .gameColumns {
+    display: flex;
+    flex-direction: row;
+    border: 2px solid black;
+    margin: auto;
+  }
+
+  .leftColumn,
+  .middleColumn,
+  .rightColumn {
+    width: 33%;
+    border: 2px solid blue;
+  }
 `;

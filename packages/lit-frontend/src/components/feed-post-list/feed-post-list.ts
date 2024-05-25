@@ -18,7 +18,8 @@ export class FeedPostListElement extends LitElement {
     return html`
       <div class="posts-container">
         ${this.posts.map(
-          (post) => html` <feed-post .post=${post}></feed-post>`
+          (post) =>
+            html` <feed-post .hasMargin=${true} .post=${post}></feed-post>`
         )}
       </div>
     `;

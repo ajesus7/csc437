@@ -90,10 +90,13 @@ export default css`
   .expanded-window {
     background: var(--menu-color);
     border-left: 2px solid var(--sub-menu-color);
-    margin-left: 1.51em;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     padding: 0.3em 2em 1em 2em;
+  }
+
+  .margin-left {
+    margin-left: 1.51em;
   }
 
   #input-comment {
