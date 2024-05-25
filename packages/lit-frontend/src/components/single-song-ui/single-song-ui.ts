@@ -3,11 +3,6 @@ import { customElement, state } from "lit/decorators.js";
 import styles from "./single-song-ui-styles";
 import { TrackObject } from "../../../../ts-models/src/index.ts";
 
-import {
-  clearTopTracks,
-  clearSelectedTracks,
-} from "../helpers/spotifyQueryHelper.ts";
-
 @customElement("single-song-ui")
 export class SingleSongUiElement extends LitElement {
   static styles = [styles];
@@ -18,19 +13,23 @@ export class SingleSongUiElement extends LitElement {
   @state()
   selectedTracks: TrackObject[] = [];
 
-  _clearTopTracks() {
-    clearTopTracks(this);
-  }
-
-  _clearSelectedTracks() {
-    clearSelectedTracks(this);
+  // * sends event to song picker to clear the specified track list (top or selected)
+  _sendClearTracks(topOrSelected: string) {
+    console.log("wanting to clear ", topOrSelected, " tracks");
+    this.dispatchEvent(
+      new CustomEvent("clear-tracks", {
+        detail: { topOrSelected: topOrSelected },
+        bubbles: true, // This makes sure the event bubbles up through the DOM
+        composed: true, // This allows the event to cross the shadow DOM boundary
+      })
+    );
   }
 
   render() {
     return html`
       <section class="search-and-selected">
         <section class="query-results">
-          <h3 class="search-results">SINGLE Search Results</h3>
+          <h3 class="search-results">Search Results</h3>
           ${this.topTracks.length > 0
             ? html`<div class="track-box-search-results">
                   ${this.topTracks
@@ -40,19 +39,25 @@ export class SingleSongUiElement extends LitElement {
                     )}
                 </div>
                 <div class="clear-results-section">
-                  <button class="clear-results" @click=${this._clearTopTracks}>
+                  <button
+                    class="clear-results"
+                    @click=${() => this._sendClearTracks("top")}
+                  >
                     Clear Results
                   </button>
                 </div>`
             : html`<div class="track-box-search-results"></div>
                 <div class="clear-results-section">
-                  <button class="clear-results" @click=${this._clearTopTracks}>
+                  <button
+                    class="clear-results"
+                    @click=${() => this._sendClearTracks("top")}
+                  >
                     Clear Results
                   </button>
                 </div>`}
         </section>
         <section class="selected-tracks">
-          <h3>Selected Songs</h3>
+          <h3>Selected Song</h3>
           <div class="track-box-selected-tracks">
             ${this.selectedTracks.map(
               (track) => html`<track-card .track=${track}></track-card>`
@@ -61,9 +66,9 @@ export class SingleSongUiElement extends LitElement {
           <div class="clear-selected-tracks-section">
             <button
               class="clear-selected-tracks"
-              @click=${this._clearSelectedTracks}
+              @click=${() => this._sendClearTracks("selected")}
             >
-              Clear Selected Tracks
+              Clear Selected Song
             </button>
           </div>
         </section>

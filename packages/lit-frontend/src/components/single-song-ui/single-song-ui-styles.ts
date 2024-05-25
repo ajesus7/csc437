@@ -3,11 +3,11 @@ import { css } from "lit";
 export default css`
   .search-and-selected {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
   }
   .selected-tracks,
   .query-results {
-    width: 50%;
+    width: 100%;
   }
   .query-results h3,
   .selected-tracks h3 {
@@ -26,6 +26,11 @@ export default css`
     height: 16.95em; /* overflows if smaller */
     margin-top: 10px;
     overflow: auto; /* Allow scrolling if content exceeds container size */
+  }
+
+  /* update height to reflect only one song being chosen*/
+  .track-box-selected-tracks {
+    height: 3em;
   }
   .clear-results-section button,
   .clear-selected-tracks-section button {

@@ -143,7 +143,7 @@ export class FeedPostElement extends LitElement {
           this.expanded
             ? html` <song-picker
                 .post=${this.post}
-                .multiPicker=${true}
+                .multiPicker=${false}
               ></song-picker>`
             : ""
         }
