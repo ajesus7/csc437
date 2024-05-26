@@ -33,6 +33,10 @@ export class GameFeatureElement extends LitElement {
   @state()
   private users: Array<{ name: string; profilePic: string }> = [];
 
+  // * used to allow 'enter' key to send message
+  @state()
+  private isInputFocused: boolean = false;
+
   private socket?: Socket;
 
   /**
@@ -80,6 +84,31 @@ export class GameFeatureElement extends LitElement {
     }
   }
 
+  // * update input state to be focused
+  private handleInputFocus() {
+    this.isInputFocused = true;
+  }
+
+  // * unfocus input
+  private handleInputBlur() {
+    this.isInputFocused = false;
+  }
+
+  /**
+   * If the following conditions are true, send the message:
+   * 1. Enter key clicked.
+   * 2. The chat message input is focused, user is actively typing and therefore this won't be a misfire for another input.
+   * 3. The input is not blank.
+   *
+   * @param event : event is click a key?
+   */
+  private handleKeydown(event: KeyboardEvent) {
+    const input = this.shadowRoot?.querySelector("input");
+    if (event.key === "Enter" && this.isInputFocused && input?.value.trim()) {
+      this.sendMessage();
+    }
+  }
+
   /**
    * When the user clicks the send button on the frontend, grab the input, send the message using socket.emit.
    * Send the user's name as part of the message (object?) to display accordingly
@@ -93,6 +122,7 @@ export class GameFeatureElement extends LitElement {
       const message = {
         text: input.value.trim(),
         sender: this.userDetails.name,
+        profilePic: this.userDetails.profilePic,
       };
       this.socket?.emit("message", message);
       input.value = "";
@@ -158,7 +188,13 @@ export class GameFeatureElement extends LitElement {
               )}
             </ul>
             <div class="message-input">
-              <input placeholder="message" />
+              <input
+                placeholder="message"
+                @keydown="${this.handleKeydown}"
+                @focus="${this.handleInputFocus}"
+                @blur="${this.handleInputBlur}"
+                tabindex="0"
+              />
               <button @click="${this.sendMessage}">Send</button>
             </div>
           </section>
