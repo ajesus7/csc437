@@ -89,6 +89,11 @@ io.on("connection", (socket) => {
       });
     }
   });
+  socket.on("track-submitted", (track) => {
+    if (track) {
+      io.emit("track-submitted", track);
+    }
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected");
     users.delete(socket.id);

@@ -1,9 +1,13 @@
 import { html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { io, Socket } from "socket.io-client";
-
 import styles from "./game-feature-styles.ts";
+
+// * components
 import "../song-picker/song-picker.ts";
+import "../track-card/track-card.ts";
+
+import { TrackObject } from "../../../../ts-models/src/index.ts";
 
 interface ChatMessage {
   text: string;
@@ -37,6 +41,10 @@ export class GameFeatureElement extends LitElement {
   @state()
   private isInputFocused: boolean = false;
 
+  // * list of track objects that is rendered in the playlist section
+  @state()
+  private playlist: TrackObject[] = [];
+
   private socket?: Socket;
 
   /**
@@ -51,6 +59,11 @@ export class GameFeatureElement extends LitElement {
     super.connectedCallback();
     this.socket = io("ws://localhost:3000");
 
+    this.addEventListener("single-track-submitted", (event: Event) => {
+      const customEvent = event as CustomEvent;
+      this._handleSongSubmittedByUser(customEvent.detail.track);
+    });
+
     // * Emit user details when connected
     if (this.userDetails) {
       this.socket?.emit("userDetails", this.userDetails);
@@ -58,6 +71,11 @@ export class GameFeatureElement extends LitElement {
     // * add message to list of messages on (message send)?
     this.socket.on("message", (message: ChatMessage) => {
       this.messages = [...this.messages, message];
+    });
+
+    // * add emitted track to playlist
+    this.socket.on("track-submitted", (track: TrackObject) => {
+      this.playlist = [...this.playlist, track];
     });
 
     // * add user to list of users on (connect)?
@@ -81,6 +99,17 @@ export class GameFeatureElement extends LitElement {
     super.disconnectedCallback();
     if (this.socket) {
       this.socket.disconnect();
+    }
+
+    this.removeEventListener(
+      "single-track-submitted",
+      this._handleSongSubmittedByUser as unknown as EventListener
+    );
+  }
+
+  _handleSongSubmittedByUser(track: TrackObject) {
+    if (track) {
+      this.socket?.emit("track-submitted", track);
     }
   }
 
@@ -115,10 +144,7 @@ export class GameFeatureElement extends LitElement {
    */
   private sendMessage() {
     const input = this.shadowRoot?.querySelector("input");
-    console.log("within send message");
-    console.log("user details: ", this.userDetails);
     if (input && input.value.trim() && this.userDetails) {
-      console.log("everything exists within send message");
       const message = {
         text: input.value.trim(),
         sender: this.userDetails.name,
@@ -168,7 +194,10 @@ export class GameFeatureElement extends LitElement {
         <section class="right-column">
           <section class="playlist-section">
             <h3 class="game-sub-header">Game Playlist</h3>
-            <ul class="playlist"></ul>
+            <ul class="playlist">
+               ${this.playlist.map((track) =>
+                 track ? html`<track-card .track=${track}></track-card>` : ""
+               )}
           </section>
           <section class="chat-section">
             <h3 class="game-sub-header">Chat Room</h3>

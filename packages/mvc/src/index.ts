@@ -9,7 +9,7 @@ import profileService from "./services/profiles";
 import dotenv from "dotenv";
 import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
-import { IPost } from "../../ts-models";
+import { IPost, TrackObject } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
 import mongoose from "mongoose";
 import { Server as SocketIOServer, Socket } from "socket.io";
@@ -63,6 +63,14 @@ io.on("connection", (socket: Socket) => {
         sender: "Unknown user",
         profilePic: "defaultProfileImage", // Provide a default profile picture
       });
+    }
+  });
+
+  // Handle incoming chosen track
+  socket.on("track-submitted", (track: TrackObject) => {
+    // * if the track information exists, send it back to be added to the playlist
+    if (track) {
+      io.emit("track-submitted", track);
     }
   });
 
