@@ -13,49 +13,69 @@ export class MatchTheVibeHeaderElement extends LitElement {
   @state()
   profile?: Profile;
 
+  @state()
+  loading = true;
+
   @consume({ context: authContext, subscribe: true })
   @property({ attribute: false })
   user = new APIUser();
 
   render() {
-    const { profileImage, profileDescription, userid } = this.profile || {};
     return html`
       <section class="match-the-vibe-header">
         <a href="/app/home">match the vibe home</a>
-        <drop-down
-          profileImage="${profileImage}"
-          profileDescription="${profileDescription}"
-          profileUserID="${userid}"
-        ></drop-down>
+        ${this.loading
+          ? html`<p>Loading...</p>`
+          : this.profile
+          ? html`
+              <drop-down
+                .profileImage="${this.profile.profileImage}"
+                .profileDescription="${this.profile.profileDescription}"
+                .profileUserID="${this.profile.userid}"
+              ></drop-down>
+            `
+          : html``}
       </section>
     `;
   }
 
-  updated(changedProperties: Map<string, unknown>) {
-    console.log("Profile Data has been updated", changedProperties);
+  async updated(changedProperties: Map<string, unknown>) {
+    console.log("within header updated");
     if (changedProperties.has("user")) {
       console.log("New user", this.user);
       const { username } = this.user;
-      this._getData(`/profiles/${username}`);
+      console.log("NEW USER USERNAME: ", username);
+      await this._getData(`/profiles/${username}`);
+      console.log("NEW PROFILE: ", this.profile);
+    } else {
+      console.log(
+        "changed properties doesn't have user, printing profile anyway? ",
+        this.profile
+      );
     }
     return true;
   }
 
-  _getData(path: string) {
+  async _getData(path: string) {
+    console.log("WITHIN HEADER GET DATA");
+
     const request = new APIRequest();
 
-    request
-      .get(path)
-      .then((response: Response) => {
-        if (response.status === 200) {
-          return response.json();
-        }
-        return null;
-      })
-      .then((json: unknown) => {
+    try {
+      const response = await request.get(path);
+      if (response.status === 200) {
+        const json = await response.json();
         console.log("Profile:", json);
         this.profile = json as Profile;
-      });
+        console.log("Profile successfully updated:", this.profile);
+      } else {
+        console.error("Failed to fetch profile data. Status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   _signOut() {
