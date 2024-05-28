@@ -57,7 +57,10 @@ export class GameFeatureElement extends LitElement {
    */
   connectedCallback() {
     super.connectedCallback();
-    this.socket = io("ws://localhost:3000");
+
+    const VITE_SERVER_URL = import.meta.env.VITE_SERVER_URL;
+    console.log("WEBSOCKETS SERVER: ", `${VITE_SERVER_URL}`);
+    this.socket = io(`${VITE_SERVER_URL}`);
 
     this.addEventListener("single-track-submitted", (event: Event) => {
       const customEvent = event as CustomEvent;

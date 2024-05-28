@@ -25,8 +25,13 @@ const httpServer = require("http").createServer(app);
 
 // Initialize Socket.io with the HTTP server
 const { Server } = require("socket.io");
+const { SERVER_URL } = process.env;
+console.log("BACKEND WS: ", `${SERVER_URL}`);
 const io: SocketIOServer = new Server(httpServer, {
-  cors: { origin: "*" },
+  cors: {
+    origin: `${SERVER_URL}`,
+    methods: ["GET", "POST", "PUT"],
+  },
 });
 
 // Track connected users
@@ -85,8 +90,6 @@ io.on("connection", (socket: Socket) => {
 // Serve static files and use middleware
 let dist: string | undefined;
 let frontend: string | undefined;
-
-const { SERVER_URL } = process.env;
 
 try {
   frontend = require.resolve("lit-frontend");

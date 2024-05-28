@@ -60,8 +60,13 @@ import_dotenv.default.config();
 const app = (0, import_express.default)();
 const httpServer = require("http").createServer(app);
 const { Server } = require("socket.io");
+const { SERVER_URL } = process.env;
+console.log("BACKEND WS: ", `${SERVER_URL}`);
 const io = new Server(httpServer, {
-  cors: { origin: "*" }
+  cors: {
+    origin: `${SERVER_URL}`,
+    methods: ["GET", "POST", "PUT"]
+  }
 });
 const users = /* @__PURE__ */ new Map();
 io.on("connection", (socket) => {
@@ -102,7 +107,6 @@ io.on("connection", (socket) => {
 });
 let dist;
 let frontend;
-const { SERVER_URL } = process.env;
 try {
   frontend = require.resolve("lit-frontend");
   dist = path.resolve(frontend, "..", "..");
