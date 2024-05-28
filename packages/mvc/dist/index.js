@@ -21,6 +21,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -41,6 +42,8 @@ var __async = (__this, __arguments, generator) => {
     step((generator = generator.apply(__this, __arguments)).next());
   });
 };
+var src_exports = {};
+module.exports = __toCommonJS(src_exports);
 var import_express = __toESM(require("express"));
 var path = __toESM(require("path"));
 var import_cors = __toESM(require("cors"));
@@ -48,14 +51,57 @@ var import_mongoConnect = require("./mongoConnect");
 var import_auth = require("./auth");
 var import_api = __toESM(require("./routes/api"));
 var import_posts = __toESM(require("./services/posts"));
+var import_profiles = __toESM(require("./services/profiles"));
 var import_dotenv = __toESM(require("dotenv"));
 var import_profile = require("./mongo/profile");
 var import_post = require("./mongo/post");
 var import_mongoose = __toESM(require("mongoose"));
+import_dotenv.default.config();
 const app = (0, import_express.default)();
+const httpServer = require("http").createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(httpServer, {
+  cors: { origin: "*" }
+});
+const users = /* @__PURE__ */ new Map();
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("userDetails", (userDetails) => {
+    users.set(socket.id, userDetails);
+    io.emit("users", Array.from(users.values()));
+  });
+  socket.on("message", (message) => {
+    const userDetails = users.get(socket.id);
+    if (userDetails) {
+      console.log(`${userDetails.name} said: ${message.text}`);
+      io.emit("message", {
+        text: message.text,
+        sender: userDetails.name,
+        profilePic: userDetails.profilePic
+      });
+    } else {
+      console.log(`Unknown user said: ${message.text}`);
+      io.emit("message", {
+        text: message.text,
+        sender: "Unknown user",
+        profilePic: "defaultProfileImage"
+        // Provide a default profile picture
+      });
+    }
+  });
+  socket.on("track-submitted", (track) => {
+    if (track) {
+      io.emit("track-submitted", track);
+    }
+  });
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    users.delete(socket.id);
+    io.emit("users", Array.from(users.values()));
+  });
+});
 let dist;
 let frontend;
-import_dotenv.default.config();
 const { SERVER_URL } = process.env;
 try {
   frontend = require.resolve("lit-frontend");
@@ -86,7 +132,7 @@ app.get("/posts", (req, res) => {
     res.status(404).send("Posts not found");
   });
 });
-app.get("/comments/:postid", (req, res) => __async(exports, null, function* () {
+app.get("/comments/:postid", (req, res) => __async(void 0, null, function* () {
   const postId = req.params.postid;
   console.log("post id where comment was added, ", postId);
   try {
@@ -102,7 +148,7 @@ app.get("/comments/:postid", (req, res) => __async(exports, null, function* () {
     res.status(500).send("Error fetching comments");
   }
 }));
-app.post("/posts", (req, res) => __async(exports, null, function* () {
+app.post("/posts", (req, res) => __async(void 0, null, function* () {
   try {
     const newPostData = req.body;
     const newPost = yield import_post.PostModel.create(newPostData);
@@ -129,7 +175,7 @@ app.put("/posts/:postid", (req, res) => {
     res.status(500).send(err);
   });
 });
-app.post("/profileCreation", (req, res) => __async(exports, null, function* () {
+app.post("/profileCreation", (req, res) => __async(void 0, null, function* () {
   console.log("within backend, /profilecreation");
   try {
     const profileData = req.body;
@@ -149,6 +195,21 @@ app.post("/profileCreation", (req, res) => __async(exports, null, function* () {
     res.status(500).send(err);
   }
 }));
+app.get("/profile/:userid", (req, res) => __async(void 0, null, function* () {
+  try {
+    const { userid } = req.params;
+    console.log(`Fetching profile for userid: ${userid}`);
+    const profile = yield import_profiles.default.get(userid);
+    console.log(`Profile fetched: ${JSON.stringify(profile)}`);
+    res.status(200).json(profile);
+  } catch (err) {
+    console.error(
+      `Error fetching profile for userid: ${req.params.userid}`,
+      err
+    );
+    res.status(404).json({ error: err });
+  }
+}));
 app.get("*", (req, res) => {
   if (/\.[^\/]+$/.test(req.path)) {
     res.status(404).send("Not found");
@@ -161,7 +222,7 @@ app.get("*", (req, res) => {
     });
   }
 });
-app.get("/api/test-db", (req, res) => __async(exports, null, function* () {
+app.get("/api/test-db", (req, res) => __async(void 0, null, function* () {
   try {
     const result = yield import_mongoose.default.connection.db.admin().serverStatus();
     res.send({ dbStatus: "Connected", version: result.version });
@@ -170,6 +231,6 @@ app.get("/api/test-db", (req, res) => __async(exports, null, function* () {
   }
 }));
 const { PORT } = process.env || 3e3;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server listening on ${SERVER_URL}`);
 });

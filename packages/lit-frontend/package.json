@@ -19,6 +19,8 @@
     "@spotify/web-api-ts-sdk": "^1.2.0",
     "buffer": "^6.0.3",
     "lit": "^3.1.2",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "ts-models": "^0.0.13"
   }
 }

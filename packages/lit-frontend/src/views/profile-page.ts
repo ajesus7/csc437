@@ -6,7 +6,7 @@ import { customElement, property } from "lit/decorators.js";
 // import resetCSS from "/styles/reset.css?inline";
 // import pageCSS from "/styles/page.css?inline";
 
-import "../components/user-profile";
+import "../components/user-profile/user-profile";
 
 type ProfileLocation = Location & {
   params: { userid: string; edit: string };

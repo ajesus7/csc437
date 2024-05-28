@@ -1,25 +1,90 @@
 import express, { Request, Response } from "express";
 import * as path from "path";
-import fs from "node:fs/promises";
 import cors from "cors";
 import { connect } from "./mongoConnect";
 import { loginUser, registerUser } from "./auth";
 import apiRouter from "./routes/api";
 import posts from "./services/posts";
-import SpotifyService from "./services/spotifySearch";
+import profileService from "./services/profiles";
 import dotenv from "dotenv";
 import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
-import { IPost } from "../../ts-models";
+import { IPost, TrackObject } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
-
 import mongoose from "mongoose";
+import { Server as SocketIOServer, Socket } from "socket.io";
 
+// Initialize dotenv to load environment variables
+dotenv.config();
+
+// Create an Express application
 const app = express();
 
+// Create an HTTP server to integrate with Socket.io
+const httpServer = require("http").createServer(app);
+
+// Initialize Socket.io with the HTTP server
+const { Server } = require("socket.io");
+const io: SocketIOServer = new Server(httpServer, {
+  cors: { origin: "*" },
+});
+
+// Track connected users
+const users: Map<string, UserDetails> = new Map();
+
+export interface UserDetails {
+  name: string;
+  profilePic: string;
+}
+
+io.on("connection", (socket: Socket) => {
+  console.log("a user connected");
+
+  // Handle receiving user details on connection
+  socket.on("userDetails", (userDetails: UserDetails) => {
+    users.set(socket.id, userDetails);
+    io.emit("users", Array.from(users.values())); // Emit the updated user list
+  });
+
+  // Handle incoming messages
+  socket.on("message", (message: { text: string; sender: string }) => {
+    const userDetails = users.get(socket.id);
+    if (userDetails) {
+      console.log(`${userDetails.name} said: ${message.text}`);
+      io.emit("message", {
+        text: message.text,
+        sender: userDetails.name,
+        profilePic: userDetails.profilePic,
+      });
+    } else {
+      console.log(`Unknown user said: ${message.text}`);
+      io.emit("message", {
+        text: message.text,
+        sender: "Unknown user",
+        profilePic: "defaultProfileImage", // Provide a default profile picture
+      });
+    }
+  });
+
+  // Handle incoming chosen track
+  socket.on("track-submitted", (track: TrackObject) => {
+    // * if the track information exists, send it back to be added to the playlist
+    if (track) {
+      io.emit("track-submitted", track);
+    }
+  });
+
+  // Handle user disconnection
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    users.delete(socket.id);
+    io.emit("users", Array.from(users.values())); // Emit the updated user list
+  });
+});
+
+// Serve static files and use middleware
 let dist: string | undefined;
 let frontend: string | undefined;
-dotenv.config();
 
 const { SERVER_URL } = process.env;
 
@@ -156,6 +221,22 @@ app.post("/profileCreation", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/profile/:userid", async (req: Request, res: Response) => {
+  try {
+    const { userid } = req.params;
+    console.log(`Fetching profile for userid: ${userid}`); // Debug log
+    const profile = await profileService.get(userid);
+    console.log(`Profile fetched: ${JSON.stringify(profile)}`); // Debug log
+    res.status(200).json(profile);
+  } catch (err) {
+    console.error(
+      `Error fetching profile for userid: ${req.params.userid}`,
+      err
+    );
+    res.status(404).json({ error: err });
+  }
+});
+
 // SPA fallback: Serve 'index.html' for non-file requests (e.g., navigation routes)
 app.get("*", (req, res) => {
   // Check if the request is for a file (by looking for a '.' in the last URI segment)
@@ -184,6 +265,6 @@ app.get("/api/test-db", async (req, res) => {
 });
 
 const { PORT } = process.env || 3000;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Server listening on ${SERVER_URL}`);
 });
