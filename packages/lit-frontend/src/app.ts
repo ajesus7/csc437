@@ -13,8 +13,10 @@ export interface Model {
 
 export const context = createContext<Model>("MTVModel");
 
+// TODO : profile shouldn't be set to undefined?
 export const init: Model = {
   user: new APIUser(),
+  profile: undefined,
 };
 
 export interface UserLoggedIn extends MsgType<"UserLoggedIn"> {
@@ -35,7 +37,11 @@ export interface PostCreated extends MsgType<"PostCreated"> {
   userid: string;
 }
 
-export type Message = UserLoggedIn | ProfileSelected | ProfileSaved | PostCreated;
+export type Message =
+  | UserLoggedIn
+  | ProfileSelected
+  | ProfileSaved
+  | PostCreated;
 
 export const createDispatch = () => new Dispatch<Model, Message>();
 
@@ -61,6 +67,7 @@ export class View extends MVU.View<Message> {
   _model: Model | undefined;
 
   getFromModel(path: keyof Model) {
+    console.log("Accessing model for path:", path, "Model:", this._model);
     if (this._model) {
       return this._model[path];
     }

@@ -1,52 +1,42 @@
 import { APIRequest, JSONRequest } from "./rest";
 import * as App from "./app";
-import { Profile } from "./models/profile";
+// import { Profile } from "./models/profile";
 
 const dispatch = App.createDispatch();
 
 export default dispatch.update;
 
-dispatch.addMessage("ProfileSelected", (msg: App.Message) => {
+dispatch.addMessage("ProfileSelected", async (msg: App.Message) => {
   const { userid } = msg as App.ProfileSelected;
 
-  return new APIRequest()
-    .get(`/profiles/${userid}`)
-    .then((response: Response) => {
-      if (response.status === 200) {
-        return response.json();
-      }
-      return undefined;
-    })
-    .then((json: unknown) => {
-      if (json) {
-        console.log("Profile:", json);
-        return json as Profile;
-      }
-    })
-    .then((profile: Profile | undefined) =>
-      profile ? App.updateProps({ profile }) : App.noUpdate
-    );
+  try {
+    const response = await new APIRequest().get(`/profiles/${userid}`);
+    if (response.status === 200) {
+      const profile = await response.json();
+      console.log("Profile:", profile);
+      return App.updateProps({ profile });
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+  }
+
+  return App.noUpdate;
 });
 
-dispatch.addMessage("ProfileSaved", (msg: App.Message) => {
+
+dispatch.addMessage("ProfileSaved", async (msg: App.Message) => {
   const { userid, profile } = msg as App.ProfileSaved;
 
-  return new JSONRequest(profile)
-    .put(`/profiles/${userid}`)
-    .then((response: Response) => {
-      if (response.status === 200) {
-        return response.json();
-      }
-      return undefined;
-    })
-    .then((json: unknown) => {
-      if (json) {
-        console.log("Profile:", json);
-        json as Profile;
-      }
-      return undefined;
-    })
-    .then((profile: Profile | undefined) =>
-      profile ? App.updateProps({ profile }) : App.noUpdate
-    );
+  try {
+    const response = await new JSONRequest(profile).put(`/profiles/${userid}`);
+    if (response.status === 200) {
+      const updatedProfile = await response.json();
+      console.log("Profile:", updatedProfile);
+      return App.updateProps({ profile: updatedProfile });
+    }
+  } catch (error) {
+    console.error("Error saving profile:", error);
+  }
+
+  return App.noUpdate;
 });

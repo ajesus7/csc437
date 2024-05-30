@@ -40,6 +40,7 @@ export class MatchTheVibeHeaderElement extends LitElement {
   }
 
   async updated(changedProperties: Map<string, unknown>) {
+    console.log("PROFILE BEFORE UPDATE: ", )
     console.log("within header updated");
     if (changedProperties.has("user")) {
       console.log("New user", this.user);
