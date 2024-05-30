@@ -119,46 +119,9 @@ export class UserProfileElement extends LitElement {
             <p class="user-description">${bio}</p>
           </section>
         </section>
-      </section>
 
-      <sortable-list
-        listAttributes='["friend&apos;s list", "friends"]'
-        names='[["thea", "indie", "user2.html"], ["Joey", "indie", "2599568"], ["Adam", "rock", "295853939"], ["Bob", "rap", "29588582"], ["Ethan", "white noise", "9995933"]]'
-      ></sortable-list>
-      <sortable-list
-        listAttributes='["playlists list", "playlists"]'
-        names='[["chill vibes", "", "playlist1.html"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
-      ></sortable-list>
-
-      <general-list
-        listAttributes='["games list", "playlists"]'
-        names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
-      ></general-list>
-
-      <section class="favorites-section">
-        <section class="subsection-header-line">
-          <section class="name-and-icon">
-            <h2>current favorites</h2>
-            <svg class="icon">
-              <use href="/icons/user-icons.svg#icon-heart" />
-            </svg>
-          </section>
-          <p class="profile-section-description">what aidan loves right now</p>
-        </section>
-        <section class="favorites-all-lists">
-          <favorites-list
-            listAttributes="artists"
-            artists='[["the backseat lovers", "1.2M Listeners"], ["arctic monkeys", "8M Listeners"], ["matt maltese", "1M Listeners"]]'
-          ></favorites-list>
-          <favorites-list
-            listAttributes="albums"
-            artists='[["silhouette", "the backseat lovers"], ["lost in the night ep", "palace"], ["orange blood", "mt joy"]]'
-          ></favorites-list>
-          <favorites-list
-            listAttributes="songs"
-            artists='[["words i used", "the backseat lovers"], ["disciples", "tame impala"], ["jigsaw falling into place", "radiohead"]]'
-          ></favorites-list>
-          <section></section>
+        <section class="coming-soon-container">
+          <p class="info">More profile functionality is coming soon!</p>
         </section>
       </section>
     `;

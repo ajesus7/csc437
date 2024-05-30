@@ -58,7 +58,21 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */function js({context:r,subscribe:e}){return(t,s)=>{typeof s=="object"?s.addInitializer(function(){new rs(this,{context:r,callback:i=>{this[s.name]=i},subscribe:e})}):t.constructor.addInitializer(i=>{new rs(i,{context:r,callback:a=>{i[s]=a},subscribe:e})})}}let bn=class extends A{constructor(e,t){super(),this.model=t,this.updateFn=e,this.addEventListener("mvu:message",s=>{const i=s.detail;console.log("Got message: ",i),this.receive(i)})}receive(e){if(this.model){const t=this.updateFn(this.model,e),s=t;typeof(s==null?void 0:s.then)=="function"?s.then(i=>{const a=i(this.model);this.model=a}):this.model=t}}},wn=class extends A{dispatchMessage(e,t=this){const s=new CustomEvent("mvu:message",{bubbles:!0,composed:!0,detail:e});t.dispatchEvent(s)}};class _n{constructor(){this._handlers=new Map,this.update=this._update.bind(this)}addMessage(e,t){console.log("Message added for dispatch:",e),this._handlers.set(e,t)}_update(e,t){const{type:s}=t,i=this._handlers.get(s);return i?i(t,e):e}}function vn(r){return e=>Object.assign({},e,r)}function xn(r){return r}const En="http://localhost:3000",$n=`${En}`,kn="/api",or="JWT_AUTH_TOKEN",ne=class ne{constructor(){this.authenticated=!1,this.username="music_listener",this.signOut=()=>{}}static deauthenticate(e){const t=new ne;return console.log("Deauthenticating",e,ne._theUser),e===ne._theUser&&(localStorage.removeItem(or),ne._theUser=t),t}};ne._theUser=new ne;let H=ne;class Ze extends H{constructor(e,t){super();const i=e.split(".")[1].replace(/-/g,"+").replace(/_/g,"/"),a=decodeURIComponent(window.atob(i).split("").map(function(h){return"%"+("00"+h.charCodeAt(0).toString(16)).slice(-2)}).join("")),c=JSON.parse(a);console.log("Token payload",c),this.token=e,this.authenticated=!0,this.username=c.username,this.signOut=t}static authenticate(e,t){return H._theUser=new Ze(e,t),localStorage.setItem(or,e),H._theUser}static authenticateFromLocalStorage(e){const t=localStorage.getItem(or);return t?Ze.authenticate(t,e):H._theUser}}class wr{constructor(e){this._base=kn,this.json=e}base(e=""){return this._base=e,this}get(e){return fetch(this._url(e),{headers:this._headers(),body:this.json&&JSON.stringify(this.json)})}post(e){return fetch(this._url(e),{method:"POST",headers:this._headers(),body:this.json&&JSON.stringify(this.json)})}put(e){return fetch(this._url(e),{method:"PUT",headers:this._headers(),body:this.json&&JSON.stringify(this.json)})}_headers(){const e=this.json!==void 0,t=H._theUser.authenticated,s={"Content-Type":"application/json"};if(t){const a={Authorization:`Bearer ${H._theUser.token}`};return e?{...s,...a}:a}else return e?{...s}:void 0}_url(e){return`${$n}${this._base}${e}`}}class is extends wr{constructor(e){super(Object.fromEntries(e))}}class qs extends wr{constructor(){super(void 0)}}var An=Object.defineProperty,zs=(r,e,t,s)=>{for(var i=void 0,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=c(e,t,i)||i);return i&&An(e,t,i),i};const Hs="MTVModel",ns={user:new H,profile:void 0},Sn=()=>new _n,Vs=vn,Ws=xn;class Ks extends bn{constructor(e){super(e,ns),this.model=ns}}zs([Ms({context:Hs}),k()],Ks.prototype,"model");class Le extends wn{getFromModel(e){if(console.log("Accessing model for path:",e,"Model:",this._model),this._model)return this._model[e]}}zs([js({context:Hs,subscribe:!0}),v({attribute:!1})],Le.prototype,"_model");const _r=Sn(),Tn=_r.update;_r.addMessage("ProfileSelected",async r=>{const{userid:e}=r;try{const t=await new qs().get(`/profiles/${e}`);if(t.status===200){const s=await t.json();return console.log("Profile:",s),Vs({profile:s})}}catch(t){console.error("Error fetching profile:",t)}return Ws});_r.addMessage("ProfileSaved",async r=>{const{userid:e,profile:t}=r;try{const s=await new wr(t).put(`/profiles/${e}`);if(s.status===200){const i=await s.json();return console.log("Profile:",i),Vs({profile:i})}}catch(s){console.error("Error saving profile:",s)}return Ws});const Pn=P`
   .user-profile-header {
-    padding: 25px 15px 15px 100px;
+    margin: auto;
+    margin-top: 2.5em;
+  }
+
+  .coming-soon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 1.5em;
+  }
+
+  .info {
+    color: var(--subtext-color);
+    font-size: 0.9em;
   }
 
   .user-profile-user-content {
@@ -87,6 +101,9 @@
   .edit-profile-toggle {
     color: var(--accent-color);
     text-decoration: underline;
+  }
+  .edit-profile-toggle:hover {
+    cursor: pointer;
   }
 
   .user-description {
@@ -833,46 +850,9 @@
             <p class="user-description">${s}</p>
           </section>
         </section>
-      </section>
 
-      <sortable-list
-        listAttributes='["friend&apos;s list", "friends"]'
-        names='[["thea", "indie", "user2.html"], ["Joey", "indie", "2599568"], ["Adam", "rock", "295853939"], ["Bob", "rap", "29588582"], ["Ethan", "white noise", "9995933"]]'
-      ></sortable-list>
-      <sortable-list
-        listAttributes='["playlists list", "playlists"]'
-        names='[["chill vibes", "", "playlist1.html"], ["vibes", "", "21"], ["sad", "", "2424"], ["happy", "", "2424"]]'
-      ></sortable-list>
-
-      <general-list
-        listAttributes='["games list", "playlists"]'
-        names='[["game1.", "12/2/23", "game1.html"], ["game2", "1/2/24", "21"], ["game3", "2/2/24", "2424"]]'
-      ></general-list>
-
-      <section class="favorites-section">
-        <section class="subsection-header-line">
-          <section class="name-and-icon">
-            <h2>current favorites</h2>
-            <svg class="icon">
-              <use href="/icons/user-icons.svg#icon-heart" />
-            </svg>
-          </section>
-          <p class="profile-section-description">what aidan loves right now</p>
-        </section>
-        <section class="favorites-all-lists">
-          <favorites-list
-            listAttributes="artists"
-            artists='[["the backseat lovers", "1.2M Listeners"], ["arctic monkeys", "8M Listeners"], ["matt maltese", "1M Listeners"]]'
-          ></favorites-list>
-          <favorites-list
-            listAttributes="albums"
-            artists='[["silhouette", "the backseat lovers"], ["lost in the night ep", "palace"], ["orange blood", "mt joy"]]'
-          ></favorites-list>
-          <favorites-list
-            listAttributes="songs"
-            artists='[["words i used", "the backseat lovers"], ["disciples", "tame impala"], ["jigsaw falling into place", "radiohead"]]'
-          ></favorites-list>
-          <section></section>
+        <section class="coming-soon-container">
+          <p class="info">More profile functionality is coming soon!</p>
         </section>
       </section>
     `}};ge.styles=Pn;lt([v()],ge.prototype,"path",2);lt([v()],ge.prototype,"editMode",2);lt([v()],ge.prototype,"profileEditText",2);lt([v({attribute:!1})],ge.prototype,"using",2);ge=lt([S("user-profile")],ge);var jo=Object.defineProperty,qo=Object.getOwnPropertyDescriptor,ai=(r,e,t,s)=>{for(var i=s>1?void 0:s?qo(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&jo(e,t,i),i};let lr=class extends A{constructor(){super(...arguments),this.router=new W(this),this.routes=[]}connectedCallback(){super.connectedCallback(),this.router.setRoutes(this.routes),console.log("Router:",this.routes)}render(){return w`<slot></slot>`}};ai([v({attribute:!1})],lr.prototype,"routes",2);lr=ai([S("vaadin-router")],lr);const zo=P`
