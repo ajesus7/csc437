@@ -528,11 +528,13 @@
                 >Your Profile</a
               >
             </li>
-            <li>Settings</li>
             <li>
               <color-mode-switch></color-mode-switch>
             </li>
-            <li class="border-bottom-only signOut" @click=${this._signOutUser}>
+            <li
+              class="border-bottom-only signOut link"
+              @click=${this._signOutUser}
+            >
               Sign out
             </li>
           </ul>
