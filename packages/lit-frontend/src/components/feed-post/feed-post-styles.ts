@@ -5,9 +5,12 @@ export default css`
   .feed-single-post-expanded {
     background-color: var(--background-color);
     padding: 10px;
-    width: 38em;
-    margin-bottom: 15px;
+    width: 34em;
+    margin-bottom: 10px; 
     color: var(--text-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px; 
+    padding: 17px 0 10px 25px;
   }
 
   .profile-name-time {
@@ -28,8 +31,8 @@ export default css`
   .message {
     margin: 0;
     padding: 0;
-    margin-bottom: 0.6em;
-    font-size: 1.2em;
+    margin-bottom: 0.3em;
+    font-size: 1em;
   }
 
   .individual-post-profile-image img {

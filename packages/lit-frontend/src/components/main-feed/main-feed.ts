@@ -1,6 +1,8 @@
 import { html, LitElement } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, state, property } from "lit/decorators.js";
 import styles from "./main-feed-styles";
+import { Profile } from "../../models/profile";
+
 // components
 import "../feed-post-list/feed-post-list";
 import "../create-post/create-post";
@@ -13,6 +15,12 @@ export class MainFeedElement extends LitElement {
 
   @state()
   posts: Post[] = []; // Initialize posts as an empty array to ensure type correctness
+
+  @property({ type: Object })
+  using?: Profile; // Define the property for .using
+
+  @property({ type: String })
+  userId?: string; // Define the property for .userId
 
   async connectedCallback() {
     super.connectedCallback();
@@ -49,11 +57,25 @@ export class MainFeedElement extends LitElement {
   }
 
   render() {
+    console.log("using", this.using);
     return html`
       <section class="feed-container">
-        <h2 class="feed-header">Song Recommendation Feed</h2>
-        <create-post></create-post>
-        <feed-post-list .posts=${this.posts}></feed-post-list>
+        <section class="nav-section">
+          <h3 class="nav-header">Navigation</h3>
+          <ul class="nav">
+            <li class="navlink">
+              <a href="app/chatRoom/${this.using?.userid}">Chat Room</a>
+            </li>
+            <li class="navlink">
+              <a href="app/profile/${this.using?.userid}">Your Profile</a>
+            </li>
+          </ul>
+        </section>
+        <section class="main-posts-section">
+          <h2 class="feed-header">Song Recommendation Feed</h2>
+          <create-post></create-post>
+          <feed-post-list .posts=${this.posts}></feed-post-list>
+        </section>
       </section>
     `;
   }
