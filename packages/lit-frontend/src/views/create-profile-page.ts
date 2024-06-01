@@ -1,38 +1,36 @@
-import { customElement, property } from "lit/decorators.js";
-import { html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { PropertyValueMap, html } from "lit";
 import * as App from "../app";
+import { APIUser } from "../rest";
 
 import "../components/main-feed/main-feed.ts";
 import "../components/feed-post-list/feed-post-list.ts";
 import "../components/edit-profile-form/edit-profile-form.ts";
 import styles from "./create-profile-page-styles.ts";
 
-type ProfileLocation = Location & {
-  params: { userid: string; edit: string };
-  searchParams: Map<string, string>;
-};
-
 @customElement("create-profile-page")
 export class CreateProfilePage extends App.View {
   static styles = styles;
-  @property({ attribute: false })
-  location?: ProfileLocation;
+  // @property()
 
-  @property({ reflect: true })
-  get userid() {
-    console.log();
-    return this.location?.params.userid;
-  }
-
-  @property({ reflect: true })
-  get edit() {
-    return this.location?.params.edit;
-  }
-
-  // TODO : Some kind of check to make the new profile? or where do I put the create profile logic
-  @property()
   get profile() {
     return this.getFromModel("profile");
+  }
+
+  protected firstUpdated(
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): void {
+    console.log("******* CREATE PROFILE FIRST UPDATED ********");
+    if (APIUser._theUser.authenticated) {
+      console.log("___ dispatching ProfileSelected____");
+
+      this.dispatchMessage({
+        type: "ProfileSelected",
+        userid: APIUser._theUser.username,
+      });
+    } else {
+      console.log("***** this.userid is undefined *****");
+    }
   }
 
   // ! attributeChangedCallback, connectedCallback, _handleProfileUpdate, all are needed to make profile data populate
@@ -57,22 +55,22 @@ export class CreateProfilePage extends App.View {
 
   _handleProfileUpdate(ev: CustomEvent) {
     console.log("Profile updated", ev.detail.profile);
-    // Ensure you have the userid available
-    const userid = this.userid;
 
-    // Check if userid is available
-    if (userid) {
+    // if user is authenticated and therefore can access the username/userid
+    if (APIUser._theUser.authenticated) {
       this.dispatchMessage({
         type: "ProfileSaved",
-        userid: userid, // Use the userid here
+        userid: APIUser._theUser.username,
         profile: ev.detail.profile,
       });
     } else {
-      console.error("UserID is undefined.");
+      console.error("Profile is undefined within model.");
     }
   }
 
   render() {
+    console.log("this.profile within createprofile page", this.profile);
+
     return html`
       <section class="page-content">
         <div class="descriptionAndForm">

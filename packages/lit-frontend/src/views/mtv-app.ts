@@ -33,7 +33,7 @@ let routes = [
     component: "home-page",
   },
   {
-    path: "/createProfile/:userid",
+    path: "/createProfile",
     component: "create-profile-page",
   },
   {
