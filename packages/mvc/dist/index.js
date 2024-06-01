@@ -1,10 +1,27 @@
 "use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -148,14 +165,26 @@ app.get("/comments/:postid", (req, res) => __async(void 0, null, function* () {
     res.status(500).send("Error fetching comments");
   }
 }));
+function isValidObjectId(id) {
+  return import_mongoose.default.Types.ObjectId.isValid(id);
+}
+function transformClientToServer(post) {
+  if (!isValidObjectId(post.userid)) {
+    throw new Error("Invalid ObjectId format");
+  }
+  return __spreadProps(__spreadValues({}, post), {
+    userid: new import_mongoose.Types.ObjectId(post.userid)
+  });
+}
 app.post("/posts", (req, res) => __async(void 0, null, function* () {
   try {
     const newPostData = req.body;
-    const newPost = yield import_post.PostModel.create(newPostData);
+    const serverPostData = transformClientToServer(newPostData);
+    const newPost = yield import_post.PostModel.create(serverPostData);
     res.status(201).send(newPost);
   } catch (err) {
     console.error("Error creating new post: ", err);
-    res.status(500).send(err);
+    res.status(500).send({ error: err.message });
   }
 }));
 app.put("/posts/:postid", (req, res) => {

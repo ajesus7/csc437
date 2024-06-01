@@ -8,11 +8,7 @@ export interface Profile {
   profileImage?: string;
   profileDescription?: string;
   bio: string;
-  //   favoriteSongs: Song[];
-  //   favoriteArtists: Artist[];
-  //   favoriteAlbums: Album[];
-  //   playlists: Playlist[];
-  //   games: Game[];
+  _id: string;
 }
 
 //have artist and album strings or artist/album objects?

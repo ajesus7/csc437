@@ -16,16 +16,17 @@ export class MainFeedElement extends LitElement {
   @state()
   posts: Post[] = []; // Initialize posts as an empty array to ensure type correctness
 
-  @property({ type: Object })
-  using?: Profile; // Define the property for .using
+  //  * the profile object retrieved from the Model
+  @state()
+  using?: Profile;
 
   @property({ type: String })
-  userId?: string; // Define the property for .userId
+  userId?: string;
 
   async connectedCallback() {
     super.connectedCallback();
     this.addEventListener("post-created", () => this._handlePostCreated());
-    await this._fetchData();
+    await this._fetchPostDataFromDatabase();
   }
 
   // * when called, re fetches the posts
@@ -33,10 +34,10 @@ export class MainFeedElement extends LitElement {
   // * in the case where there are many users, you might want to update all posts in case multiple are created at the same time
   async _handlePostCreated() {
     console.log("Post Created, Now Refreshing Component");
-    await this._fetchData();
+    await this._fetchPostDataFromDatabase();
   }
 
-  async _fetchData() {
+  async _fetchPostDataFromDatabase() {
     console.log("fetching posts!");
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -73,7 +74,7 @@ export class MainFeedElement extends LitElement {
         </section>
         <section class="main-posts-section">
           <h2 class="feed-header">Song Recommendation Feed</h2>
-          <create-post></create-post>
+          <create-post .using=${this.using}></create-post>
           <feed-post-list .posts=${this.posts}></feed-post-list>
         </section>
       </section>

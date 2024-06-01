@@ -108,7 +108,9 @@ export class FeedPostElement extends LitElement {
       <section class="${this.expandedClass}">
         <section class="profile-name-time">
           <section class="individual-post-profile-image">
-            <img src="/images/aidan_pfp.png" alt="placeholder image" />
+            <img src="/images/${this.post?.profileImage}.png" alt="${
+      this.post?.profileDescription
+    }" />
             ${
               this.expanded
                 ? html`<div class="line-decoration"></div>`

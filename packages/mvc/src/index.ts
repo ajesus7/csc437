@@ -9,9 +9,9 @@ import profileService from "./services/profiles";
 import dotenv from "dotenv";
 import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
-import { IPost, TrackObject } from "../../ts-models";
+import { IPostServer, IPostClient, TrackObject } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { Server as SocketIOServer, Socket } from "socket.io";
 
 // Initialize dotenv to load environment variables
@@ -118,7 +118,7 @@ app.use(express.static(distPath));
 app.get("/posts", (req, res) => {
   posts
     .getAll() // Assuming .getAll() is the method to fetch all posts; adjust according to your actual method
-    .then((allPosts: IPost[] | undefined) => {
+    .then((allPosts: IPostClient[] | undefined) => {
       // Use an array type to represent multiple posts
       if (!allPosts || allPosts.length === 0) throw "No posts found";
       else res.json(allPosts); // Send the array of posts
@@ -154,18 +154,44 @@ app.get("/comments/:postid", async (req, res) => {
   }
 });
 
+function isValidObjectId(id: string): boolean {
+  return mongoose.Types.ObjectId.isValid(id);
+}
+
+// * converts client post type to server post type
+function transformClientToServer(post: IPostClient): IPostServer {
+  if (!isValidObjectId(post.userid)) {
+    throw new Error("Invalid ObjectId format");
+  }
+
+  return {
+    ...post,
+    userid: new Types.ObjectId(post.userid),
+  };
+}
+
+// function transformServerToClient(post: IPostServer): IPostClient {
+//   return {
+//     ...post,
+//     _id: post._id.toString(),
+//   };
+// }
+
 // * Creates New Post
 app.post("/posts", async (req: Request, res: Response) => {
   try {
-    //grab the data from req.body
-    const newPostData: IPost = req.body;
+    // Grab the data from req.body
+    const newPostData: IPostClient = req.body;
 
-    //create a document based on the mongoose model imported
-    const newPost = await PostModel.create(newPostData);
+    // Transform client data to server data
+    const serverPostData = transformClientToServer(newPostData);
+
+    // Create a document based on the mongoose model imported
+    const newPost = await PostModel.create(serverPostData);
     res.status(201).send(newPost); // Send the created post back
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error creating new post: ", err);
-    res.status(500).send(err);
+    res.status(500).send({ error: err.message });
   }
 });
 

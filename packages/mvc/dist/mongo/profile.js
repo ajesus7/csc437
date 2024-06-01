@@ -40,7 +40,7 @@ const profileSchema = new import_mongoose.Schema(
       type: String,
       required: false,
       trim: true,
-      default: ""
+      default: "A cartoon wearing headphones."
     },
     spotify: { type: Boolean, required: false, default: false }
   },

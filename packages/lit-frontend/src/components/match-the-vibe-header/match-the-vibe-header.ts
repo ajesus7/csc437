@@ -6,6 +6,8 @@ import { consume } from "@lit/context";
 import { APIUser, APIRequest } from "../../rest";
 import styles from "./match-the-vibe-header-styles";
 
+// ! TODO: Do I need to refactor the method of getting the profile here? This is not an App.View, so I can't use getFromModel("profile");
+// ! however, I can pass this.profile as .using...
 @customElement("match-the-vibe-header")
 export class MatchTheVibeHeaderElement extends LitElement {
   static styles = [styles];
@@ -19,6 +21,7 @@ export class MatchTheVibeHeaderElement extends LitElement {
   @consume({ context: authContext, subscribe: true })
   @property({ attribute: false })
   user = new APIUser();
+
 
   render() {
     return html`
@@ -40,7 +43,6 @@ export class MatchTheVibeHeaderElement extends LitElement {
   }
 
   async updated(changedProperties: Map<string, unknown>) {
-    console.log("PROFILE BEFORE UPDATE: ", )
     console.log("within header updated");
     if (changedProperties.has("user")) {
       console.log("New user", this.user);
