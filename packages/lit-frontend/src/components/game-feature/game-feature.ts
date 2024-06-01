@@ -155,6 +155,8 @@ export class GameFeatureElement extends LitElement {
     }
   }
 
+  // TODO : Leaving game should do something to game state with player, not just navigate user to home
+
   /**
    *
    * Users and messages are rendered in their respective containers.
@@ -166,7 +168,11 @@ export class GameFeatureElement extends LitElement {
         <section class="left-column">
           <section class="game-info">
             <h3 class="game-sub-header">Round #</h3>
-            <p class="leave-game">Leave Game</p>
+            <a href="/app/home" class="leave-game">Leave Game</a>
+          </section>
+          <section class="last-recommended-song">
+            <h4 class="sub-sub-header">Last Song Recommended By:</h4>
+            <p class="subtext">Enter user name here.</p>
           </section>
           <section class="user-section">
             <h3 class="game-sub-header">Player List</h3>

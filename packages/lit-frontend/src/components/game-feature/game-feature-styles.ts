@@ -15,12 +15,13 @@ export default css`
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: nowrap; /* Ensure columns do not wrap */
   }
 
   .left-column,
   .middle-column,
   .right-column {
-    flex: 1;
+    flex: 1; /* Ensure all columns have equal flex value */
     background: white;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -52,11 +53,19 @@ export default css`
     color: #333;
     font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.2em;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   .leave-game {
-    color: #007bff;
+    color: var(--subtext-color);
+    font-size: 0.9em;
+  }
+
+  .leave-game:hover {
     text-decoration: underline;
     cursor: pointer;
   }
@@ -157,5 +166,24 @@ export default css`
 
   .message-input button:hover {
     background: #0056b3;
+  }
+
+  .subtext {
+    color: var(--subtext-color);
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sub-sub-header {
+    font-size: 1em;
+    color: var(--text-color);
+    margin-bottom: 0.2em;
+  }
+
+  h3,
+  h4 {
+    margin: 0;
+    padding: 0;
   }
 `;

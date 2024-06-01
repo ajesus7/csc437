@@ -2110,12 +2110,13 @@
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: nowrap; /* Ensure columns do not wrap */
   }
 
   .left-column,
   .middle-column,
   .right-column {
-    flex: 1;
+    flex: 1; /* Ensure all columns have equal flex value */
     background: white;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -2147,11 +2148,19 @@
     color: #333;
     font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.2em;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   .leave-game {
-    color: #007bff;
+    color: var(--subtext-color);
+    font-size: 0.9em;
+  }
+
+  .leave-game:hover {
     text-decoration: underline;
     cursor: pointer;
   }
@@ -2253,12 +2262,35 @@
   .message-input button:hover {
     background: #0056b3;
   }
+
+  .subtext {
+    color: var(--subtext-color);
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sub-sub-header {
+    font-size: 1em;
+    color: var(--text-color);
+    margin-bottom: 0.2em;
+  }
+
+  h3,
+  h4 {
+    margin: 0;
+    padding: 0;
+  }
 `;var Dc=Object.defineProperty,Lc=Object.getOwnPropertyDescriptor,Ne=(r,e,t,s)=>{for(var i=s>1?void 0:s?Lc(e,t):e,a=r.length-1,c;a>=0;a--)(c=r[a])&&(i=(s?c(e,t,i):c(i))||i);return s&&i&&Dc(e,t,i),i};let ce=class extends A{constructor(){super(...arguments),this.userDetails=null,this.messages=[],this.users=[],this.isInputFocused=!1,this.playlist=[]}connectedCallback(){var r;super.connectedCallback(),this.socket=$t("ws://localhost:3000"),this.addEventListener("single-track-submitted",e=>{const t=e;this._handleSongSubmittedByUser(t.detail.track)}),this.userDetails&&((r=this.socket)==null||r.emit("userDetails",this.userDetails)),this.socket.on("message",e=>{this.messages=[...this.messages,e]}),this.socket.on("track-submitted",e=>{this.playlist=[...this.playlist,e]}),this.socket.on("users",e=>{this.users=e}),this.socket.on("connect",()=>{console.log("Connected to WebSocket server")}),this.socket.on("disconnect",()=>{console.log("Disconnected from WebSocket server")})}disconnectedCallback(){super.disconnectedCallback(),this.socket&&this.socket.disconnect(),this.removeEventListener("single-track-submitted",this._handleSongSubmittedByUser)}_handleSongSubmittedByUser(r){var e;r&&((e=this.socket)==null||e.emit("track-submitted",r))}handleInputFocus(){this.isInputFocused=!0}handleInputBlur(){this.isInputFocused=!1}handleKeydown(r){var t;const e=(t=this.shadowRoot)==null?void 0:t.querySelector("input");r.key==="Enter"&&this.isInputFocused&&(e!=null&&e.value.trim())&&this.sendMessage()}sendMessage(){var e,t;const r=(e=this.shadowRoot)==null?void 0:e.querySelector("input");if(r&&r.value.trim()&&this.userDetails){const s={text:r.value.trim(),sender:this.userDetails.name,profilePic:this.userDetails.profilePic};(t=this.socket)==null||t.emit("message",s),r.value=""}}render(){return w`
       <section class="game-columns">
         <section class="left-column">
           <section class="game-info">
             <h3 class="game-sub-header">Round #</h3>
-            <p class="leave-game">Leave Game</p>
+            <a href="/app/home" class="leave-game">Leave Game</a>
+          </section>
+          <section class="last-recommended-song">
+            <h4 class="sub-sub-header">Last Song Recommended By:</h4>
+            <p class="subtext">Enter user name here.</p>
           </section>
           <section class="user-section">
             <h3 class="game-sub-header">Player List</h3>
