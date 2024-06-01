@@ -15,6 +15,11 @@ export default css`
 
   .profile-name-time {
     display: flex;
+    flex-direction: column;
+  }
+
+  .post-content {
+    display: flex;
     flex-direction: row;
   }
 

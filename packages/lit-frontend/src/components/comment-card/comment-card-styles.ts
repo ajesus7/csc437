@@ -7,6 +7,7 @@ export default css`
     background-color: var(--background-color);
     color: var(--text-color);
     padding: 6px;
+    width: 23em;
     border-radius: var(--default-border-radius);
     margin-bottom: 10px;
     box-shadow: var(--box-shadow);
@@ -27,27 +28,35 @@ export default css`
     margin-bottom: 0.5em;
   }
 
+  .details {
+    padding: 5px;
+  }
+
   .comment-name {
     font-weight: 600;
+    margin: 0;
+    padding: 0;
     margin-right: 0.5em;
-    font-size: 0.9em;
+    font-size: 0.8em;
   }
 
   .comment-time {
     font-size: var(--small-size);
     color: var(--subtext-color);
+    margin: 0;
+    padding: 0;
   }
 
   .comment-message {
-    margin-top: 0.5em;
-    font-size: 0.9em;
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0;
   }
 
   .track-info {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 10px;
     background-color: var(--track-background-color);
     padding: 5px;
     border-radius: 5px;

@@ -107,49 +107,46 @@ export class FeedPostElement extends LitElement {
     return html`
       <section class="${this.expandedClass}">
         <section class="profile-name-time">
-          <section class="individual-post-profile-image">
-            <img src="/images/${this.post?.profileImage}.png" alt="${
-      this.post?.profileDescription
-    }" />
-            ${
-              this.expanded
+          <section class="post-content">
+            <section class="individual-post-profile-image">
+              <img
+                src="/images/${this.post?.profileImage}.png"
+                alt="${this.post?.profileDescription}"
+              />
+              ${this.expanded
                 ? html`<div class="line-decoration"></div>`
-                : html`<div></div>`
-            }
-            </button>
-          </section>
-          <section class="non-image-content">
-            <section class="name-and-time">
-              <h3 class="feed-name">${this.post?.userName}</h3>
-              <p class="time-posted">${readablePostTime}</p>
+                : html`<div></div>`}
             </section>
-            <p class="message">${this.post?.postMessage}</p>
-            <button class="expand-unexpand" @click=${this._expand}>
-              ${
-                this.expanded
+            <section class="non-image-content">
+              <section class="name-and-time">
+                <h3 class="feed-name">${this.post?.userName}</h3>
+                <p class="time-posted">${readablePostTime}</p>
+              </section>
+              <p class="message">${this.post?.postMessage}</p>
+              <button class="expand-unexpand" @click=${this._expand}>
+                ${this.expanded
                   ? "Close song recommendation form."
-                  : "Recommend a song."
-              }
-            </button>
+                  : "Recommend a song."}
+              </button>
+            </section>
           </section>
-        <section class="comment-list">
-          ${this.getPostComments?.map(
-            (comment) => html`
-              <comment-card .comment=${comment}></comment-card>
-            `
-          )}
-        </section>
+
+          <section class="comment-list">
+            ${this.getPostComments?.map(
+              (comment) => html`
+                <comment-card .comment=${comment}></comment-card>
+              `
+            )}
+          </section>
         </section>
 
-        ${
-          this.expanded
-            ? html` <song-picker
-                .post=${this.post}
-                .multiPicker=${true}
-                .hasMargin=${true}
-              ></song-picker>`
-            : ""
-        }
+        ${this.expanded
+          ? html` <song-picker
+              .post=${this.post}
+              .multiPicker=${true}
+              .hasMargin=${true}
+            ></song-picker>`
+          : ""}
       </section>
     `;
   }
