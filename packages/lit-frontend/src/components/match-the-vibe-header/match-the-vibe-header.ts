@@ -45,6 +45,7 @@ export class MatchTheVibeHeaderElement extends LitElement {
     if (changedProperties.has("user")) {
       console.log("New user", this.user);
       const { username } = this.user;
+      
       console.log("NEW USER USERNAME: ", username);
       await this._getData(`/profiles/${username}`);
       console.log("NEW PROFILE: ", this.profile);

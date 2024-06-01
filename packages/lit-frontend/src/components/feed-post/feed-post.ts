@@ -130,6 +130,13 @@ export class FeedPostElement extends LitElement {
               }
             </button>
           </section>
+        <section class="comment-list">
+          ${this.getPostComments?.map(
+            (comment) => html`
+              <comment-card .comment=${comment}></comment-card>
+            `
+          )}
+        </section>
         </section>
 
         ${

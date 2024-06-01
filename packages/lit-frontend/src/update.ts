@@ -10,7 +10,9 @@ dispatch.addMessage("ProfileSelected", async (msg: App.Message) => {
   const { userid } = msg as App.ProfileSelected;
 
   try {
-    const response = await new APIRequest().get(`/profiles/${userid}`);
+    const request = new APIRequest();
+    const response = await request.get(`/profiles/${userid}`);
+    console.log("Request headers:", request._headers()); // Log headers
     if (response.status === 200) {
       const profile = await response.json();
       console.log("Profile:", profile);
@@ -23,12 +25,13 @@ dispatch.addMessage("ProfileSelected", async (msg: App.Message) => {
   return App.noUpdate;
 });
 
-
 dispatch.addMessage("ProfileSaved", async (msg: App.Message) => {
   const { userid, profile } = msg as App.ProfileSaved;
 
   try {
-    const response = await new JSONRequest(profile).put(`/profiles/${userid}`);
+    const request = new JSONRequest(profile);
+    const response = await request.put(`/profiles/${userid}`);
+    console.log("Request headers:", request._headers()); // Log headers
     if (response.status === 200) {
       const updatedProfile = await response.json();
       console.log("Profile:", updatedProfile);

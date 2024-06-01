@@ -1,6 +1,7 @@
 import { customElement, property } from "lit/decorators.js";
-import { html } from "lit";
+import { PropertyValueMap, html } from "lit";
 import * as App from "../app";
+import { APIUser } from "../rest";
 
 import "../components/main-feed/main-feed";
 import "../components/feed-post-list/feed-post-list";
@@ -15,12 +16,12 @@ export class HomePageElement extends App.View {
   @property({ attribute: false })
   location?: ProfileLocation;
 
+  // ! userid not in the url
   @property({ reflect: true })
   get userid() {
     return this.location?.params.userid;
   }
 
-  // TODO WHAT DOES THIS DO?
   @property({ reflect: true })
   get edit() {
     return this.location?.params.edit;
@@ -29,6 +30,22 @@ export class HomePageElement extends App.View {
   // @property()
   get profile() {
     return this.getFromModel("profile");
+  }
+
+  protected firstUpdated(
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): void {
+    console.log("******* HOME PAGE FIRST UPDATED ********");
+    if (APIUser._theUser.authenticated) {
+      console.log("___ dispatching ProfileSelected____");
+
+      this.dispatchMessage({
+        type: "ProfileSelected",
+        userid: APIUser._theUser.username,
+      });
+    } else {
+      console.log("***** this.userid is undefined *****");
+    }
   }
 
   render() {

@@ -89,7 +89,7 @@ export class AuthRequiredElement extends LitElement {
         console.log("WTR within login ", this.whereToRedirect);
         Router.go(
           this.whereToRedirect === "app/home"
-            ? "app/home"
+            ? `app/home/${username}`
             : `/createProfile/${username}`
         );
 

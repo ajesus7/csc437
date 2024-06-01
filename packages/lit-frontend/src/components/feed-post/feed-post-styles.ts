@@ -6,10 +6,10 @@ export default css`
     background-color: var(--background-color);
     padding: 10px;
     width: 34em;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
     color: var(--text-color);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     padding: 17px 0 10px 25px;
   }
 

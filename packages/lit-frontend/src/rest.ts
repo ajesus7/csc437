@@ -47,6 +47,7 @@ export class AuthenticatedUser extends APIUser {
     );
     const jsonPayload = JSON.parse(payload);
 
+    
     console.log("Token payload", jsonPayload);
     this.token = token;
     this.authenticated = true;

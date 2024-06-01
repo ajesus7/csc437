@@ -6,15 +6,18 @@ export default css`
     flex-direction: row;
     background-color: var(--background-color);
     color: var(--text-color);
-    padding: 15px;
+    padding: 6px;
     border-radius: var(--default-border-radius);
     margin-bottom: 10px;
     box-shadow: var(--box-shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   .comment-left,
   .comment-right {
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .details-header {
@@ -27,6 +30,7 @@ export default css`
   .comment-name {
     font-weight: 600;
     margin-right: 0.5em;
+    font-size: 0.9em;
   }
 
   .comment-time {
@@ -35,8 +39,8 @@ export default css`
   }
 
   .comment-message {
-    margin-top: 1em;
-    font-size: 1em;
+    margin-top: 0.5em;
+    font-size: 0.9em;
   }
 
   .track-info {
@@ -44,6 +48,14 @@ export default css`
     flex-direction: row;
     align-items: center;
     margin-top: 10px;
+    background-color: var(--track-background-color);
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .track-info:hover {
+    background-color: var(--track-hover-background-color);
   }
 
   .track-name-and-artist {
@@ -58,15 +70,20 @@ export default css`
     margin: 0;
   }
 
+  .track-name {
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
   .track-artist {
-    font-size: 0.875em;
+    font-size: 0.8em;
     color: var(--subtext-color);
   }
 
   .track-image {
     width: 40px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: 5px;
     object-fit: cover;
   }
 `;

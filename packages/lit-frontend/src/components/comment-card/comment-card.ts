@@ -111,6 +111,7 @@ export class CommentCardElement extends LitElement {
 
     // Now that we've checked that comment is defined, we can safely destructure it
     const { userName, commentTime, commentMessage } = this.comment;
+    // console.log("commentTime.toLocale", commentTime.toLocaleDateString);
     // Render the track information
     return html`
       <section class="single-comment">
