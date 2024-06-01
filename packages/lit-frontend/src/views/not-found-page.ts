@@ -1,44 +1,36 @@
-import { customElement, state } from "lit/decorators.js";
-import { html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { PropertyValueMap, html } from "lit";
 import * as App from "../app";
 import styles from "./not-found-page-styles.ts";
 import { Router } from "@vaadin/router";
-import { Profile } from "../models/profile.ts";
+import { APIUser } from "../rest";
+import { Profile } from "../models/profile";
 
 @customElement("not-found-page")
 export class NotFoundPage extends App.View {
   static styles = [styles];
 
-  @state()
-  private profile: Profile | null = null;
-
-  @state()
-  private loading = true;
+  get profile(): Profile | null {
+    return this.getFromModel("profile") as Profile | null;
+  }
 
   navigateTo(path: string) {
     Router.go(path);
   }
 
-  async firstUpdated() {
-    console.log("******** NOT FOUND PAGE FIRST UPDATE ********");
-    await this.fetchProfile();
-  }
+  protected firstUpdated(
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): void {
+    console.log("******* HOME PAGE FIRST UPDATED ********");
+    if (APIUser._theUser.authenticated) {
+      console.log("___ dispatching ProfileSelected____");
 
-  async fetchProfile() {
-    try {
-      const profile = await this.getFromModel("profile");
-      console.log("Profile fetched:", profile);
-      if (profile) {
-        this.profile = profile as Profile;
-      } else {
-        this.profile = null;
-      }
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
-      this.profile = null;
-    } finally {
-      this.loading = false; // Set loading to false after the profile is fetched
-      console.log("Profile fetched and set:", this.profile);
+      this.dispatchMessage({
+        type: "ProfileSelected",
+        userid: APIUser._theUser.username,
+      });
+    } else {
+      console.log("***** this.userid is undefined *****");
     }
   }
 
@@ -46,36 +38,30 @@ export class NotFoundPage extends App.View {
     console.log("within not found page this.profile ", this.profile);
     return html`
       <section class="container">
-        ${this.loading
-          ? html`<p>Loading profile data...</p>`
-          : html`
-              <h1>Page Not Found</h1>
-              <p>
-                The page you're looking for doesn't exist. Here are some helpful
-                links:
-              </p>
-              <div class="links">
-                <button @click="${() => this.navigateTo("/app/home")}">
-                  Home
+        <h1>Page Not Found</h1>
+        <p>
+          The page you're looking for doesn't exist. Here are some helpful
+          links:
+        </p>
+        <div class="links">
+          <button @click="${() => this.navigateTo("/app/home")}">Home</button>
+          ${this.profile?.userid
+            ? html`
+                <button
+                  @click="${() =>
+                    this.navigateTo(`app/chatRoom/${this.profile?.userid}`)}"
+                >
+                  Chat Room
                 </button>
-                ${this.profile
-                  ? html`
-                      <button
-                        @click="${() =>
-                          this.navigateTo(`/chatRoom/${this.profile?.userid}`)}"
-                      >
-                        Chat Room
-                      </button>
-                      <button
-                        @click="${() =>
-                          this.navigateTo(`/profile/${this.profile?.userid}`)}"
-                      >
-                        Profile
-                      </button>
-                    `
-                  : html`<p>Profile not found.</p>`}
-              </div>
-            `}
+                <button
+                  @click="${() =>
+                    this.navigateTo(`app/profile/${this.profile?.userid}`)}"
+                >
+                  Profile
+                </button>
+              `
+            : html`<p>Profile not found.</p>`}
+        </div>
       </section>
     `;
   }
