@@ -1816,7 +1816,7 @@
 
         ${this.expanded?w` <song-picker
                 .post=${this.post}
-                .multiPicker=${!1}
+                .multiPicker=${!0}
                 .hasMargin=${!0}
               ></song-picker>`:""}
       </section>
