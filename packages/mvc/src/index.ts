@@ -75,6 +75,11 @@ io.on("connection", (socket: Socket) => {
     }
   });
 
+  // set the game loading state
+  socket.on("is-loading", (isLoading: boolean) => {
+    io.emit("is-loading", isLoading);
+  });
+
   // Handle submitted vibe
   socket.on("vibe-submitted", (chosenVibe: string) => {
     // * if the vibe is not empty, send it back to be added to the game state

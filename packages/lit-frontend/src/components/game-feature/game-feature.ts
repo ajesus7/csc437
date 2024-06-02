@@ -46,12 +46,19 @@ export class GameFeatureElement extends LitElement {
   private playlist: TrackObject[] = [];
 
   @property()
-  private chosenVibe: string = "vibey";
+  private chosenVibe: string = "";
 
   private socket?: Socket;
 
   @state()
   private isPlaying: boolean = false;
+
+  // Add state for loading bar
+  @state()
+  private isLoading: boolean = false;
+
+  @state()
+  private loadingProgress: number = 0;
 
   private audio: HTMLAudioElement | null = null;
 
@@ -93,6 +100,12 @@ export class GameFeatureElement extends LitElement {
     // * add emitted track to playlist
     this.socket.on("track-submitted", (track: TrackObject) => {
       this.playlist = [...this.playlist, track];
+    });
+
+    // * add emitted track to playlist
+    this.socket.on("is-loading", (isLoading: boolean) => {
+      this.isLoading = isLoading;
+      this.startGameLoading();
     });
 
     // * send selected vibe
@@ -295,29 +308,97 @@ export class GameFeatureElement extends LitElement {
           </section>
         </section>
       </section>
-      ${!this.chosenVibe ? this.renderVibeModal() : ""}
+      ${this.chosenVibe && this.loadingProgress == 100
+        ? ""
+        : this.renderVibeModal()}
     `;
   }
 
   private renderVibeModal() {
     return html`
       <div class="modal-overlay">
-        <div class="modal">
-          <h2>Choose a Vibe</h2>
-          <p>Select a vibe for the game.</p>
-          <form @submit="${this.handleVibeSubmit}">
-            <input
-              type="text"
-              name="vibe"
-              placeholder="Enter your vibe"
-              required
+        <section class="modal">
+          <div class="modal-content">
+            <img
+              src="images/mtv_logo.png"
+              alt="Match the Vibe Logo."
+              class="logo"
             />
-            <button type="submit">Submit</button>
-          </form>
-          <button @click="${this.closeModal}">Close</button>
-        </div>
+            <h3 class="game-sub-header">Connected Players.</h3>
+            <div class="user-list-within-modal">
+              ${this.users.map(
+                (user) => html`
+                  <div class="user">
+                    <img
+                      src="/images/${user.profilePic}.png"
+                      alt="${user.name}"
+                    />
+                    <span class="username">${user.name}</span>
+                  </div>
+                `
+              )}
+            </div>
+            <p>Select a vibe for the game.</p>
+            ${!this.chosenVibe
+              ? html`<form @submit="${this.handleVibeSubmit}">
+                  <input
+                    type="text"
+                    name="vibe"
+                    placeholder="Enter your vibe"
+                    required
+                  />
+                  <button type="submit">Submit</button>
+                </form>`
+              : html`<p class="subtext">
+                  the vibe has been set as: ${this.chosenVibe}
+                </p>`}
+            <button
+              class="start-game"
+              @click="${this.submitIsLoadingToServer}"
+              ?disabled="${!this.chosenVibe}"
+            >
+              Start Game
+            </button>
+            ${this.isLoading
+              ? html`
+                  <p class="subtext">the game is starting soon:</p>
+                  <div class="loading-bar-container">
+                    <div
+                      class="loading-bar"
+                      style="width: ${this.loadingProgress}%"
+                    ></div>
+                  </div>
+                `
+              : ""}
+            <a href="/app/home" class="return-home">Return to Home</a>
+          </div>
+        </section>
       </div>
     `;
+  }
+
+  private submitIsLoadingToServer() {
+    this.isLoading = true;
+    this.socket?.emit("is-loading", this.isLoading);
+  }
+
+  // Add the startGame method
+  private startGameLoading() {
+    this.isLoading = true;
+    this.loadingProgress = 0;
+    const intervalDuration = 1000; // Interval duration in milliseconds (1 second)
+    const stepIncrement = 20; // Each step increments by 10%
+
+    const interval = setInterval(() => {
+      console.log("within interval:");
+      this.loadingProgress += stepIncrement;
+      if (this.loadingProgress >= 100) {
+        clearInterval(interval);
+        this.loadingProgress = 100;
+        this.isLoading = false;
+        // Implement game start logic here
+      }
+    }, intervalDuration);
   }
 
   private handleVibeSubmit(event: Event) {

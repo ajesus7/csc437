@@ -111,6 +111,9 @@ io.on("connection", (socket) => {
       io.emit("track-submitted", track);
     }
   });
+  socket.on("is-loading", (isLoading) => {
+    io.emit("is-loading", isLoading);
+  });
   socket.on("vibe-submitted", (chosenVibe) => {
     if (chosenVibe) {
       io.emit("vibe-submitted", chosenVibe);

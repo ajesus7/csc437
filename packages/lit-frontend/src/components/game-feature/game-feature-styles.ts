@@ -49,7 +49,7 @@ export default css`
     margin-bottom: 1em;
   }
 
-  .game-sub-header {
+  h3.game-sub-header {
     color: #333;
     font-size: 1.2em;
     font-weight: bold;
@@ -84,6 +84,7 @@ export default css`
     background: #f1f1f1;
     border-radius: 8px;
     transition: background 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .user:hover {
@@ -112,6 +113,7 @@ export default css`
     padding: 1em;
     border-radius: 8px;
     background: #f1f1f1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .playlist,
@@ -121,6 +123,7 @@ export default css`
     padding: 0.5em;
     height: 150px;
     overflow-y: auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .chat-message {
@@ -152,6 +155,7 @@ export default css`
     padding: 0.5em;
     border: 1px solid #ddd;
     border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .message-input button {
@@ -197,15 +201,69 @@ export default css`
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000; /* Ensure it appears above other content */
   }
 
+  .modal-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 75%;
+    height: 75%;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 2em;
+  }
+
+  .modal button.start-game {
+    margin-top: 1em;
+    padding: 0.75em 1.5em;
+    border: none;
+    background: #4caf50;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 1em;
+  }
+
+  .modal button.start-game:hover {
+    background: #45a049;
+  }
+
+  .loading-bar-container {
+    width: 100%;
+    background: #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1em;
+  }
+
+  .loading-bar {
+    width: 0%;
+    height: 10px;
+    background: #4caf50;
+    transition: width 10s linear;
+  }
+
+  .logo {
+    width: 40%;
+    height: auto;
+    margin-bottom: 3em;
+  }
+
   .modal {
     background: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2em;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -218,20 +276,37 @@ export default css`
 
   .modal form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    width: 35%;
     gap: 1em;
     margin-top: 1em;
   }
 
   .modal input {
-    padding: 0.5em;
+    padding: 0.2em;
+    width: 30em;
     border: 1px solid #ddd;
     border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .user-list-within-modal {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    margin-bottom: 2em;
+  }
+
+  .user {
+    background: #f1f1f1;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .modal button {
     margin-top: 1em;
-    padding: 0.5em 1em;
+    padding: 0.75em 1.25em;
     border: none;
     background: #007bff;
     color: white;
@@ -242,6 +317,21 @@ export default css`
 
   .modal button:hover {
     background: #0056b3;
+  }
+
+  .return-home {
+    font-size: 0.9em;
+    display: block;
+    margin-top: 2.5em;
+    font-size: 1em;
+    color: var(--subtext-color);
+    text-decoration: none;
+    padding: 0.5em 1em;
+  }
+
+  .return-home:hover {
+    cursor: pointer;
+    text-decoration: underline;
   }
 
   .song-player-component {
