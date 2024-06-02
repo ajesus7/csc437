@@ -181,9 +181,118 @@ export default css`
     margin-bottom: 0.2em;
   }
 
+  .last-recommended-song {
+    margin-bottom: 1em;
+  }
+
   h3,
   h4 {
     margin: 0;
     padding: 0;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it appears above other content */
+  }
+
+  .modal {
+    background: white;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .modal h2 {
+    margin-top: 0;
+  }
+
+  .modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1em;
+  }
+
+  .modal input {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .modal button {
+    margin-top: 1em;
+    padding: 0.5em 1em;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .modal button:hover {
+    background: #0056b3;
+  }
+
+  .song-player-component {
+    background: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 2em;
+  }
+
+  .song-player-component .song-name {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-bottom: 0.15em;
+    margin: 0;
+    padding: 0;
+  }
+
+  .song-player-component .artist-name {
+    font-size: 1.15em;
+    color: #666;
+    margin: 0;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 0.25em;
+  }
+
+  .song-player-component .album-cover {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    margin: 0.5em 0;
+  }
+
+  .song-player-component .recommended-by {
+    font-size: 1em;
+    color: #333;
+  }
+
+  .song-player-component button {
+    padding: 0.5em 1em;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .song-player-component button:hover {
+    background: #0056b3;
   }
 `;

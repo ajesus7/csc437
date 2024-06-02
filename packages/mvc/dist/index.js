@@ -111,6 +111,18 @@ io.on("connection", (socket) => {
       io.emit("track-submitted", track);
     }
   });
+  socket.on("vibe-submitted", (chosenVibe) => {
+    if (chosenVibe) {
+      io.emit("vibe-submitted", chosenVibe);
+    }
+  });
+  socket.on("current-song", (currentSong) => {
+    console.log("a song has been submitted: ", currentSong);
+    if (currentSong) {
+      console.log("emitting song back", currentSong);
+      io.emit("current-song", currentSong);
+    }
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected");
     users.delete(socket.id);

@@ -13,6 +13,7 @@ import { IPostServer, IPostClient, TrackObject } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
 import mongoose, { Types } from "mongoose";
 import { Server as SocketIOServer, Socket } from "socket.io";
+import { log } from "console";
 
 // Initialize dotenv to load environment variables
 dotenv.config();
@@ -71,6 +72,24 @@ io.on("connection", (socket: Socket) => {
     // * if the track information exists, send it back to be added to the playlist
     if (track) {
       io.emit("track-submitted", track);
+    }
+  });
+
+  // Handle submitted vibe
+  socket.on("vibe-submitted", (chosenVibe: string) => {
+    // * if the vibe is not empty, send it back to be added to the game state
+    if (chosenVibe) {
+      io.emit("vibe-submitted", chosenVibe);
+    }
+  });
+
+  // Handle submitted vibe
+  socket.on("current-song", (currentSong: any) => {
+    console.log("a song has been submitted: ", currentSong);
+    // * if the song is not empty, send it back to be added to the game state
+    if (currentSong) {
+      console.log("emitting song back", currentSong);
+      io.emit("current-song", currentSong);
     }
   });
 

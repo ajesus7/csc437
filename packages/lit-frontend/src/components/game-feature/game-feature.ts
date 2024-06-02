@@ -1,5 +1,5 @@
 import { html, LitElement } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, state, property } from "lit/decorators.js";
 import { io, Socket } from "socket.io-client";
 import styles from "./game-feature-styles.ts";
 
@@ -45,7 +45,18 @@ export class GameFeatureElement extends LitElement {
   @state()
   private playlist: TrackObject[] = [];
 
+  @property()
+  private chosenVibe: string = "vibey";
+
   private socket?: Socket;
+
+  @state()
+  private currentSong: {
+    name: string;
+    artist: string;
+    albumCover: string;
+    recommendedBy: string;
+  } | null = null;
 
   /**
    * On first render, define the socket, then:
@@ -76,6 +87,16 @@ export class GameFeatureElement extends LitElement {
     // * add emitted track to playlist
     this.socket.on("track-submitted", (track: TrackObject) => {
       this.playlist = [...this.playlist, track];
+    });
+
+    // * send selected vibe
+    this.socket.on("vibe-submitted", (chosenVibe: string) => {
+      this.chosenVibe = chosenVibe;
+    });
+
+    // * send current song
+    this.socket.on("current-song", (currentSong: any) => {
+      this.currentSong = currentSong;
     });
 
     // * add user to list of users on (connect)?
@@ -109,7 +130,17 @@ export class GameFeatureElement extends LitElement {
 
   _handleSongSubmittedByUser(track: TrackObject) {
     if (track) {
+      console.log("submitting track from the front end");
       this.socket?.emit("track-submitted", track);
+      const currentSong = {
+        name: track.name,
+        artist: track.artists[0].name,
+        albumCover: track.album.images[0].url,
+        recommendedBy: this.userDetails?.name || "Unknown",
+      };
+      this.currentSong = currentSong;
+      console.log("emitting song from the frontend, ", currentSong);
+      this.socket?.emit("current-song", currentSong);
     }
   }
 
@@ -192,18 +223,37 @@ export class GameFeatureElement extends LitElement {
           </section>
         </section>
         <section class="middle-column">
+          <p class="subtext">The vibe: ${this.chosenVibe}</p>
           <div class="song-picker-holder">
             <h3 class="game-sub-header">Pick a Song.</h3>
             <song-picker .multiPicker=${false}></song-picker>
           </div>
+          ${this.currentSong
+            ? html`
+                <div class="song-player-component">
+                  <h3 class="song-name">${this.currentSong?.name}</h3>
+                  <p class="artist-name">${this.currentSong?.artist}</p>
+                  <img
+                    src="${this.currentSong?.albumCover}"
+                    alt="Album cover"
+                    class="album-cover"
+                  />
+                  <p class="recommended-by">
+                    Recommended by: ${this.currentSong?.recommendedBy}
+                  </p>
+                  <button @click="${this.playSong}">Play</button>
+                </div>
+              `
+            : ``}
         </section>
         <section class="right-column">
           <section class="playlist-section">
             <h3 class="game-sub-header">Game Playlist</h3>
             <ul class="playlist">
-               ${this.playlist.map((track) =>
-                 track ? html`<track-card .track=${track}></track-card>` : ""
-               )}
+              ${this.playlist.map((track) =>
+                track ? html`<track-card .track=${track}></track-card>` : ""
+              )}
+            </ul>
           </section>
           <section class="chat-section">
             <h3 class="game-sub-header">Chat Room</h3>
@@ -235,6 +285,49 @@ export class GameFeatureElement extends LitElement {
           </section>
         </section>
       </section>
+      ${!this.chosenVibe ? this.renderVibeModal() : ""}
     `;
+  }
+
+  private renderVibeModal() {
+    return html`
+      <div class="modal-overlay">
+        <div class="modal">
+          <h2>Choose a Vibe</h2>
+          <p>Select a vibe for the game.</p>
+          <form @submit="${this.handleVibeSubmit}">
+            <input
+              type="text"
+              name="vibe"
+              placeholder="Enter your vibe"
+              required
+            />
+            <button type="submit">Submit</button>
+          </form>
+          <button @click="${this.closeModal}">Close</button>
+        </div>
+      </div>
+    `;
+  }
+
+  private handleVibeSubmit(event: Event) {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const input = form.elements.namedItem("vibe") as HTMLInputElement;
+    this.chosenVibe = input.value;
+    this.socket?.emit("vibe-submitted", this.chosenVibe); // Emit the vibe-submitted event
+    this.closeModal();
+    this.requestUpdate();
+  }
+
+  private closeModal() {
+    if (this.chosenVibe) {
+      this.requestUpdate();
+    }
+  }
+
+  private playSong() {
+    // Logic to play the song goes here.
+    console.log(`Playing song: ${this.currentSong?.name}`);
   }
 }
