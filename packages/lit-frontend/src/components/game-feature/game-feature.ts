@@ -51,11 +51,17 @@ export class GameFeatureElement extends LitElement {
   private socket?: Socket;
 
   @state()
+  private isPlaying: boolean = false;
+
+  private audio: HTMLAudioElement | null = null;
+
+  @state()
   private currentSong: {
     name: string;
     artist: string;
     albumCover: string;
     recommendedBy: string;
+    previewURL: string;
   } | null = null;
 
   /**
@@ -136,6 +142,7 @@ export class GameFeatureElement extends LitElement {
         name: track.name,
         artist: track.artists[0].name,
         albumCover: track.album.images[0].url,
+        previewURL: track.preview_url,
         recommendedBy: this.userDetails?.name || "Unknown",
       };
       this.currentSong = currentSong;
@@ -241,7 +248,10 @@ export class GameFeatureElement extends LitElement {
                   <p class="recommended-by">
                     Recommended by: ${this.currentSong?.recommendedBy}
                   </p>
-                  <button @click="${this.playSong}">Play</button>
+                  <button @click="${this.playSong}">
+                    ${this.isPlaying ? "Stop Song" : "Play"}
+                  </button>
+                  <audio></audio>
                 </div>
               `
             : ``}
@@ -326,8 +336,25 @@ export class GameFeatureElement extends LitElement {
     }
   }
 
+  // * triggered when user clicks Play button within the current song component
   private playSong() {
-    // Logic to play the song goes here.
-    console.log(`Playing song: ${this.currentSong?.name}`);
+    // * if the spotify request returns a song
+    if (this.currentSong?.previewURL) {
+      // * if audio not yet set
+      if (!this.audio) {
+        this.audio = this.shadowRoot?.querySelector("audio") || null;
+      }
+      // * if audio exists, then pause if already playing, or play if not playing yet
+      if (this.audio) {
+        if (this.isPlaying) {
+          this.audio.pause();
+        } else {
+          this.audio.src = this.currentSong.previewURL;
+          this.audio.play();
+        }
+        // * flip the isPlaying state which is needed to know whether to pause or play
+        this.isPlaying = !this.isPlaying;
+      }
+    }
   }
 }
