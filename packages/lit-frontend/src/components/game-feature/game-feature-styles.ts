@@ -126,23 +126,27 @@ export default css`
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
-  .chat-message {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5em;
-  }
+.chat-message {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+  padding: 0.75em;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-  .chat-profile-pic {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 0.5em;
-  }
 
-  .chat-sender {
-    font-weight: bold;
-    margin-right: 0.5em;
-  }
+.chat-profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 0.5em;
+}
+
+.chat-sender {
+  font-weight: bold;
+  margin-right: 0.5em;
+}
 
   .message-input {
     display: flex;
@@ -418,4 +422,16 @@ export default css`
     font-size: 1em;
     cursor: pointer;
   }
+
+  .senderIsGame {
+  background: #e0e0e0; /* Light grey for system messages */
+}
+
+.vibeMatched {
+  background: #d4edda; /* Soft green */
+}
+
+.vibeNotMatched {
+  background: #f8d7da; /* Soft red */
+}
 `;

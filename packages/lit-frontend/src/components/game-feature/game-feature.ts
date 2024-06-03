@@ -11,6 +11,7 @@ import "../voting-form/voting-form.ts";
 import { TrackObject } from "../../../../ts-models/src/index.ts";
 
 interface ChatMessage {
+  class: unknown;
   text: string;
   sender: string;
   profilePic: string;
@@ -191,13 +192,28 @@ export class GameFeatureElement extends LitElement {
 
     // * handle voting decision made
     this.socket.on("voting-decision-made", (decision: string) => {
+      const track = this.submittedTrackList.pop();
       if (decision.toUpperCase() === "YES") {
-        const track = this.submittedTrackList.pop();
+        const message = {
+          text: `${track?.name} matches the vibe!`,
+          sender: "GAME",
+          class: "chat-message vibeMatched",
+        };
+
+        this.socket?.emit("message", message);
         if (track) {
           this.playlist = [...this.playlist, track];
         } else {
           console.error("No track to add to the playlist");
         }
+      } else {
+        const message = {
+          text: `${track?.name} does not match the vibe!`,
+          sender: "GAME",
+          class: "chat-message vibeNotMatched",
+        };
+
+        this.socket?.emit("message", message);
       }
       this.lastUserToRecommendASong = this.idOfUserChoosingSong;
       this.startNextRoundOfGame();
@@ -331,8 +347,10 @@ export class GameFeatureElement extends LitElement {
         text: input.value.trim(),
         sender: this.userDetails.name,
         profilePic: this.userDetails.profilePic,
+        class: "chat-message",
       };
       this.socket?.emit("message", message);
+      this.messages = [...this.messages, message]; // add message to client side immediately
       input.value = "";
     }
   }
@@ -461,7 +479,7 @@ export class GameFeatureElement extends LitElement {
             <ul class="chat-log">
               ${this.messages.map(
                 (message) => html`
-                  <li class="chat-message">
+                  <li class="${message.class}">
                     <img
                       src="/images/${message.profilePic}.png"
                       alt="${message.sender}"
@@ -611,6 +629,14 @@ export class GameFeatureElement extends LitElement {
         "notification",
         `${randomUser.name} is picking a song!`
       );
+
+      const message = {
+        text: `${randomUser.name} is picking a song!`,
+        sender: "GAME",
+        class: "chat-message senderIsGame",
+      };
+
+      this.socket?.emit("message", message);
       this.roundsForThisGame = this.users.length * 2;
     }
   }
@@ -655,6 +681,13 @@ export class GameFeatureElement extends LitElement {
         "notification",
         `Round ${this.currentRound} is starting now.`
       );
+      const message = {
+        text: `Round ${this.currentRound} is starting now.`,
+        sender: "GAME",
+        class: "chat-message senderIsGame",
+      };
+
+      this.socket?.emit("message", message);
 
       // Set the next user to choose a song
       this.idOfUserChoosingSong = nextUser.name;
@@ -662,6 +695,13 @@ export class GameFeatureElement extends LitElement {
     } else {
       console.log("The game is over!");
       this.socket?.emit("notification", `The game has ended!`);
+      const message = {
+        text: `The game has ended!`,
+        sender: "GAME",
+        class: "chat-message senderIsGame",
+      };
+
+      this.socket?.emit("message", message);
       this.numberNo = 0;
       this.numberYes = 0;
 

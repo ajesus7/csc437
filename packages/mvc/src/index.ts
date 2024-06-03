@@ -48,24 +48,37 @@ io.on("connection", (socket: Socket) => {
   });
 
   // Handle incoming messages
-  socket.on("message", (message: { text: string; sender: string }) => {
-    const userDetails = users.get(socket.id);
-    if (userDetails) {
-      console.log(`${userDetails.name} said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: userDetails.name,
-        profilePic: userDetails.profilePic,
-      });
-    } else {
-      console.log(`Unknown user said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: "Unknown user",
-        profilePic: "defaultProfileImage", // Provide a default profile picture
-      });
+  socket.on(
+    "message",
+    (message: { text: string; sender: string; class: string }) => {
+      const userDetails = users.get(socket.id);
+
+      if (message.sender === "GAME") {
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "MTV",
+          profilePic: "headphones_icon_for_game_messages",
+          class: message.class,
+        });
+      } else if (userDetails) {
+        console.log(`${userDetails.name} said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: userDetails.name,
+          profilePic: userDetails.profilePic,
+          class: message.class,
+        });
+      } else {
+        console.log(`Unknown user said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "Unknown user",
+          profilePic: "defaultProfileImage", // Provide a default profile picture
+          class: message.class,
+        });
+      }
     }
-  });
+  );
 
   // Handle incoming chosen track
   socket.on("track-submitted", (track: TrackObject) => {
@@ -117,13 +130,6 @@ io.on("connection", (socket: Socket) => {
 
   socket.on("game-ended", () => {
     io.emit("game-ended");
-  });
-
-  socket.on("notification", (notification: string) => {
-    // * if the notification exists (this check may not be needed)
-    if (notification) {
-      io.emit("notification", notification);
-    }
   });
 
   // Handle submitted vibe

@@ -87,25 +87,37 @@ io.on("connection", (socket) => {
     users.set(socket.id, userDetails);
     io.emit("users", Array.from(users.values()));
   });
-  socket.on("message", (message) => {
-    const userDetails = users.get(socket.id);
-    if (userDetails) {
-      console.log(`${userDetails.name} said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: userDetails.name,
-        profilePic: userDetails.profilePic
-      });
-    } else {
-      console.log(`Unknown user said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: "Unknown user",
-        profilePic: "defaultProfileImage"
-        // Provide a default profile picture
-      });
+  socket.on(
+    "message",
+    (message) => {
+      const userDetails = users.get(socket.id);
+      if (message.sender === "GAME") {
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "MTV",
+          profilePic: "headphones_icon_for_game_messages",
+          class: message.class
+        });
+      } else if (userDetails) {
+        console.log(`${userDetails.name} said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: userDetails.name,
+          profilePic: userDetails.profilePic,
+          class: message.class
+        });
+      } else {
+        console.log(`Unknown user said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "Unknown user",
+          profilePic: "defaultProfileImage",
+          // Provide a default profile picture
+          class: message.class
+        });
+      }
     }
-  });
+  );
   socket.on("track-submitted", (track) => {
     if (track) {
       io.emit("track-submitted", track);
@@ -139,11 +151,6 @@ io.on("connection", (socket) => {
   });
   socket.on("game-ended", () => {
     io.emit("game-ended");
-  });
-  socket.on("notification", (notification) => {
-    if (notification) {
-      io.emit("notification", notification);
-    }
   });
   socket.on("current-song", (currentSong) => {
     console.log("a song has been submitted: ", currentSong);
