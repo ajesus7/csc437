@@ -117,6 +117,9 @@ io.on("connection", (socket) => {
   socket.on("single-vote-made", (vote) => {
     io.emit("single-vote-made", vote);
   });
+  socket.on("user-chosen-to-pick", (userName) => {
+    io.emit("user-chosen-to-pick", userName);
+  });
   socket.on("is-loading", (isLoading) => {
     io.emit("is-loading", isLoading);
   });

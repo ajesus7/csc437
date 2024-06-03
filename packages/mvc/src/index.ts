@@ -85,6 +85,11 @@ io.on("connection", (socket: Socket) => {
     io.emit("single-vote-made", vote);
   });
 
+  // send back the user chosen to pick a song
+  socket.on("user-chosen-to-pick", (userName: string) => {
+    io.emit("user-chosen-to-pick", userName);
+  });
+
   // set the game loading state
   socket.on("is-loading", (isLoading: boolean) => {
     io.emit("is-loading", isLoading);

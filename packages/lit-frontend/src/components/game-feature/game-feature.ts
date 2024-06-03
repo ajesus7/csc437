@@ -50,7 +50,7 @@ export class GameFeatureElement extends LitElement {
   private submittedTrackList: TrackObject[] = [];
 
   @property()
-  private chosenVibe: string = "";
+  private chosenVibe: string = "fricken hype";
 
   private socket?: Socket;
 
@@ -71,6 +71,9 @@ export class GameFeatureElement extends LitElement {
 
   @state()
   private numberNo: number = 0;
+
+  @state()
+  private userWhoIsChoosingSong: boolean = false;
 
   @state()
   private currentSong: {
@@ -159,7 +162,18 @@ export class GameFeatureElement extends LitElement {
       this.currentSong = currentSong;
     });
 
-    // * add user to list of users on (connect)?
+    this.socket.on("user-chosen-to-pick", (userName: string) => {
+      console.log(
+        "user-chosen-to-pick within frontend websocket receiver: ",
+        userName
+      );
+      console.log("userName", this.userDetails?.name);
+      if (userName === this.userDetails?.name) {
+        this.userWhoIsChoosingSong = true;
+      }
+    });
+
+    // * add user to list of users on connect
     this.socket.on(
       "users",
       (users: Array<{ name: string; profilePic: string }>) => {
@@ -220,6 +234,8 @@ export class GameFeatureElement extends LitElement {
       this.currentSong = currentSong;
       console.log("emitting song from the frontend, ", currentSong);
       this.socket?.emit("current-song", currentSong);
+      // * user has chosen, so they will no longer see the song menu
+      this.userWhoIsChoosingSong = false;
     }
   }
 
@@ -273,6 +289,7 @@ export class GameFeatureElement extends LitElement {
    * The sendMessage function is called when the user clicks the Send button
    */
   render() {
+    // TODO : remove this at some point
     return html`
       <section class="game-columns">
         <section class="left-column">
@@ -303,10 +320,12 @@ export class GameFeatureElement extends LitElement {
         </section>
         <section class="middle-column">
           <p class="subtext">The vibe: ${this.chosenVibe}</p>
-          <div class="song-picker-holder">
-            <h3 class="game-sub-header">Pick a Song.</h3>
-            <song-picker .multiPicker=${false}></song-picker>
-          </div>
+          ${this.userWhoIsChoosingSong
+            ? html`<div class="song-picker-holder">
+                <h3 class="game-sub-header">Pick a Song.</h3>
+                <song-picker .multiPicker=${false}></song-picker>
+              </div>`
+            : ``}
           ${this.currentSong
             ? html`
                 <div class="song-player-component">
@@ -372,7 +391,7 @@ export class GameFeatureElement extends LitElement {
           </section>
         </section>
       </section>
-      ${!this.chosenVibe && this.loadingProgress !== 100
+      ${this.chosenVibe && this.loadingProgress == 100
         ? ""
         : this.renderVibeModal()}
     `;
@@ -450,7 +469,7 @@ export class GameFeatureElement extends LitElement {
   private startGameLoading() {
     this.isLoading = true;
     this.loadingProgress = 0;
-    const intervalDuration = 1000; // Interval duration in milliseconds (1 second)
+    const intervalDuration = 10; // ! was 1000
     const stepIncrement = 20; // Each step increments by 10%
 
     const interval = setInterval(() => {
@@ -460,9 +479,18 @@ export class GameFeatureElement extends LitElement {
         clearInterval(interval);
         this.loadingProgress = 100;
         this.isLoading = false;
-        // Implement game start logic here
+        this.startGameLogic();
       }
     }, intervalDuration);
+  }
+
+  private startGameLogic() {
+    console.log("startGameLogic Ran!");
+    if (this.users) {
+      const randomUser = this.users[0];
+      console.log("randomUser", randomUser);
+      this.socket?.emit("user-chosen-to-pick", randomUser.name);
+    }
   }
 
   private handleVibeSubmit(event: Event) {

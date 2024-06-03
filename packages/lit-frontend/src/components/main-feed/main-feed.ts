@@ -65,7 +65,7 @@ export class MainFeedElement extends LitElement {
           <h3 class="nav-header">Navigation</h3>
           <ul class="nav">
             <li class="navlink">
-              <a href="app/chatRoom/${this.using?.userid}}">Chat Room</a>
+              <a href="app/chatRoom/${this.using?.userid}">Chat Room</a>
             </li>
             <li class="navlink">
               <a href="app/profile/${this.using?.userid}">Your Profile</a>
