@@ -728,6 +728,7 @@ export class GameFeatureElement extends LitElement {
       }
       // * if audio exists, then pause if already playing, or play if not playing yet
       if (this.audio) {
+        this.audio.volume = 0.1; //adjust volume level
         if (this.isPlaying) {
           this.audio.pause();
         } else {
