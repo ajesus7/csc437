@@ -75,6 +75,16 @@ io.on("connection", (socket: Socket) => {
     }
   });
 
+  // Handle voting decision made
+  socket.on("voting-decision-made", (decision: string) => {
+    io.emit("voting-decision-made", decision);
+  });
+
+  // Handle voting decision made
+  socket.on("single-vote-made", (vote: string) => {
+    io.emit("single-vote-made", vote);
+  });
+
   // set the game loading state
   socket.on("is-loading", (isLoading: boolean) => {
     io.emit("is-loading", isLoading);

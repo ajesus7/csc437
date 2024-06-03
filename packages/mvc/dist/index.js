@@ -111,6 +111,12 @@ io.on("connection", (socket) => {
       io.emit("track-submitted", track);
     }
   });
+  socket.on("voting-decision-made", (decision) => {
+    io.emit("voting-decision-made", decision);
+  });
+  socket.on("single-vote-made", (vote) => {
+    io.emit("single-vote-made", vote);
+  });
   socket.on("is-loading", (isLoading) => {
     io.emit("is-loading", isLoading);
   });

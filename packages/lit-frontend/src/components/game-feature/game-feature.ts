@@ -6,6 +6,7 @@ import styles from "./game-feature-styles.ts";
 // * components
 import "../song-picker/song-picker.ts";
 import "../track-card/track-card.ts";
+import "../voting-form/voting-form.ts";
 
 import { TrackObject } from "../../../../ts-models/src/index.ts";
 
@@ -45,6 +46,9 @@ export class GameFeatureElement extends LitElement {
   @state()
   private playlist: TrackObject[] = [];
 
+  @state()
+  private submittedTrackList: TrackObject[] = [];
+
   @property()
   private chosenVibe: string = "";
 
@@ -61,6 +65,12 @@ export class GameFeatureElement extends LitElement {
   private loadingProgress: number = 0;
 
   private audio: HTMLAudioElement | null = null;
+
+  @state()
+  private numberYes: number = 0;
+
+  @state()
+  private numberNo: number = 0;
 
   @state()
   private currentSong: {
@@ -88,6 +98,16 @@ export class GameFeatureElement extends LitElement {
       this._handleSongSubmittedByUser(customEvent.detail.track);
     });
 
+    this.addEventListener("voting-decision-made", (event: Event) => {
+      const customEvent = event as CustomEvent;
+      this._handleMajorityReached(customEvent.detail.decision);
+    });
+
+    this.addEventListener("single-vote-made", (event: Event) => {
+      const customEvent = event as CustomEvent;
+      this._handleSingleVoteMade(customEvent.detail.vote);
+    });
+
     // * Emit user details when connected
     if (this.userDetails) {
       this.socket?.emit("userDetails", this.userDetails);
@@ -99,10 +119,10 @@ export class GameFeatureElement extends LitElement {
 
     // * add emitted track to playlist
     this.socket.on("track-submitted", (track: TrackObject) => {
-      this.playlist = [...this.playlist, track];
+      this.submittedTrackList = [...this.submittedTrackList, track];
     });
 
-    // * add emitted track to playlist
+    // *
     this.socket.on("is-loading", (isLoading: boolean) => {
       this.isLoading = isLoading;
       this.startGameLoading();
@@ -111,6 +131,27 @@ export class GameFeatureElement extends LitElement {
     // * send selected vibe
     this.socket.on("vibe-submitted", (chosenVibe: string) => {
       this.chosenVibe = chosenVibe;
+    });
+
+    // * handle voting decision made
+    this.socket.on("voting-decision-made", (decision: string) => {
+      if (decision.toUpperCase() === "YES") {
+        const track = this.submittedTrackList.pop();
+        if (track) {
+          this.playlist = [...this.playlist, track];
+        } else {
+          console.error("No track to add to the playlist");
+        }
+      }
+    });
+
+    // *
+    this.socket.on("single-vote-made", (vote: string) => {
+      if (vote.toUpperCase() === "YES") {
+        this.numberYes += 1;
+      } else {
+        this.numberNo += 1;
+      }
     });
 
     // * send current song
@@ -145,6 +186,24 @@ export class GameFeatureElement extends LitElement {
       "single-track-submitted",
       this._handleSongSubmittedByUser as unknown as EventListener
     );
+    this.removeEventListener(
+      "single-vote-made",
+      this._handleSingleVoteMade as unknown as EventListener
+    );
+    this.removeEventListener(
+      "voting-decision-made",
+      this._handleMajorityReached as unknown as EventListener
+    );
+  }
+
+  _handleMajorityReached(decision: string) {
+    console.log("decision within majority reached event listener: ", decision);
+    this.socket?.emit("voting-decision-made", decision);
+  }
+
+  _handleSingleVoteMade(vote: string) {
+    console.log("single vote made: ", vote);
+    this.socket?.emit("single-vote-made", vote);
   }
 
   _handleSongSubmittedByUser(track: TrackObject) {
@@ -268,6 +327,11 @@ export class GameFeatureElement extends LitElement {
                 </div>
               `
             : ``}
+          <voting-form
+            .numberYes=${this.numberYes}
+            .numberNo=${this.numberNo}
+            .numberOfUsers=${this.users.length}
+          ></voting-form>
         </section>
         <section class="right-column">
           <section class="playlist-section">
@@ -308,7 +372,7 @@ export class GameFeatureElement extends LitElement {
           </section>
         </section>
       </section>
-      ${this.chosenVibe && this.loadingProgress == 100
+      ${!this.chosenVibe && this.loadingProgress !== 100
         ? ""
         : this.renderVibeModal()}
     `;
