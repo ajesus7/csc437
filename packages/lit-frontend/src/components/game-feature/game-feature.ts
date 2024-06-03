@@ -85,6 +85,9 @@ export class GameFeatureElement extends LitElement {
   private lastUserToRecommendASong: string = "";
 
   @state()
+  private notificationsList: string[] = [];
+
+  @state()
   private currentSong: {
     name: string;
     artist: string;
@@ -139,9 +142,15 @@ export class GameFeatureElement extends LitElement {
     if (this.userDetails) {
       this.socket?.emit("userDetails", this.userDetails);
     }
+
     // * add message to list of messages on (message send)?
     this.socket.on("message", (message: ChatMessage) => {
       this.messages = [...this.messages, message];
+    });
+
+    // * receive the notification that was emitted, add it to notificationsList
+    this.socket.on("notification", (notification: string) => {
+      this.notificationsList = [...this.notificationsList, notification];
     });
 
     this.socket.on("has-user-voted", ({ userName, voteState }) => {
@@ -318,6 +327,11 @@ export class GameFeatureElement extends LitElement {
     }
   }
 
+  private removeMostRecentNotification() {
+    this.notificationsList.pop();
+    this.requestUpdate();
+  }
+
   // TODO : Leaving game should do something to game state with player, not just navigate user to home
 
   /**
@@ -340,6 +354,7 @@ export class GameFeatureElement extends LitElement {
             <h4 class="sub-sub-header">Last Song Recommended By:</h4>
             <p class="subtext">${this.lastUserToRecommendASong}</p>
           </section>
+          <p class="subtext">The vibe: ${this.chosenVibe}</p>
           <section class="user-section">
             <h3 class="game-sub-header">Player List</h3>
             <div class="user-list">
@@ -358,7 +373,23 @@ export class GameFeatureElement extends LitElement {
           </section>
         </section>
         <section class="middle-column">
-          <p class="subtext">The vibe: ${this.chosenVibe}</p>
+          <div class="notification-box">
+            <ul class="notification-list">
+              ${this.notificationsList.length > 0
+                ? html`
+                    <div class="notification-item">
+                      ${this.notificationsList[
+                        this.notificationsList.length - 1
+                      ]}
+                      <button @click="${this.removeMostRecentNotification}">
+                        X
+                      </button>
+                    </div>
+                  `
+                : html``}
+            </ul>
+          </div>
+
           ${this.userWhoIsChoosingSong
             ? html`<div class="song-picker-holder">
                 <h3 class="game-sub-header">Pick a Song.</h3>
@@ -524,12 +555,17 @@ export class GameFeatureElement extends LitElement {
     }, intervalDuration);
   }
 
+  // TODO : this isn't random, it just chooses the first user, if it were random, and both users browsers were calculating the random, there is a chance that two users could be picked, correct? This calculation may be needed to be done on the server side to ensure it only happens once. But for now, it is fine.
   private startGameLogic() {
     console.log("startGameLogic Ran!");
     if (this.users) {
       const randomUser = this.users[0];
       console.log("randomUser", randomUser);
       this.socket?.emit("user-chosen-to-pick", randomUser.name);
+      this.socket?.emit(
+        "notification",
+        `${randomUser.name} is picking a song!`
+      );
       this.roundsForThisGame = this.users.length * 2;
     }
   }

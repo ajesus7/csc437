@@ -105,7 +105,7 @@ export default css`
   }
 
   .song-picker-holder {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 
   .playlist-section,
@@ -384,5 +384,38 @@ export default css`
 
   .song-player-component button:hover {
     background: #0056b3;
+  }
+
+  .notification-box {
+    width: calc(100% - 1em);
+    height: 1.5em;
+    padding: 0.5em;
+    border-radius: 8px;
+    background: #f1f1f1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* position it in the center more elegantly, at a later point*/
+  .notification-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: 2px;
+  }
+
+  .notification-item {
+    text-align-center;
+  }
+
+  .notification-item button {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 1em;
+    cursor: pointer;
   }
 `;
