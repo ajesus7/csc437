@@ -115,6 +115,17 @@ io.on("connection", (socket: Socket) => {
     }
   });
 
+  socket.on("game-ended", () => {
+    io.emit("game-ended");
+  });
+
+  socket.on("notification", (notification: string) => {
+    // * if the notification exists (this check may not be needed)
+    if (notification) {
+      io.emit("notification", notification);
+    }
+  });
+
   // Handle submitted vibe
   socket.on("current-song", (currentSong: any) => {
     console.log("a song has been submitted: ", currentSong);

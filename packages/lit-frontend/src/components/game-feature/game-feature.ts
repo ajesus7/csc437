@@ -148,6 +148,13 @@ export class GameFeatureElement extends LitElement {
       this.messages = [...this.messages, message];
     });
 
+    // * add message to list of messages on (message send)?
+    this.socket.on("game-ended", () => {
+      setTimeout(() => {
+        this.showGameOverDialog();
+      }, 3000);
+    });
+
     // * receive the notification that was emitted, add it to notificationsList
     this.socket.on("notification", (notification: string) => {
       this.notificationsList = [...this.notificationsList, notification];
@@ -604,17 +611,24 @@ export class GameFeatureElement extends LitElement {
         usersName,
         voteState: false,
       });
+      this.socket?.emit(
+        "notification",
+        `Round ${this.currentRound} is starting now.`
+      );
 
       // Set the next user to choose a song
       this.idOfUserChoosingSong = nextUser.name;
       this.socket?.emit("user-chosen-to-pick", nextUser.name);
     } else {
       console.log("The game is over!");
+      this.socket?.emit("notification", `The game has ended!`);
       this.numberNo = 0;
       this.numberYes = 0;
 
       // Optionally, render a "game over" popup dialog
-      this.showGameOverDialog();
+      setTimeout(() => {
+        this.socket?.emit("game-ended");
+      }, 3000);
     }
   }
 

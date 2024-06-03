@@ -137,6 +137,14 @@ io.on("connection", (socket) => {
       io.emit("notification", notification);
     }
   });
+  socket.on("game-ended", () => {
+    io.emit("game-ended");
+  });
+  socket.on("notification", (notification) => {
+    if (notification) {
+      io.emit("notification", notification);
+    }
+  });
   socket.on("current-song", (currentSong) => {
     console.log("a song has been submitted: ", currentSong);
     if (currentSong) {
