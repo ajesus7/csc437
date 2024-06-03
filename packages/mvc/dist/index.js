@@ -120,6 +120,10 @@ io.on("connection", (socket) => {
   socket.on("user-chosen-to-pick", (userName) => {
     io.emit("user-chosen-to-pick", userName);
   });
+  socket.on("has-user-voted", ({ userName, voteState }) => {
+    console.log("voteState on backend: ", voteState);
+    io.emit("has-user-voted", { userName, voteState });
+  });
   socket.on("is-loading", (isLoading) => {
     io.emit("is-loading", isLoading);
   });

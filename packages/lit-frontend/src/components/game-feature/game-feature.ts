@@ -73,7 +73,16 @@ export class GameFeatureElement extends LitElement {
   private numberNo: number = 0;
 
   @state()
+  private hasUserVoted: boolean = false;
+
+  @state()
   private userWhoIsChoosingSong: boolean = false;
+
+  @state()
+  private idOfUserChoosingSong: string = "";
+
+  @state()
+  private lastUserToRecommendASong: string = "";
 
   @state()
   private currentSong: {
@@ -83,6 +92,12 @@ export class GameFeatureElement extends LitElement {
     recommendedBy: string;
     previewURL: string;
   } | null = null;
+
+  @state()
+  private currentRound: number = 1;
+
+  @state()
+  private roundsForThisGame: number = 0;
 
   /**
    * On first render, define the socket, then:
@@ -111,6 +126,15 @@ export class GameFeatureElement extends LitElement {
       this._handleSingleVoteMade(customEvent.detail.vote);
     });
 
+    this.addEventListener("has-user-voted", (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const userName = this.userDetails?.name || "Unknown";
+      this.socket?.emit("has-user-voted", {
+        userName,
+        voteState: customEvent.detail.voteState,
+      });
+    });
+
     // * Emit user details when connected
     if (this.userDetails) {
       this.socket?.emit("userDetails", this.userDetails);
@@ -118,6 +142,16 @@ export class GameFeatureElement extends LitElement {
     // * add message to list of messages on (message send)?
     this.socket.on("message", (message: ChatMessage) => {
       this.messages = [...this.messages, message];
+    });
+
+    this.socket.on("has-user-voted", ({ userName, voteState }) => {
+      console.log("within front end has-user-voted, voteState:", voteState);
+
+      // * the user who voted is this user, so update their voting state
+      if (this.userDetails?.name == userName) {
+        console.log("USERNAMES MATCH!");
+        this.hasUserVoted = voteState;
+      }
     });
 
     // * add emitted track to playlist
@@ -146,6 +180,8 @@ export class GameFeatureElement extends LitElement {
           console.error("No track to add to the playlist");
         }
       }
+      this.lastUserToRecommendASong = this.idOfUserChoosingSong;
+      this.startNextRoundOfGame();
     });
 
     // *
@@ -171,6 +207,7 @@ export class GameFeatureElement extends LitElement {
       if (userName === this.userDetails?.name) {
         this.userWhoIsChoosingSong = true;
       }
+      this.idOfUserChoosingSong = userName;
     });
 
     // * add user to list of users on connect
@@ -294,12 +331,14 @@ export class GameFeatureElement extends LitElement {
       <section class="game-columns">
         <section class="left-column">
           <section class="game-info">
-            <h3 class="game-sub-header">Round #</h3>
+            <h3 class="game-sub-header">
+              Round ${this.currentRound}/${this.roundsForThisGame}
+            </h3>
             <a href="/app/home" class="leave-game">Leave Game</a>
           </section>
           <section class="last-recommended-song">
             <h4 class="sub-sub-header">Last Song Recommended By:</h4>
-            <p class="subtext">Enter user name here.</p>
+            <p class="subtext">${this.lastUserToRecommendASong}</p>
           </section>
           <section class="user-section">
             <h3 class="game-sub-header">Player List</h3>
@@ -350,6 +389,7 @@ export class GameFeatureElement extends LitElement {
             .numberYes=${this.numberYes}
             .numberNo=${this.numberNo}
             .numberOfUsers=${this.users.length}
+            .hasUserVoted=${this.hasUserVoted}
           ></voting-form>
         </section>
         <section class="right-column">
@@ -490,6 +530,7 @@ export class GameFeatureElement extends LitElement {
       const randomUser = this.users[0];
       console.log("randomUser", randomUser);
       this.socket?.emit("user-chosen-to-pick", randomUser.name);
+      this.roundsForThisGame = this.users.length * 2;
     }
   }
 
@@ -501,6 +542,50 @@ export class GameFeatureElement extends LitElement {
     this.socket?.emit("vibe-submitted", this.chosenVibe); // Emit the vibe-submitted event
     this.closeModal();
     this.requestUpdate();
+  }
+
+  private startNextRoundOfGame() {
+    console.log("Starting next round logic!");
+
+    // Check if there are more rounds to be played
+    if (this.currentRound < this.roundsForThisGame) {
+      this.currentRound += 1;
+      this.numberNo = 0;
+      this.numberYes = 0;
+      this.hasUserVoted = false;
+      console.log("user voted set to false");
+
+      // Find the next user index
+      const currentIndex = this.users.findIndex(
+        (user) => user.name === this.idOfUserChoosingSong
+      );
+      const nextIndex = (currentIndex + 1) % this.users.length;
+      const nextUser = this.users[nextIndex];
+
+      const usersName = this.userDetails?.name;
+      // update the user voted
+      this.socket?.emit("has-user-voted", {
+        usersName,
+        voteState: false,
+      });
+
+      // Set the next user to choose a song
+      this.idOfUserChoosingSong = nextUser.name;
+      this.socket?.emit("user-chosen-to-pick", nextUser.name);
+    } else {
+      console.log("The game is over!");
+      this.numberNo = 0;
+      this.numberYes = 0;
+
+      // Optionally, render a "game over" popup dialog
+      this.showGameOverDialog();
+    }
+  }
+
+  // TODO : Make this a modal similar to the lobby that displays the game playlist.
+  private showGameOverDialog() {
+    // Implement the logic to show a "game over" popup dialog
+    alert("Game Over! Thanks for playing.");
   }
 
   private closeModal() {
