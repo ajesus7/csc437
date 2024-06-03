@@ -2505,9 +2505,32 @@
     position: relative;
     top: 2px;
   }
+  
+  .light-green {
+    background: #d4edda; 
+  }
 
   .notification-item {
     text-align-center;
+  }
+
+  .current-user-is-picking-notif {
+    width: calc(100% - 1em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5em;
+    padding: 0.5em;
+    margin-top: 1em;
+    border-radius: 8px;
+    background: #f1f1f1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: #d4edda; 
+  }
+  
+  .current-user-is-picking-notif p {
+    background: #d4edda; 
+    text-align: center;
   }
 
   .notification-item button {
@@ -2519,16 +2542,16 @@
   }
 
   .senderIsGame {
-  background: #e0e0e0; /* Light grey for system messages */
-}
+    background: #e0e0e0; /* Light grey for system messages */
+  }
 
-.vibeMatched {
-  background: #d4edda; /* Soft green */
-}
+  .vibeMatched {
+    background: #d4edda; /* Soft green */
+  }
 
-.vibeNotMatched {
-  background: #f8d7da; /* Soft red */
-}
+  .vibeNotMatched {
+    background: #f8d7da; /* Soft red */
+  }
 `,Fc=P`
   .form-container {
     border: 1px solid #ccc;
@@ -2685,10 +2708,13 @@
             </ul>
           </div>
 
-          ${this.userWhoIsChoosingSong?y`<div class="song-picker-holder">
-                <h3 class="game-sub-header">Pick a Song.</h3>
-                <song-picker .multiPicker=${!1}></song-picker>
-              </div>`:""}
+          ${this.userWhoIsChoosingSong?y`<div class="current-user-is-picking-notif">
+                  <p>It is your turn to pick!</p>
+                </div>
+                <div class="song-picker-holder">
+                  <h3 class="game-sub-header">Pick a Song.</h3>
+                  <song-picker .multiPicker=${!1}></song-picker>
+                </div>`:""}
           ${this.currentSong?y`
                 <div class="song-player-component">
                   <h3 class="song-name">${(r=this.currentSong)==null?void 0:r.name}</h3>

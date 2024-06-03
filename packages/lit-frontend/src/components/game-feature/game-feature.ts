@@ -419,10 +419,13 @@ export class GameFeatureElement extends LitElement {
           </div>
 
           ${this.userWhoIsChoosingSong
-            ? html`<div class="song-picker-holder">
-                <h3 class="game-sub-header">Pick a Song.</h3>
-                <song-picker .multiPicker=${false}></song-picker>
-              </div>`
+            ? html`<div class="current-user-is-picking-notif">
+                  <p>It is your turn to pick!</p>
+                </div>
+                <div class="song-picker-holder">
+                  <h3 class="game-sub-header">Pick a Song.</h3>
+                  <song-picker .multiPicker=${false}></song-picker>
+                </div>`
             : ``}
           ${this.currentSong
             ? html`
