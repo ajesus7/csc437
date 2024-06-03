@@ -88,6 +88,9 @@ export class GameFeatureElement extends LitElement {
   private notificationsList: string[] = [];
 
   @state()
+  private gameConcluded: boolean = false;
+
+  @state()
   private currentSong: {
     name: string;
     artist: string;
@@ -151,8 +154,8 @@ export class GameFeatureElement extends LitElement {
     // * add message to list of messages on (message send)?
     this.socket.on("game-ended", () => {
       setTimeout(() => {
-        this.showGameOverDialog();
-      }, 3000);
+        this.gameConcluded = true;
+      }, 2000);
     });
 
     // * receive the notification that was emitted, add it to notificationsList
@@ -486,6 +489,27 @@ export class GameFeatureElement extends LitElement {
       ${this.chosenVibe && this.loadingProgress == 100
         ? ""
         : this.renderVibeModal()}
+      ${this.gameConcluded ? this.showGameOverModal() : ``}
+    `;
+  }
+
+  // * triggered when the game ends
+  private showGameOverModal() {
+    return html`
+      <div class="modal-overlay">
+        <section class="modal">
+          <div class="modal-content">
+            <h3 class="game-sub-header">Game Over! Thanks for playing.</h3>
+            <h4 class="sub-sub-header">Game Playlist</h4>
+            <ul class="playlist">
+              ${this.playlist.map((track) =>
+                track ? html`<track-card .track=${track}></track-card>` : ""
+              )}
+            </ul>
+            <a href="/app/home" class="return-home">Return to Home</a>
+          </div>
+        </section>
+      </div>
     `;
   }
 
@@ -646,12 +670,6 @@ export class GameFeatureElement extends LitElement {
         this.socket?.emit("game-ended");
       }, 3000);
     }
-  }
-
-  // TODO : Make this a modal similar to the lobby that displays the game playlist.
-  private showGameOverDialog() {
-    // Implement the logic to show a "game over" popup dialog
-    alert("Game Over! Thanks for playing.");
   }
 
   private closeModal() {
