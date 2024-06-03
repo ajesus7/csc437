@@ -423,12 +423,26 @@ export class GameFeatureElement extends LitElement {
                 </div>
               `
             : ``}
-          <voting-form
-            .numberYes=${this.numberYes}
-            .numberNo=${this.numberNo}
-            .numberOfUsers=${this.users.length}
-            .hasUserVoted=${this.hasUserVoted}
-          ></voting-form>
+          ${!this.currentSong && !this.userWhoIsChoosingSong
+            ? html` <div class="song-player-component">
+                <h3 class="song-name">---------</h3>
+                <p class="artist-name">---------</p>
+                <img
+                  src="/images/gray_square.png"
+                  alt="Gray square as placeholder album cover."
+                  class="album-cover"
+                />
+                <p class="recommended-by">Recommended by: ---------</p>
+              </div>`
+            : ``}
+          ${this.currentSong
+            ? html`<voting-form
+                .numberYes=${this.numberYes}
+                .numberNo=${this.numberNo}
+                .numberOfUsers=${this.users.length}
+                .hasUserVoted=${this.hasUserVoted}
+              ></voting-form>`
+            : ``}
         </section>
         <section class="right-column">
           <section class="playlist-section">
@@ -593,6 +607,8 @@ export class GameFeatureElement extends LitElement {
     // Check if there are more rounds to be played
     if (this.currentRound < this.roundsForThisGame) {
       this.currentRound += 1;
+      // reset currentSong because the new current song not picked yet
+      this.currentSong = null;
       this.numberNo = 0;
       this.numberYes = 0;
       this.hasUserVoted = false;
