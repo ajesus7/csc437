@@ -23,10 +23,13 @@ export class FeedPostElement extends LitElement {
   post?: Post;
 
   @state()
-  getPostComments?: IComment[] = [];
+  getPostComments: IComment[] = [];
 
   @state()
   expanded: boolean = false;
+
+  @state()
+  commentsSectionExpanded: boolean = false;
 
   @state()
   submissionSuccess: boolean | null = null;
@@ -44,7 +47,20 @@ export class FeedPostElement extends LitElement {
   expandedClass: String = "feed-single-post";
 
   _expand() {
+    // * can't have both expanded
+    this.commentsSectionExpanded = false;
     this.expanded = !this.expanded;
+    if (this.expandedClass === "feed-single-post") {
+      this.expandedClass = "feed-single-post-expanded";
+    } else {
+      this.expandedClass = "feed-single-post";
+    }
+  }
+
+  _showComments() {
+    // * can't have both expanded
+    this.commentsSectionExpanded = !this.commentsSectionExpanded;
+    this.expanded = false;
     if (this.expandedClass === "feed-single-post") {
       this.expandedClass = "feed-single-post-expanded";
     } else {
@@ -81,6 +97,10 @@ export class FeedPostElement extends LitElement {
 
       // Ensure this is treated as a new array for reactivity
       this.getPostComments = [...comments];
+      // close comment menu
+      setTimeout(() => {
+        this.expanded = !this.expanded;
+      }, 1000);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
@@ -103,6 +123,7 @@ export class FeedPostElement extends LitElement {
 
   render() {
     const readablePostTime = this._calculateTimeFromDate();
+    const numberOfComments = this.getPostComments?.length ?? 0;
 
     return html`
       <section class="${this.expandedClass}">
@@ -128,18 +149,32 @@ export class FeedPostElement extends LitElement {
                   ? "Close song recommendation form."
                   : "Recommend a song."}
               </button>
+              <button
+                class="expand-unexpand-right"
+                @click=${this._showComments}
+              >
+                ${this.commentsSectionExpanded
+                  ? "Close comments."
+                  : `View (${this.getPostComments?.length}) comments.`}
+              </button>
             </section>
-          </section>
-
-          <section class="comment-list">
-            ${this.getPostComments?.map(
-              (comment) => html`
-                <comment-card .comment=${comment}></comment-card>
-              `
-            )}
           </section>
         </section>
 
+        ${this.commentsSectionExpanded && numberOfComments > 0
+          ? html` <section class="comment-list">
+              ${this.getPostComments?.map(
+                (comment) => html`
+                  <comment-card .comment=${comment}></comment-card>
+                `
+              )}
+            </section>`
+          : ``}
+        ${this.commentsSectionExpanded && numberOfComments <= 0
+          ? html` <section class="comment-list">
+              <p class="subtext">There are no comments on this post yet.</p>
+            </section>`
+          : ``}
         ${this.expanded
           ? html` <song-picker
               .post=${this.post}

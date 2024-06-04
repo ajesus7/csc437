@@ -82,7 +82,8 @@ export default css`
     font-weight: 300;
   }
 
-  .expand-unexpand {
+  .expand-unexpand,
+  .expand-unexpand-right {
     text-decoration: underline;
     background: none;
     color: var(--subtext-color);
@@ -94,6 +95,10 @@ export default css`
     margin-bottom: 1em;
     padding: 0;
     white-space: nowrap; /* Prevents wrapping on small screens */
+  }
+
+  .expand-unexpand-right {
+    margin-left: 0.55em;
   }
 
   .expand-unexpand:hover {
@@ -124,6 +129,11 @@ export default css`
 
   .track-artist {
     font-size: var(--smaller-size);
+    color: var(--subtext-color);
+  }
+
+  .subtext {
+    font-size: 0.9em;
     color: var(--subtext-color);
   }
 

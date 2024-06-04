@@ -80,12 +80,12 @@ export default css`
   }
 
   .track-name {
-    font-size: 0.9em;
+    font-size: 0.8em;
     font-weight: 500;
   }
 
   .track-artist {
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: var(--subtext-color);
   }
 

@@ -67,13 +67,17 @@ export default css`
   }
 
   .submit-success-message {
-    color: #00e676;
-    background-color: #1e442c;
-    padding: 8px;
-    border-radius: 4px;
-    font-size: 0.875em;
-    border: 1px solid #00e676;
-    margin: 0;
+    color: #155724;
+    background-color: #d4edda;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.8em;
+    border: 1px solid #c3e6cb;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 35em;
   }
 
   .post-top-bar {

@@ -195,7 +195,7 @@ export async function submitCommentToDatabase(ev: Event, context: any) {
       // * send handle comment added event up to the feed-post component, which will cause a re render of the post
       // * to show the comment
       context.dispatchEvent(
-        new CustomEvent("handle-comment-selected", {
+        new CustomEvent("handle-comment-added", {
           bubbles: true, // This makes sure the event bubbles up through the DOM
           composed: true, // This allows the event to cross the shadow DOM boundary
         })

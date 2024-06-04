@@ -101,6 +101,12 @@ export class CreatePostElement extends LitElement {
       if (response.ok) {
         console.log("Post added successfully!");
         this.submissionSuccess = true; // Renders submission message
+
+        // remove success message after 2.5 seconds
+        setTimeout(() => {
+          this.submissionSuccess = false;
+        }, 2500);
+
         this.expanded = !this.expanded; // Close create post component
         target.reset(); // Reset form input
         this._sendUpdateToRefreshMainFeed();
