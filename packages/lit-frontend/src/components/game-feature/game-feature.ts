@@ -51,7 +51,7 @@ export class GameFeatureElement extends LitElement {
   private submittedTrackList: TrackObject[] = [];
 
   @property()
-  private chosenVibe: string = "fricken hype";
+  private chosenVibe: string = "";
 
   private socket?: Socket;
 
