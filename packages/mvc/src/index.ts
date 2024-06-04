@@ -9,10 +9,11 @@ import profileService from "./services/profiles";
 import dotenv from "dotenv";
 import { ProfileModel } from "./mongo/profile";
 import { PostModel } from "./mongo/post";
-import { IPost, TrackObject } from "../../ts-models";
+import { IPostServer, IPostClient, TrackObject } from "../../ts-models";
 import { Profile } from "../../ts-models/src/profile";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { Server as SocketIOServer, Socket } from "socket.io";
+import { log } from "console";
 
 // Initialize dotenv to load environment variables
 dotenv.config();
@@ -52,30 +53,97 @@ io.on("connection", (socket: Socket) => {
   });
 
   // Handle incoming messages
-  socket.on("message", (message: { text: string; sender: string }) => {
-    const userDetails = users.get(socket.id);
-    if (userDetails) {
-      console.log(`${userDetails.name} said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: userDetails.name,
-        profilePic: userDetails.profilePic,
-      });
-    } else {
-      console.log(`Unknown user said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: "Unknown user",
-        profilePic: "defaultProfileImage", // Provide a default profile picture
-      });
+  socket.on(
+    "message",
+    (message: { text: string; sender: string; class: string }) => {
+      const userDetails = users.get(socket.id);
+
+      if (message.sender === "GAME") {
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "MTV",
+          profilePic: "headphones_icon_for_game_messages",
+          class: message.class,
+        });
+      } else if (userDetails) {
+        console.log(`${userDetails.name} said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: userDetails.name,
+          profilePic: userDetails.profilePic,
+          class: message.class,
+        });
+      } else {
+        console.log(`Unknown user said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "Unknown user",
+          profilePic: "defaultProfileImage", // Provide a default profile picture
+          class: message.class,
+        });
+      }
     }
-  });
+  );
 
   // Handle incoming chosen track
   socket.on("track-submitted", (track: TrackObject) => {
     // * if the track information exists, send it back to be added to the playlist
     if (track) {
       io.emit("track-submitted", track);
+    }
+  });
+
+  // Handle voting decision made
+  socket.on("voting-decision-made", (decision: string) => {
+    io.emit("voting-decision-made", decision);
+  });
+
+  // Handle voting decision made
+  socket.on("single-vote-made", (vote: string) => {
+    io.emit("single-vote-made", vote);
+  });
+
+  // send back the user chosen to pick a song
+  socket.on("user-chosen-to-pick", (userName: string) => {
+    io.emit("user-chosen-to-pick", userName);
+  });
+
+  socket.on("has-user-voted", ({ userName, voteState }) => {
+    console.log("voteState on backend: ", voteState);
+    io.emit("has-user-voted", { userName, voteState });
+  });
+
+  // set the game loading state
+  socket.on("is-loading", (isLoading: boolean) => {
+    io.emit("is-loading", isLoading);
+  });
+
+  // Handle submitted vibe
+  socket.on("vibe-submitted", (chosenVibe: string) => {
+    // * if the vibe is not empty, send it back to be added to the game state
+    if (chosenVibe) {
+      io.emit("vibe-submitted", chosenVibe);
+    }
+  });
+
+  socket.on("notification", (notification: string) => {
+    // * if the notification exists (this check may not be needed)
+    if (notification) {
+      io.emit("notification", notification);
+    }
+  });
+
+  socket.on("game-ended", () => {
+    io.emit("game-ended");
+  });
+
+  // Handle submitted vibe
+  socket.on("current-song", (currentSong: any) => {
+    console.log("a song has been submitted: ", currentSong);
+    // * if the song is not empty, send it back to be added to the game state
+    if (currentSong) {
+      console.log("emitting song back", currentSong);
+      io.emit("current-song", currentSong);
     }
   });
 
@@ -121,7 +189,7 @@ app.use(express.static(distPath));
 app.get("/posts", (req, res) => {
   posts
     .getAll() // Assuming .getAll() is the method to fetch all posts; adjust according to your actual method
-    .then((allPosts: IPost[] | undefined) => {
+    .then((allPosts: IPostClient[] | undefined) => {
       // Use an array type to represent multiple posts
       if (!allPosts || allPosts.length === 0) throw "No posts found";
       else res.json(allPosts); // Send the array of posts
@@ -157,18 +225,44 @@ app.get("/comments/:postid", async (req, res) => {
   }
 });
 
+function isValidObjectId(id: string): boolean {
+  return mongoose.Types.ObjectId.isValid(id);
+}
+
+// * converts client post type to server post type
+function transformClientToServer(post: IPostClient): IPostServer {
+  if (!isValidObjectId(post.userid)) {
+    throw new Error("Invalid ObjectId format");
+  }
+
+  return {
+    ...post,
+    userid: new Types.ObjectId(post.userid),
+  };
+}
+
+// function transformServerToClient(post: IPostServer): IPostClient {
+//   return {
+//     ...post,
+//     _id: post._id.toString(),
+//   };
+// }
+
 // * Creates New Post
 app.post("/posts", async (req: Request, res: Response) => {
   try {
-    //grab the data from req.body
-    const newPostData: IPost = req.body;
+    // Grab the data from req.body
+    const newPostData: IPostClient = req.body;
 
-    //create a document based on the mongoose model imported
-    const newPost = await PostModel.create(newPostData);
+    // Transform client data to server data
+    const serverPostData = transformClientToServer(newPostData);
+
+    // Create a document based on the mongoose model imported
+    const newPost = await PostModel.create(serverPostData);
     res.status(201).send(newPost); // Send the created post back
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error creating new post: ", err);
-    res.status(500).send(err);
+    res.status(500).send({ error: err.message });
   }
 });
 

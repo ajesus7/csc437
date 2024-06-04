@@ -5,7 +5,7 @@ import Post from "../../models/post.ts";
 import { IComment } from "../../../../ts-models/src/index.ts";
 import styles from "./feed-post-styles.ts";
 
-//import components
+// Import components
 import "../track-card/track-card.ts";
 import "../comment-card/comment-card.ts";
 import "../song-picker/song-picker.ts";
@@ -55,13 +55,13 @@ export class FeedPostElement extends LitElement {
   connectedCallback(): void {
     super.connectedCallback(); // Always call super first in connectedCallback
 
-    //if not already initialized, set initial post comments state to getPostComments, this will be updated later when a comment is submitted
+    // If not already initialized, set initial post comments state to getPostComments, this will be updated later when a comment is submitted
     if (!this.getPostComments || this.getPostComments.length === 0) {
       this.getPostComments = this.post?.comments || [];
     }
   }
 
-  // * when called, re renders the specific post to show new comment
+  // * When called, re-renders the specific post to show new comment
   async _handleCommentAdded() {
     console.log("Comment Created, Now Refreshing Component");
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
@@ -86,27 +86,20 @@ export class FeedPostElement extends LitElement {
     }
   }
 
-  // * time calculation refactored for better readability
+  // * Time calculation refactored for better readability
   _calculateTimeFromDate() {
     calculateTimeFromDate(this);
   }
 
-  // * comment needs to appear in post, so therefore state needs to be updated here,
+  // * Comment needs to appear in post, so therefore state needs to be updated here,
   // * so listen for the handle comment added event in the constructor
   constructor() {
     super();
-    // ! handle comment added event sent from song-picker
+    // ! Handle comment added event sent from song-picker
     this.addEventListener("handle-comment-added", () => {
       this._handleCommentAdded();
     });
   }
-
-  // <section class="post-comments">
-  //         <h3 class="comments-header">Comments</h3>
-  //         ${this.getPostComments?.map(
-  //           (comment) => html`<comment-card .comment=${comment}></comment-card>`
-  //         )}
-  //       </section>
 
   render() {
     const readablePostTime = this._calculateTimeFromDate();
@@ -114,40 +107,46 @@ export class FeedPostElement extends LitElement {
     return html`
       <section class="${this.expandedClass}">
         <section class="profile-name-time">
-          <section class="individual-post-profile-image">
-            <img src="/images/aidan_pfp.png" alt="placeholder image" />
-            ${
-              this.expanded
+          <section class="post-content">
+            <section class="individual-post-profile-image">
+              <img
+                src="/images/${this.post?.profileImage}.png"
+                alt="${this.post?.profileDescription}"
+              />
+              ${this.expanded
                 ? html`<div class="line-decoration"></div>`
-                : html`<div></div>`
-            }
-            </button>
-          </section>
-          <section class="non-image-content">
-            <section class="name-and-time">
-              <h3 class="feed-name">${this.post?.userName}</h3>
-              <p class="time-posted">${readablePostTime}</p>
+                : html`<div></div>`}
             </section>
-            <p class="message">${this.post?.postMessage}</p>
-            <button class="expand-unexpand" @click=${this._expand}>
-              ${
-                this.expanded
+            <section class="non-image-content">
+              <section class="name-and-time">
+                <h3 class="feed-name">${this.post?.userName}</h3>
+                <p class="time-posted">${readablePostTime}</p>
+              </section>
+              <p class="message">${this.post?.postMessage}</p>
+              <button class="expand-unexpand" @click=${this._expand}>
+                ${this.expanded
                   ? "Close song recommendation form."
-                  : "Recommend a song."
-              }
-            </button>
+                  : "Recommend a song."}
+              </button>
+            </section>
+          </section>
+
+          <section class="comment-list">
+            ${this.getPostComments?.map(
+              (comment) => html`
+                <comment-card .comment=${comment}></comment-card>
+              `
+            )}
           </section>
         </section>
 
-        ${
-          this.expanded
-            ? html` <song-picker
-                .post=${this.post}
-                .multiPicker=${false}
-                .hasMargin=${true}
-              ></song-picker>`
-            : ""
-        }
+        ${this.expanded
+          ? html` <song-picker
+              .post=${this.post}
+              .multiPicker=${true}
+              .hasMargin=${true}
+            ></song-picker>`
+          : ""}
       </section>
     `;
   }

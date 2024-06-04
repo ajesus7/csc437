@@ -45,6 +45,14 @@ const PostSchema = new import_mongoose.default.Schema({
     type: String,
     required: true
   },
+  profileImage: {
+    type: String,
+    required: true
+  },
+  profileDescription: {
+    type: String,
+    required: true
+  },
   postTime: {
     type: Date,
     // Explicitly setting to Date type

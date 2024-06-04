@@ -2,7 +2,21 @@ import { css } from "lit";
 
 export default css`
   .user-profile-header {
-    padding: 25px 15px 15px 100px;
+    margin: auto;
+    margin-top: 2.5em;
+  }
+
+  .coming-soon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 1.5em;
+  }
+
+  .info {
+    color: var(--subtext-color);
+    font-size: 0.9em;
   }
 
   .user-profile-user-content {
@@ -31,6 +45,9 @@ export default css`
   .edit-profile-toggle {
     color: var(--accent-color);
     text-decoration: underline;
+  }
+  .edit-profile-toggle:hover {
+    cursor: pointer;
   }
 
   .user-description {

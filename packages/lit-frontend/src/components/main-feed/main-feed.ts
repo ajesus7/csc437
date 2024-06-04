@@ -1,6 +1,8 @@
 import { html, LitElement } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, state, property } from "lit/decorators.js";
 import styles from "./main-feed-styles";
+import { Profile } from "../../models/profile";
+
 // components
 import "../feed-post-list/feed-post-list";
 import "../create-post/create-post";
@@ -14,10 +16,17 @@ export class MainFeedElement extends LitElement {
   @state()
   posts: Post[] = []; // Initialize posts as an empty array to ensure type correctness
 
+  //  * the profile object retrieved from the Model
+  @state()
+  using?: Profile;
+
+  @property({ type: String })
+  userId?: string;
+
   async connectedCallback() {
     super.connectedCallback();
     this.addEventListener("post-created", () => this._handlePostCreated());
-    await this._fetchData();
+    await this._fetchPostDataFromDatabase();
   }
 
   // * when called, re fetches the posts
@@ -25,10 +34,10 @@ export class MainFeedElement extends LitElement {
   // * in the case where there are many users, you might want to update all posts in case multiple are created at the same time
   async _handlePostCreated() {
     console.log("Post Created, Now Refreshing Component");
-    await this._fetchData();
+    await this._fetchPostDataFromDatabase();
   }
 
-  async _fetchData() {
+  async _fetchPostDataFromDatabase() {
     console.log("fetching posts!");
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -49,11 +58,25 @@ export class MainFeedElement extends LitElement {
   }
 
   render() {
+    console.log("using", this.using);
     return html`
       <section class="feed-container">
-        <h2 class="feed-header">Song Recommendation Feed</h2>
-        <create-post></create-post>
-        <feed-post-list .posts=${this.posts}></feed-post-list>
+        <section class="nav-section">
+          <h3 class="nav-header">Navigation</h3>
+          <ul class="nav">
+            <li class="navlink">
+              <a href="app/chatRoom/${this.using?.userid}">Chat Room</a>
+            </li>
+            <li class="navlink">
+              <a href="app/profile/${this.using?.userid}">Your Profile</a>
+            </li>
+          </ul>
+        </section>
+        <section class="main-posts-section">
+          <h2 class="feed-header">Song Recommendation Feed</h2>
+          <create-post .using=${this.using}></create-post>
+          <feed-post-list .posts=${this.posts}></feed-post-list>
+        </section>
       </section>
     `;
   }

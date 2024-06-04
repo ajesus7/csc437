@@ -3,7 +3,8 @@ import { customElement, state } from "lit/decorators.js";
 import styles from "./create-post-styles";
 
 //import interfaces
-import { IPost } from "../../../../ts-models/src";
+import { IPostClient } from "../../../../ts-models/src";
+import { Profile } from "../../models/profile";
 
 // * Functionality: default view is of a button that says "Create Post +",
 // * onclick, expand to the full view with the option to insert a message and a button
@@ -18,6 +19,10 @@ export class CreatePostElement extends LitElement {
 
   @state()
   expanded: boolean = false;
+
+  //  * the profile object retrieved from the Model
+  @state()
+  using?: Profile | null;
 
   @state()
   submissionSuccess: boolean = false;
@@ -52,26 +57,39 @@ export class CreatePostElement extends LitElement {
     }
   }
 
-  //handles the submission of the post
+  // * checks if the profile object is available, then submits a POST request with the post information to
+  // * if response = ok, render a success message, close the component, and refresh the page to show the new post
   async _sendPostRequest(message: string, target: HTMLFormElement) {
-    // TODO at some point change this userid to be dynamic based on the user profile, same with userName
-    const newPost: IPost = {
-      userid: "65caf83fcdc541534288d60b" as any,
-      userName: "aidan",
+    console.log("this.using", this.using);
+    // * if profile object or its attributes not available, do not submit post
+    if (
+      !this.using ||
+      !this.using._id ||
+      !this.using.name ||
+      !this.using.profileDescription ||
+      !this.using.profileImage
+    ) {
+      console.error("User information is incomplete.");
+      return false;
+    }
+
+    const newPost: IPostClient = {
+      userid: this.using._id,
+      userName: this.using.name,
+      profileImage: this.using.profileImage,
+      profileDescription: this.using.profileDescription,
       postTime: new Date(),
       postMessage: message,
       comments: [],
     };
-
-    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-
     console.log("new post: ", newPost);
 
-    //attempt to create a POST request with the post data
+    // Attempt to create a POST request with the post data
     try {
+      const SERVER_URL = import.meta.env.VITE_SERVER_URL;
       const url = `${SERVER_URL}/posts`;
 
-      //make the post request
+      // Make the post request
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -82,16 +100,16 @@ export class CreatePostElement extends LitElement {
 
       if (response.ok) {
         console.log("Post added successfully!");
-        this.submissionSuccess = true; //renders submission message
-        this.expanded = !this.expanded; //close create post component
-        target.reset(); // reset form input
+        this.submissionSuccess = true; // Renders submission message
+        this.expanded = !this.expanded; // Close create post component
+        target.reset(); // Reset form input
         this._sendUpdateToRefreshMainFeed();
       } else {
         throw new Error("Failed to create post.");
       }
     } catch (error) {
       console.error("Error: ", error);
-      this.submissionSuccess = false; // dont render submission message
+      this.submissionSuccess = false; // Don't render submission message
     }
   }
 

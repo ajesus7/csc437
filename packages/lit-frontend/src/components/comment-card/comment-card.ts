@@ -109,16 +109,23 @@ export class CommentCardElement extends LitElement {
       `;
     }
 
-    // Now that we've checked that comment is defined, we can safely destructure it
     const { userName, commentTime, commentMessage } = this.comment;
-    // Render the track information
+
+    // * convert the comment to a date to display it in a prettier format
+    const date = new Date(commentTime);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
     return html`
       <section class="single-comment">
         <section class="comment-left">
           <section class="details">
             <section class="details-header">
               <p class="comment-name">${userName}</p>
-              <p class="comment-time">${commentTime}</p>
+              <p class="comment-time">${formattedDate}</p>
             </section>
             <p class="comment-message">${commentMessage}</p>
           </section>

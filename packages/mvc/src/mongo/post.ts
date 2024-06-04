@@ -11,6 +11,14 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  profileImage: {
+    type: String,
+    required: true,
+  },
+  profileDescription: {
+    type: String,
+    required: true,
+  },
   postTime: {
     type: Date, // Explicitly setting to Date type
     default: Date.now,

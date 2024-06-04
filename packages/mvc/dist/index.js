@@ -1,10 +1,27 @@
 "use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -75,28 +92,76 @@ io.on("connection", (socket) => {
     users.set(socket.id, userDetails);
     io.emit("users", Array.from(users.values()));
   });
-  socket.on("message", (message) => {
-    const userDetails = users.get(socket.id);
-    if (userDetails) {
-      console.log(`${userDetails.name} said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: userDetails.name,
-        profilePic: userDetails.profilePic
-      });
-    } else {
-      console.log(`Unknown user said: ${message.text}`);
-      io.emit("message", {
-        text: message.text,
-        sender: "Unknown user",
-        profilePic: "defaultProfileImage"
-        // Provide a default profile picture
-      });
+  socket.on(
+    "message",
+    (message) => {
+      const userDetails = users.get(socket.id);
+      if (message.sender === "GAME") {
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "MTV",
+          profilePic: "headphones_icon_for_game_messages",
+          class: message.class
+        });
+      } else if (userDetails) {
+        console.log(`${userDetails.name} said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: userDetails.name,
+          profilePic: userDetails.profilePic,
+          class: message.class
+        });
+      } else {
+        console.log(`Unknown user said: ${message.text}`);
+        socket.broadcast.emit("message", {
+          text: message.text,
+          sender: "Unknown user",
+          profilePic: "defaultProfileImage",
+          // Provide a default profile picture
+          class: message.class
+        });
+      }
     }
-  });
+  );
   socket.on("track-submitted", (track) => {
     if (track) {
       io.emit("track-submitted", track);
+    }
+  });
+  socket.on("voting-decision-made", (decision) => {
+    io.emit("voting-decision-made", decision);
+  });
+  socket.on("single-vote-made", (vote) => {
+    io.emit("single-vote-made", vote);
+  });
+  socket.on("user-chosen-to-pick", (userName) => {
+    io.emit("user-chosen-to-pick", userName);
+  });
+  socket.on("has-user-voted", ({ userName, voteState }) => {
+    console.log("voteState on backend: ", voteState);
+    io.emit("has-user-voted", { userName, voteState });
+  });
+  socket.on("is-loading", (isLoading) => {
+    io.emit("is-loading", isLoading);
+  });
+  socket.on("vibe-submitted", (chosenVibe) => {
+    if (chosenVibe) {
+      io.emit("vibe-submitted", chosenVibe);
+    }
+  });
+  socket.on("notification", (notification) => {
+    if (notification) {
+      io.emit("notification", notification);
+    }
+  });
+  socket.on("game-ended", () => {
+    io.emit("game-ended");
+  });
+  socket.on("current-song", (currentSong) => {
+    console.log("a song has been submitted: ", currentSong);
+    if (currentSong) {
+      console.log("emitting song back", currentSong);
+      io.emit("current-song", currentSong);
     }
   });
   socket.on("disconnect", () => {
@@ -152,14 +217,26 @@ app.get("/comments/:postid", (req, res) => __async(void 0, null, function* () {
     res.status(500).send("Error fetching comments");
   }
 }));
+function isValidObjectId(id) {
+  return import_mongoose.default.Types.ObjectId.isValid(id);
+}
+function transformClientToServer(post) {
+  if (!isValidObjectId(post.userid)) {
+    throw new Error("Invalid ObjectId format");
+  }
+  return __spreadProps(__spreadValues({}, post), {
+    userid: new import_mongoose.Types.ObjectId(post.userid)
+  });
+}
 app.post("/posts", (req, res) => __async(void 0, null, function* () {
   try {
     const newPostData = req.body;
-    const newPost = yield import_post.PostModel.create(newPostData);
+    const serverPostData = transformClientToServer(newPostData);
+    const newPost = yield import_post.PostModel.create(serverPostData);
     res.status(201).send(newPost);
   } catch (err) {
     console.error("Error creating new post: ", err);
-    res.status(500).send(err);
+    res.status(500).send({ error: err.message });
   }
 }));
 app.put("/posts/:postid", (req, res) => {

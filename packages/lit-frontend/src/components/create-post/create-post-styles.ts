@@ -10,7 +10,6 @@ export default css`
     background: var(--button-color);
     color: white;
     border: none;
-    margin-top: 1.5em;
     border-radius: 4px;
     cursor: pointer;
     padding: 8px 16px;
@@ -30,8 +29,10 @@ export default css`
   .create-post-ui {
     background-color: var(--menu-color);
     color: var(--text-color);
+    width: 32.5em;
     border: 1.5px solid var(--section-border-color);
-    padding: 2em;
+    padding: 1.25em;
+    margin: 0;
     border-radius: 8px;
     box-shadow: var(--box-shadow);
     margin-bottom: 1em;
