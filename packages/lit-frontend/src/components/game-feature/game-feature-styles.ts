@@ -474,4 +474,18 @@ export default css`
   .vibeNotMatched {
     background: #f8d7da; /* Soft red */
   }
+
+  .the-vibe-box {
+    padding: 0.75em;
+    background: #d4edda;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1em;
+  }
+
+  .the-vibe-box p {
+    font-weight: 400;
+    padding; 0;
+    margin: 0;
+  }
 `;

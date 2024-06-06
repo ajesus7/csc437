@@ -2594,6 +2594,20 @@
   .vibeNotMatched {
     background: #f8d7da; /* Soft red */
   }
+
+  .the-vibe-box {
+    padding: 0.75em;
+    background: #d4edda;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1em;
+  }
+
+  .the-vibe-box p {
+    font-weight: 400;
+    padding; 0;
+    margin: 0;
+  }
 `,Fc=P`
   .form-container {
     border: 1px solid #ddd;
@@ -2701,6 +2715,9 @@
       <section class="game-columns">
         <section class="left-column">
           <section class="game-info">
+            <div class="the-vibe-box">
+              <p>The vibe: ${this.chosenVibe}</p>
+            </div>
             <h3 class="game-sub-header">
               Round ${this.currentRound}/${this.roundsForThisGame}
             </h3>
@@ -2710,7 +2727,6 @@
             <h4 class="sub-sub-header">Last Song Recommended By:</h4>
             <p class="subtext">${this.lastUserToRecommendASong}</p>
           </section>
-          <p class="subtext">The vibe: ${this.chosenVibe}</p>
           <section class="user-section">
             <h3 class="game-sub-header">Player List</h3>
             <div class="user-list">
