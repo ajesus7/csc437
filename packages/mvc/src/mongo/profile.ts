@@ -20,7 +20,7 @@ const profileSchema = new Schema<Profile>(
       trim: true,
       default: "A cartoon wearing headphones.",
     },
-    spotify: { type: Boolean, required: false, default: false },
+    spotify: { type: Boolean, required: false, default: true },
   },
   { collection: "user_profiles" }
 );

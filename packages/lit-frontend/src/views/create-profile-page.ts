@@ -82,8 +82,8 @@ export class CreateProfilePage extends App.View {
             </p>
           </div>
           <edit-profile-form
+            .redirectAfterSubmit=${true}
             .profile=${this.profile}
-            .redirectAfterSubmit="${true}"
           ></edit-profile-form>
         </div>
       </section>

@@ -108,16 +108,6 @@ export class EditProfileElement extends LitElement {
                     placeholder="Your music taste in a few words"
                     />
                     </div>
-                    <div class="form-group">
-                    <label for="timezone">Timezone</label>
-                    <input
-                    type="text"
-                    id="timezone"
-                    name="timezone"
-                    .value=${this.profile?.timezone}
-                    placeholder="ex. PST, CST, EST"
-                    />
-                    </div>
                   <fieldset class="form-group">
                       <legend>Do you use Spotify?</legend>
                       <label>
