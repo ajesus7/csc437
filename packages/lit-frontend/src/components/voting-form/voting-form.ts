@@ -101,19 +101,21 @@ export class VotingFormElement extends LitElement {
     console.log(" __ ON VF RENDER __: this.hasVoted: ", this.hasUserVoted);
 
     return html`
-      <section class="form-container">
-        <h2 class="question">Does this song match the vibe?</h2>
-        <ul class="choices-list">
-          <li class="choice" @click=${this.updateYesVotes}>YES</li>
-          <li class="choice" @click=${this.updateNoVotes}>NO</li>
-        </ul>
-      </section>
-      <section class="results-container">
-        <h2 class="results-header">Results out of ${this.numberOfUsers}</h2>
-        <ul class="results-list">
-          <li class="result">${this.numberYes} YES</li>
-          <li class="result">${this.numberNo} NO</li>
-        </ul>
+      <section class="big-container">
+        <section class="form-container">
+          <h2 class="question">Does this song match the vibe?</h2>
+          <ul class="choices-list">
+            <li class="choice" @click=${this.updateYesVotes}>YES</li>
+            <li class="choice" @click=${this.updateNoVotes}>NO</li>
+          </ul>
+        </section>
+        <section class="results-container">
+          <h2 class="results-header">Results out of ${this.numberOfUsers}</h2>
+          <ul class="results-list">
+            <li class="result">${this.numberYes} YES</li>
+            <li class="result">${this.numberNo} NO</li>
+          </ul>
+        </section>
       </section>
     `;
   }
