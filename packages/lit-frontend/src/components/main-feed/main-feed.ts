@@ -58,7 +58,6 @@ export class MainFeedElement extends LitElement {
   }
 
   render() {
-    console.log("using", this.using);
     return html`
       <section class="feed-container">
         <section class="nav-section">
@@ -75,7 +74,10 @@ export class MainFeedElement extends LitElement {
         <section class="main-posts-section">
           <h2 class="feed-header">Song Recommendation Feed</h2>
           <create-post .using=${this.using}></create-post>
-          <feed-post-list .posts=${this.posts}></feed-post-list>
+          <feed-post-list
+            .using=${this.using}
+            .posts=${this.posts}
+          ></feed-post-list>
         </section>
       </section>
     `;

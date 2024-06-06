@@ -60,7 +60,6 @@ export class CreatePostElement extends LitElement {
   // * checks if the profile object is available, then submits a POST request with the post information to
   // * if response = ok, render a success message, close the component, and refresh the page to show the new post
   async _sendPostRequest(message: string, target: HTMLFormElement) {
-    console.log("this.using", this.using);
     // * if profile object or its attributes not available, do not submit post
     if (
       !this.using ||

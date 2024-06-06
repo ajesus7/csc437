@@ -4,6 +4,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import Post from "../../models/post.ts";
 import { IComment } from "../../../../ts-models/src/index.ts";
 import styles from "./feed-post-styles.ts";
+import { Profile } from "../../models/profile";
 
 // Import components
 import "../track-card/track-card.ts";
@@ -45,6 +46,10 @@ export class FeedPostElement extends LitElement {
 
   @state()
   expandedClass: String = "feed-single-post";
+
+  //  * the profile object retrieved from the Model
+  @state()
+  using?: Profile;
 
   _expand() {
     // * can't have both expanded
@@ -180,6 +185,7 @@ export class FeedPostElement extends LitElement {
               .post=${this.post}
               .multiPicker=${true}
               .hasMargin=${true}
+              .using=${this.using}
             ></song-picker>`
           : ""}
       </section>

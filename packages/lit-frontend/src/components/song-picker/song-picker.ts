@@ -2,6 +2,7 @@ import { html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import styles from "./song-picker-styles";
 import Post from "../../models/post.ts";
+import { Profile } from "../../models/profile";
 
 import {
   submitCommentToDatabase,
@@ -44,6 +45,10 @@ export class SongPickerElement extends LitElement {
 
   @property({ type: Object })
   post?: Post;
+
+  //  * the profile object retrieved from the Model
+  @state()
+  using?: Profile;
 
   // * used for adding a margin-left to only the multi song picker
   @property({ type: Boolean })

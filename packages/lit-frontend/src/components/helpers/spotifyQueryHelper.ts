@@ -169,8 +169,9 @@ export async function submitCommentToDatabase(ev: Event, context: any) {
   let message = formData.get("input-comment") as string;
   const trackIds = context.selectedTracks.map((track: TrackObject) => track.id);
   const url = `${SERVER_URL}/posts/${context.post?._id}`;
+  
   const newComment = {
-    userName: "aidan",
+    userName: context.using.name,
     commentTime: new Date(),
     commentMessage: message,
     SongIDs: trackIds,
