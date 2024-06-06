@@ -1677,7 +1677,12 @@
     width: 92%;
     height: 9em; /* overflows if smaller */
     margin-top: 10px;
-    overflow: auto; /* Allow scrolling if content exceeds container size */
+    overflow: auto;
+  }
+
+  /* no overflow (scroll bar) because it is a single song */
+  .track-box-selected-tracks {
+    overflow: visible;
   }
 
   /* update height to reflect only one song being chosen*/
