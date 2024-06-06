@@ -299,6 +299,15 @@ export class GameFeatureElement extends LitElement {
     if (track) {
       console.log("submitting track from the front end");
       this.socket?.emit("track-submitted", track);
+
+      // * user automatically votes yes on their own song
+      this.socket?.emit("single-vote-made", "yes");
+      this.hasUserVoted = true;
+
+      // * bandaid fix for single user submitting song
+      if (this.users.length == 1) {
+        this.socket?.emit("voting-decision-made", "yes");
+      }
       const currentSong = {
         name: track.name,
         artist: track.artists[0].name,
