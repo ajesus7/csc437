@@ -689,10 +689,12 @@ export class GameFeatureElement extends LitElement {
     // Check if there are more rounds to be played
     if (this.currentRound < this.roundsForThisGame) {
       this.currentRound += 1;
-      // reset currentSong because the new current song not picked yet
+
+      // reset state holders for new round
       this.currentSong = null;
       this.numberNo = 0;
       this.numberYes = 0;
+      this.isPlaying = false;
       this.hasUserVoted = false;
       console.log("user voted set to false");
 
