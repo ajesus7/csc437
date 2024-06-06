@@ -126,27 +126,26 @@ export default css`
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
-.chat-message {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5em;
-  padding: 0.75em;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+  .chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    padding: 0.75em;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
 
+  .chat-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5em;
+  }
 
-.chat-profile-pic {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 0.5em;
-}
-
-.chat-sender {
-  font-weight: bold;
-  margin-right: 0.5em;
-}
+  .chat-sender {
+    font-weight: bold;
+    margin-right: 0.5em;
+  }
 
   .message-input {
     display: flex;
@@ -410,13 +409,31 @@ export default css`
     position: relative;
     top: 2px;
   }
-  
+
   .light-green {
-    background: #d4edda; 
+    background: #d4edda;
   }
 
   .notification-item {
-    text-align-center;
+    text-align: center;
+  }
+
+  .waiting-on-user-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    background-color: #d4edda;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+  }
+
+  .waiting-on-user-message p {
+    text-align: center;
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
   }
 
   .current-user-is-picking-notif {
@@ -430,11 +447,11 @@ export default css`
     border-radius: 8px;
     background: #f1f1f1;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    background: #d4edda; 
+    background: #d4edda;
   }
-  
+
   .current-user-is-picking-notif p {
-    background: #d4edda; 
+    background: #d4edda;
     text-align: center;
   }
 

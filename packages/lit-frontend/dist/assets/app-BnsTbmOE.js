@@ -2241,27 +2241,26 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
-.chat-message {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5em;
-  padding: 0.75em;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+  .chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    padding: 0.75em;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
 
+  .chat-profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5em;
+  }
 
-.chat-profile-pic {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 0.5em;
-}
-
-.chat-sender {
-  font-weight: bold;
-  margin-right: 0.5em;
-}
+  .chat-sender {
+    font-weight: bold;
+    margin-right: 0.5em;
+  }
 
   .message-input {
     display: flex;
@@ -2525,13 +2524,31 @@
     position: relative;
     top: 2px;
   }
-  
+
   .light-green {
-    background: #d4edda; 
+    background: #d4edda;
   }
 
   .notification-item {
-    text-align-center;
+    text-align: center;
+  }
+
+  .waiting-on-user-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+    background-color: #d4edda;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+  }
+
+  .waiting-on-user-message p {
+    text-align: center;
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
   }
 
   .current-user-is-picking-notif {
@@ -2545,11 +2562,11 @@
     border-radius: 8px;
     background: #f1f1f1;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    background: #d4edda; 
+    background: #d4edda;
   }
-  
+
   .current-user-is-picking-notif p {
-    background: #d4edda; 
+    background: #d4edda;
     text-align: center;
   }
 
@@ -2680,7 +2697,7 @@
           </ul>
         </section>
       </section>
-    `}};ve.styles=Fc;ut([_()],ve.prototype,"numberYes",2);ut([x({type:Boolean})],ve.prototype,"hasUserVoted",2);ut([x()],ve.prototype,"numberOfUsers",2);ut([_()],ve.prototype,"numberNo",2);ve=ut([A("voting-form")],ve);var jc=Object.defineProperty,qc=Object.getOwnPropertyDescriptor,B=(s,e,t,r)=>{for(var i=r>1?void 0:r?qc(e,t):e,o=s.length-1,c;o>=0;o--)(c=s[o])&&(i=(r?c(e,t,i):c(i))||i);return r&&i&&jc(e,t,i),i};let R=class extends S{constructor(){super(...arguments),this.userDetails=null,this.messages=[],this.users=[],this.isInputFocused=!1,this.playlist=[],this.submittedTrackList=[],this.chosenVibe="",this.isPlaying=!1,this.isLoading=!1,this.loadingProgress=0,this.audio=null,this.numberYes=0,this.numberNo=0,this.hasUserVoted=!1,this.userWhoIsChoosingSong=!1,this.idOfUserChoosingSong="",this.lastUserToRecommendASong="",this.notificationsList=[],this.gameConcluded=!1,this.currentSong=null,this.currentRound=1,this.roundsForThisGame=0}connectedCallback(){var e;super.connectedCallback();const s="http://localhost:3000";console.log("WEBSOCKETS SERVER: ",`${s}`),this.socket=At(`${s}`),this.addEventListener("single-track-submitted",t=>{const r=t;this._handleSongSubmittedByUser(r.detail.track)}),this.addEventListener("voting-decision-made",t=>{const r=t;this._handleMajorityReached(r.detail.decision)}),this.addEventListener("single-vote-made",t=>{const r=t;this._handleSingleVoteMade(r.detail.vote)}),this.addEventListener("has-user-voted",t=>{var o,c;const r=t,i=((o=this.userDetails)==null?void 0:o.name)||"Unknown";(c=this.socket)==null||c.emit("has-user-voted",{userName:i,voteState:r.detail.voteState})}),this.userDetails&&((e=this.socket)==null||e.emit("userDetails",this.userDetails)),this.socket.on("message",t=>{this.messages=[...this.messages,t]}),this.socket.on("game-ended",()=>{setTimeout(()=>{this.gameConcluded=!0},2e3)}),this.socket.on("notification",t=>{this.notificationsList=[...this.notificationsList,t]}),this.socket.on("has-user-voted",({userName:t,voteState:r})=>{var i;console.log("within front end has-user-voted, voteState:",r),((i=this.userDetails)==null?void 0:i.name)==t&&(console.log("USERNAMES MATCH!"),this.hasUserVoted=r)}),this.socket.on("track-submitted",t=>{this.submittedTrackList=[...this.submittedTrackList,t]}),this.socket.on("is-loading",t=>{this.isLoading=t,this.startGameLoading()}),this.socket.on("vibe-submitted",t=>{this.chosenVibe=t}),this.socket.on("voting-decision-made",t=>{var i,o;const r=this.submittedTrackList.pop();if(t.toUpperCase()==="YES"){const c={text:`${r==null?void 0:r.name} matches the vibe!`,sender:"GAME",class:"chat-message vibeMatched"};(i=this.socket)==null||i.emit("message",c),r?this.playlist=[...this.playlist,r]:console.error("No track to add to the playlist")}else{const c={text:`${r==null?void 0:r.name} does not match the vibe!`,sender:"GAME",class:"chat-message vibeNotMatched"};(o=this.socket)==null||o.emit("message",c)}this.lastUserToRecommendASong=this.idOfUserChoosingSong,this.startNextRoundOfGame()}),this.socket.on("single-vote-made",t=>{t.toUpperCase()==="YES"?this.numberYes+=1:this.numberNo+=1}),this.socket.on("current-song",t=>{this.currentSong=t}),this.socket.on("user-chosen-to-pick",t=>{var r,i;console.log("user-chosen-to-pick within frontend websocket receiver: ",t),console.log("userName",(r=this.userDetails)==null?void 0:r.name),t===((i=this.userDetails)==null?void 0:i.name)&&(this.userWhoIsChoosingSong=!0),this.idOfUserChoosingSong=t}),this.socket.on("users",t=>{this.users=t}),this.socket.on("connect",()=>{console.log("Connected to WebSocket server")}),this.socket.on("disconnect",()=>{console.log("Disconnected from WebSocket server")})}disconnectedCallback(){super.disconnectedCallback(),this.socket&&this.socket.disconnect(),this.removeEventListener("single-track-submitted",this._handleSongSubmittedByUser),this.removeEventListener("single-vote-made",this._handleSingleVoteMade),this.removeEventListener("voting-decision-made",this._handleMajorityReached)}_handleMajorityReached(s){var e;console.log("decision within majority reached event listener: ",s),(e=this.socket)==null||e.emit("voting-decision-made",s)}_handleSingleVoteMade(s){var e;console.log("single vote made: ",s),(e=this.socket)==null||e.emit("single-vote-made",s)}_handleSongSubmittedByUser(s){var e,t,r,i,o;if(s){console.log("submitting track from the front end"),(e=this.socket)==null||e.emit("track-submitted",s),(t=this.socket)==null||t.emit("single-vote-made","yes"),this.hasUserVoted=!0,this.users.length==1&&((r=this.socket)==null||r.emit("voting-decision-made","yes"));const c={name:s.name,artist:s.artists[0].name,albumCover:s.album.images[0].url,previewURL:s.preview_url,recommendedBy:((i=this.userDetails)==null?void 0:i.name)||"Unknown"};this.currentSong=c,console.log("emitting song from the frontend, ",c),(o=this.socket)==null||o.emit("current-song",c),this.userWhoIsChoosingSong=!1}}handleInputFocus(){this.isInputFocused=!0}handleInputBlur(){this.isInputFocused=!1}handleKeydown(s){var t;const e=(t=this.shadowRoot)==null?void 0:t.querySelector("input");s.key==="Enter"&&this.isInputFocused&&(e!=null&&e.value.trim())&&this.sendMessage()}sendMessage(){var e,t;const s=(e=this.shadowRoot)==null?void 0:e.querySelector("input");if(s&&s.value.trim()&&this.userDetails){const r={text:s.value.trim(),sender:this.userDetails.name,profilePic:this.userDetails.profilePic,class:"chat-message"};(t=this.socket)==null||t.emit("message",r),this.messages=[...this.messages,r],s.value=""}}removeMostRecentNotification(){this.notificationsList.pop(),this.requestUpdate()}render(){var s,e,t,r;return y`
+    `}};ve.styles=Fc;ut([_()],ve.prototype,"numberYes",2);ut([x({type:Boolean})],ve.prototype,"hasUserVoted",2);ut([x()],ve.prototype,"numberOfUsers",2);ut([_()],ve.prototype,"numberNo",2);ve=ut([A("voting-form")],ve);var jc=Object.defineProperty,qc=Object.getOwnPropertyDescriptor,B=(s,e,t,r)=>{for(var i=r>1?void 0:r?qc(e,t):e,o=s.length-1,c;o>=0;o--)(c=s[o])&&(i=(r?c(e,t,i):c(i))||i);return r&&i&&jc(e,t,i),i};let R=class extends S{constructor(){super(...arguments),this.userDetails=null,this.messages=[],this.users=[],this.isInputFocused=!1,this.playlist=[],this.submittedTrackList=[],this.chosenVibe="",this.isPlaying=!1,this.isLoading=!1,this.loadingProgress=0,this.audio=null,this.numberYes=0,this.numberNo=0,this.hasUserVoted=!1,this.userWhoIsChoosingSong=!1,this.idOfUserChoosingSong="",this.lastUserToRecommendASong="",this.notificationsList=[],this.gameConcluded=!1,this.currentSong=null,this.currentRound=1,this.roundsForThisGame=0}connectedCallback(){var e;super.connectedCallback();const s="http://localhost:3000";console.log("WEBSOCKETS SERVER: ",`${s}`),this.socket=At(`${s}`),this.addEventListener("single-track-submitted",t=>{const r=t;this._handleSongSubmittedByUser(r.detail.track)}),this.addEventListener("voting-decision-made",t=>{const r=t;this._handleMajorityReached(r.detail.decision)}),this.addEventListener("single-vote-made",t=>{const r=t;this._handleSingleVoteMade(r.detail.vote)}),this.addEventListener("has-user-voted",t=>{var o,c;const r=t,i=((o=this.userDetails)==null?void 0:o.name)||"Unknown";(c=this.socket)==null||c.emit("has-user-voted",{userName:i,voteState:r.detail.voteState})}),this.userDetails&&((e=this.socket)==null||e.emit("userDetails",this.userDetails)),this.socket.on("message",t=>{this.messages=[...this.messages,t]}),this.socket.on("game-ended",()=>{setTimeout(()=>{this.gameConcluded=!0},2e3)}),this.socket.on("notification",t=>{this.notificationsList=[...this.notificationsList,t]}),this.socket.on("has-user-voted",({userName:t,voteState:r})=>{var i;console.log("within front end has-user-voted, voteState:",r),((i=this.userDetails)==null?void 0:i.name)==t&&(console.log("USERNAMES MATCH!"),this.hasUserVoted=r)}),this.socket.on("track-submitted",t=>{this.submittedTrackList=[...this.submittedTrackList,t]}),this.socket.on("is-loading",t=>{this.isLoading=t,this.startGameLoading()}),this.socket.on("vibe-submitted",t=>{this.chosenVibe=t}),this.socket.on("voting-decision-made",t=>{var i,o;const r=this.submittedTrackList.pop();if(t.toUpperCase()==="YES"){const c={text:`${r==null?void 0:r.name} matches the vibe!`,sender:"GAME",class:"chat-message vibeMatched"};(i=this.socket)==null||i.emit("message",c),r?this.playlist=[...this.playlist,r]:console.error("No track to add to the playlist")}else{const c={text:`${r==null?void 0:r.name} does not match the vibe!`,sender:"GAME",class:"chat-message vibeNotMatched"};(o=this.socket)==null||o.emit("message",c)}this.lastUserToRecommendASong=this.idOfUserChoosingSong,this.startNextRoundOfGame()}),this.socket.on("single-vote-made",t=>{t.toUpperCase()==="YES"?this.numberYes+=1:this.numberNo+=1}),this.socket.on("current-song",t=>{this.currentSong=t}),this.socket.on("user-chosen-to-pick",t=>{var r,i,o;console.log("user-chosen-to-pick within frontend websocket receiver: ",t," and username of who emitted this: ",(r=this.userDetails)==null?void 0:r.name),console.log("userName",(i=this.userDetails)==null?void 0:i.name),t===((o=this.userDetails)==null?void 0:o.name)&&(this.userWhoIsChoosingSong=!0),this.idOfUserChoosingSong=t}),this.socket.on("users",t=>{this.users=t}),this.socket.on("connect",()=>{console.log("Connected to WebSocket server")}),this.socket.on("disconnect",()=>{console.log("Disconnected from WebSocket server")})}disconnectedCallback(){super.disconnectedCallback(),this.socket&&this.socket.disconnect(),this.removeEventListener("single-track-submitted",this._handleSongSubmittedByUser),this.removeEventListener("single-vote-made",this._handleSingleVoteMade),this.removeEventListener("voting-decision-made",this._handleMajorityReached)}_handleMajorityReached(s){var e;console.log("decision within majority reached event listener: ",s),(e=this.socket)==null||e.emit("voting-decision-made",s)}_handleSingleVoteMade(s){var e;console.log("single vote made: ",s),(e=this.socket)==null||e.emit("single-vote-made",s)}_handleSongSubmittedByUser(s){var e,t,r,i,o;if(s){console.log("submitting track from the front end"),(e=this.socket)==null||e.emit("track-submitted",s),(t=this.socket)==null||t.emit("single-vote-made","yes"),this.hasUserVoted=!0,this.users.length==1&&((r=this.socket)==null||r.emit("voting-decision-made","yes"));const c={name:s.name,artist:s.artists[0].name,albumCover:s.album.images[0].url,previewURL:s.preview_url,recommendedBy:((i=this.userDetails)==null?void 0:i.name)||"Unknown"};this.currentSong=c,console.log("emitting song from the frontend, ",c),(o=this.socket)==null||o.emit("current-song",c),this.userWhoIsChoosingSong=!1}}handleInputFocus(){this.isInputFocused=!0}handleInputBlur(){this.isInputFocused=!1}handleKeydown(s){var t;const e=(t=this.shadowRoot)==null?void 0:t.querySelector("input");s.key==="Enter"&&this.isInputFocused&&(e!=null&&e.value.trim())&&this.sendMessage()}sendMessage(){var e,t;const s=(e=this.shadowRoot)==null?void 0:e.querySelector("input");if(s&&s.value.trim()&&this.userDetails){const r={text:s.value.trim(),sender:this.userDetails.name,profilePic:this.userDetails.profilePic,class:"chat-message"};(t=this.socket)==null||t.emit("message",r),this.messages=[...this.messages,r],s.value=""}}removeMostRecentNotification(){this.notificationsList.pop(),this.requestUpdate()}render(){var s,e,t,r;return y`
       <section class="game-columns">
         <section class="left-column">
           <section class="game-info">
@@ -2758,12 +2775,25 @@
                 />
                 <p class="recommended-by">Recommended by: ---------</p>
               </div>`:""}
-          ${this.currentSong?y`<voting-form
-                .numberYes=${this.numberYes}
-                .numberNo=${this.numberNo}
-                .numberOfUsers=${this.users.length}
-                .hasUserVoted=${this.hasUserVoted}
-              ></voting-form>`:""}
+          ${this.currentSong&&!this.hasUserVoted?y` <div class="waiting-on-user-message">
+                  <p>
+                    It&apos;s your turn to decide if the song matches the vibe!
+                  </p>
+                </div>
+                <voting-form
+                  .numberYes=${this.numberYes}
+                  .numberNo=${this.numberNo}
+                  .numberOfUsers=${this.users.length}
+                  .hasUserVoted=${this.hasUserVoted}
+                ></voting-form>`:""}
+          ${this.hasUserVoted?y`
+                <div class="waiting-on-user-message">
+                  <p>
+                    You have voted yes on your own song, waiting on the other
+                    user to vote.
+                  </p>
+                </div>
+              `:""}
         </section>
         <section class="right-column">
           <section class="playlist-section">

@@ -239,7 +239,9 @@ export class GameFeatureElement extends LitElement {
     this.socket.on("user-chosen-to-pick", (userName: string) => {
       console.log(
         "user-chosen-to-pick within frontend websocket receiver: ",
-        userName
+        userName,
+        " and username of who emitted this: ",
+        this.userDetails?.name
       );
       console.log("userName", this.userDetails?.name);
       if (userName === this.userDetails?.name) {
@@ -471,14 +473,29 @@ export class GameFeatureElement extends LitElement {
                 <p class="recommended-by">Recommended by: ---------</p>
               </div>`
             : ``}
-          ${this.currentSong
-            ? html`<voting-form
-                .numberYes=${this.numberYes}
-                .numberNo=${this.numberNo}
-                .numberOfUsers=${this.users.length}
-                .hasUserVoted=${this.hasUserVoted}
-              ></voting-form>`
+          ${this.currentSong && !this.hasUserVoted
+            ? html` <div class="waiting-on-user-message">
+                  <p>
+                    It&apos;s your turn to decide if the song matches the vibe!
+                  </p>
+                </div>
+                <voting-form
+                  .numberYes=${this.numberYes}
+                  .numberNo=${this.numberNo}
+                  .numberOfUsers=${this.users.length}
+                  .hasUserVoted=${this.hasUserVoted}
+                ></voting-form>`
             : ``}
+          ${this.hasUserVoted
+            ? html`
+                <div class="waiting-on-user-message">
+                  <p>
+                    You have voted yes on your own song, waiting on the other
+                    user to vote.
+                  </p>
+                </div>
+              `
+            : ""}
         </section>
         <section class="right-column">
           <section class="playlist-section">
