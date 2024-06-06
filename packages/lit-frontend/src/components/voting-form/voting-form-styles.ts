@@ -13,11 +13,12 @@ export default css`
     background-color: #fff;
   }
 
-  .question {
-    font-size: 1.2em;
-    margin: 0 0 1em;
+  .question,
+  .results-header {
+    font-size: 1em;
+    margin: 0 0 0.5em;
     text-align: center;
-    font-weight: bold;
+    font-weight: 400;
   }
 
   .choices-list {
@@ -27,6 +28,7 @@ export default css`
     padding: 0;
     margin: 0;
     list-style-type: none;
+    margin-bottom: 0.5em;
   }
 
   .choice {
@@ -39,7 +41,7 @@ export default css`
     border-radius: 8px;
     font-weight: bold;
     color: #333;
-    background-color: #f9f9f9;
+    background-color: rgb(241, 241, 241);
   }
 
   .choice:hover {
@@ -58,13 +60,6 @@ export default css`
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     margin-top: 1em;
-  }
-
-  .results-header {
-    font-size: 1.2em;
-    margin: 0 0 1em;
-    text-align: center;
-    font-weight: bold;
   }
 
   .results-list {

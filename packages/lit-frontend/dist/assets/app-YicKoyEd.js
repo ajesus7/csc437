@@ -2602,11 +2602,12 @@
     background-color: #fff;
   }
 
-  .question {
-    font-size: 1.2em;
-    margin: 0 0 1em;
+  .question,
+  .results-header {
+    font-size: 1em;
+    margin: 0 0 0.5em;
     text-align: center;
-    font-weight: bold;
+    font-weight: 400;
   }
 
   .choices-list {
@@ -2616,6 +2617,7 @@
     padding: 0;
     margin: 0;
     list-style-type: none;
+    margin-bottom: 0.5em;
   }
 
   .choice {
@@ -2628,7 +2630,7 @@
     border-radius: 8px;
     font-weight: bold;
     color: #333;
-    background-color: #f9f9f9;
+    background-color: rgb(241, 241, 241);
   }
 
   .choice:hover {
@@ -2647,13 +2649,6 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     margin-top: 1em;
-  }
-
-  .results-header {
-    font-size: 1.2em;
-    margin: 0 0 1em;
-    text-align: center;
-    font-weight: bold;
   }
 
   .results-list {
@@ -2683,14 +2678,14 @@
 `;var Nc=Object.defineProperty,Mc=Object.getOwnPropertyDescriptor,ut=(s,e,t,r)=>{for(var i=r>1?void 0:r?Mc(e,t):e,o=s.length-1,c;o>=0;o--)(c=s[o])&&(i=(r?c(e,t,i):c(i))||i);return r&&i&&Nc(e,t,i),i};let ve=class extends S{constructor(){super(...arguments),this.numberYes=0,this.hasUserVoted=!1,this.numberOfUsers=0,this.numberNo=0}updateYesVotes(){console.log("before setting vote, hasUserVoted: ",this.hasUserVoted),this.hasUserVoted?console.log("user cannot vote twice"):(this.numberYes+=1,this.hasUserVoted=!0,this.dispatchSingleVote("YES"),this.dispatchHasUserVoted(!0),this.checkMajorityDecision())}updateNoVotes(){console.log("before setting vote, hasUserVoted: ",this.hasUserVoted),this.hasUserVoted?console.log("user cannot vote twice"):(this.numberNo+=1,this.hasUserVoted=!0,this.dispatchSingleVote("NO"),this.dispatchHasUserVoted(!0),this.checkMajorityDecision())}dispatchHasUserVoted(s){console.log("dispatching has user voted!",s);const e=new CustomEvent("has-user-voted",{detail:{voteState:s},bubbles:!0,composed:!0});this.dispatchEvent(e)}checkMajorityDecision(){const s=Math.floor(this.numberOfUsers/2)+1;this.numberYes>=s?this.dispatchVotingMajorityReached("YES"):(this.numberNo>=s||this.numberNo+this.numberYes==this.numberOfUsers)&&(console.log("SENDING NO MAJORITY DECISION"),this.dispatchVotingMajorityReached("NO"))}dispatchVotingMajorityReached(s){console.log("decision dispatched!");const e=new CustomEvent("voting-decision-made",{detail:{decision:s},bubbles:!0,composed:!0});this.dispatchEvent(e)}dispatchSingleVote(s){console.log("single vote dispatched!");const e=new CustomEvent("single-vote-made",{detail:{vote:s},bubbles:!0,composed:!0});this.dispatchEvent(e)}render(){return console.log(" __ ON VF RENDER __: this.hasVoted: ",this.hasUserVoted),y`
       <section class="big-container">
         <section class="form-container">
-          <h2 class="question">Does this song match the vibe?</h2>
+          <h4 class="question">Does this song match the vibe?</h4>
           <ul class="choices-list">
             <li class="choice" @click=${this.updateYesVotes}>YES</li>
             <li class="choice" @click=${this.updateNoVotes}>NO</li>
           </ul>
-        </section>
-        <section class="results-container">
-          <h2 class="results-header">Results out of ${this.numberOfUsers}</h2>
+          <h4 class="results-header">
+            Voting results out of ${this.numberOfUsers}
+          </h4>
           <ul class="results-list">
             <li class="result">${this.numberYes} YES</li>
             <li class="result">${this.numberNo} NO</li>
